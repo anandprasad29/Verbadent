@@ -1,18 +1,23 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
-import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'app.dart';
+import 'dashboard_screen.dart';
 
 void main() {
-  WidgetsFlutterBinding.ensureInitialized();
+  runApp(const MyApp());
+}
 
-  // Set preferred orientations for mobile/tablet
-  SystemChrome.setPreferredOrientations([
-    DeviceOrientation.portraitUp,
-    DeviceOrientation.portraitDown,
-    DeviceOrientation.landscapeLeft,
-    DeviceOrientation.landscapeRight,
-  ]);
+class MyApp extends StatelessWidget {
+  const MyApp({super.key});
 
-  runApp(const ProviderScope(child: VerbadentApp()));
+  @override
+  Widget build(BuildContext context) {
+    return MaterialApp(
+      title: 'Verbadent',
+      debugShowCheckedModeBanner: false,
+      theme: ThemeData(
+        colorScheme: ColorScheme.fromSeed(seedColor: Colors.blue),
+        useMaterial3: true,
+      ),
+      home: const DashboardScreen(),
+    );
+  }
 }
