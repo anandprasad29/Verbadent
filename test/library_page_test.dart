@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:go_router/go_router.dart';
@@ -7,9 +8,42 @@ import 'package:verbadent/src/features/library/presentation/library_page.dart';
 import 'package:verbadent/src/features/library/presentation/widgets/library_card.dart';
 
 void main() {
-  // Load fonts for golden tests
+  TestWidgetsFlutterBinding.ensureInitialized();
+
+  // Mock the TTS platform channel
+  const MethodChannel ttsChannel = MethodChannel('flutter_tts');
+
   setUpAll(() async {
     await loadAppFonts();
+  });
+
+  setUp(() {
+    TestDefaultBinaryMessengerBinding.instance.defaultBinaryMessenger
+        .setMockMethodCallHandler(ttsChannel, (MethodCall methodCall) async {
+      switch (methodCall.method) {
+        case 'speak':
+        case 'stop':
+        case 'setLanguage':
+        case 'setSpeechRate':
+        case 'setVolume':
+        case 'setPitch':
+        case 'awaitSpeakCompletion':
+          return 1;
+        case 'getLanguages':
+          return ['en-US', 'es-ES'];
+        case 'getVoices':
+          return [];
+        case 'isLanguageAvailable':
+          return 1;
+        default:
+          return null;
+      }
+    });
+  });
+
+  tearDown(() {
+    TestDefaultBinaryMessengerBinding.instance.defaultBinaryMessenger
+        .setMockMethodCallHandler(ttsChannel, null);
   });
 
   /// Creates a test router with LibraryPage as the initial route
