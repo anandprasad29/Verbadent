@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import '../constants/app_constants.dart';
 
 /// Responsive breakpoints and utilities
 class Responsive {
@@ -90,5 +91,44 @@ class Responsive {
   static bool isPortrait(BuildContext context) {
     return MediaQuery.of(context).orientation == Orientation.portrait;
   }
-}
 
+  // ============================================
+  // Grid Layout Helpers
+  // ============================================
+
+  /// Get the number of grid columns based on screen width.
+  /// Desktop: 5, Tablet: 3, Mobile: 2
+  static int getGridColumnCount(BuildContext context) {
+    if (isDesktop(context)) {
+      return AppConstants.gridColumnsDesktop;
+    } else if (isTablet(context)) {
+      return AppConstants.gridColumnsTablet;
+    } else {
+      return AppConstants.gridColumnsMobile;
+    }
+  }
+
+  /// Get grid spacing based on screen width.
+  /// Desktop: 24, Tablet: 20, Mobile: 16
+  static double getGridSpacing(BuildContext context) {
+    if (isDesktop(context)) {
+      return AppConstants.gridSpacingDesktop;
+    } else if (isTablet(context)) {
+      return AppConstants.gridSpacingTablet;
+    } else {
+      return AppConstants.gridSpacingMobile;
+    }
+  }
+
+  /// Get content padding based on screen width.
+  /// Desktop: 48h/24v, Tablet: 32h/20v, Mobile: 16h/16v
+  static EdgeInsets getContentPadding(BuildContext context) {
+    if (isDesktop(context)) {
+      return AppConstants.contentPaddingDesktop;
+    } else if (isTablet(context)) {
+      return AppConstants.contentPaddingTablet;
+    } else {
+      return AppConstants.contentPaddingMobile;
+    }
+  }
+}
