@@ -1,0 +1,201 @@
+import 'package:flutter_test/flutter_test.dart';
+import 'package:verbadent/src/features/library/domain/library_item.dart';
+import 'package:verbadent/src/features/library/data/library_data.dart';
+
+void main() {
+  group('LibraryItem', () {
+    test('creates instance with required parameters', () {
+      const item = LibraryItem(
+        id: 'test-1',
+        imagePath: 'assets/test.png',
+        caption: 'Test Caption',
+      );
+
+      expect(item.id, equals('test-1'));
+      expect(item.imagePath, equals('assets/test.png'));
+      expect(item.caption, equals('Test Caption'));
+    });
+
+    test('can create const instances', () {
+      const item1 = LibraryItem(
+        id: '1',
+        imagePath: 'path1',
+        caption: 'caption1',
+      );
+      const item2 = LibraryItem(
+        id: '1',
+        imagePath: 'path1',
+        caption: 'caption1',
+      );
+
+      // Const instances with same values should be identical
+      expect(identical(item1, item2), isTrue);
+    });
+
+    test('supports different id formats', () {
+      const numericId = LibraryItem(
+        id: '123',
+        imagePath: 'path',
+        caption: 'caption',
+      );
+      const uuidId = LibraryItem(
+        id: 'a1b2c3d4-e5f6-7890-abcd-ef1234567890',
+        imagePath: 'path',
+        caption: 'caption',
+      );
+
+      expect(numericId.id, equals('123'));
+      expect(uuidId.id, equals('a1b2c3d4-e5f6-7890-abcd-ef1234567890'));
+    });
+
+    test('supports various image path formats', () {
+      const assetPath = LibraryItem(
+        id: '1',
+        imagePath: 'assets/images/library/test.png',
+        caption: 'caption',
+      );
+      const relativePath = LibraryItem(
+        id: '2',
+        imagePath: '../images/test.jpg',
+        caption: 'caption',
+      );
+
+      expect(assetPath.imagePath, contains('assets'));
+      expect(relativePath.imagePath, contains('..'));
+    });
+
+    test('caption can contain special characters', () {
+      const item = LibraryItem(
+        id: '1',
+        imagePath: 'path',
+        caption: "This is the dentist's chair & it's comfortable!",
+      );
+
+      expect(item.caption, contains("'"));
+      expect(item.caption, contains('&'));
+    });
+
+    test('caption can be multi-word', () {
+      const item = LibraryItem(
+        id: '1',
+        imagePath: 'path',
+        caption: 'The bright light helps the dentist see your teeth',
+      );
+
+      expect(item.caption.split(' ').length, greaterThan(5));
+    });
+  });
+
+  group('LibraryData', () {
+    test('sampleItems is not empty', () {
+      expect(LibraryData.sampleItems, isNotEmpty);
+    });
+
+    test('sampleItems contains 10 items', () {
+      expect(LibraryData.sampleItems.length, equals(10));
+    });
+
+    test('all items have unique ids', () {
+      final ids = LibraryData.sampleItems.map((item) => item.id).toList();
+      final uniqueIds = ids.toSet();
+      expect(uniqueIds.length, equals(ids.length));
+    });
+
+    test('all items have non-empty captions', () {
+      for (final item in LibraryData.sampleItems) {
+        expect(item.caption, isNotEmpty);
+      }
+    });
+
+    test('all items have valid image paths', () {
+      for (final item in LibraryData.sampleItems) {
+        expect(item.imagePath, startsWith('assets/images/library/'));
+        expect(item.imagePath, endsWith('.png'));
+      }
+    });
+
+    test('all items have dental-related captions', () {
+      final dentalKeywords = [
+        'dentist',
+        'teeth',
+        'mouth',
+        'dental',
+        'chair',
+        'mask',
+        'gloves',
+        'light',
+        'mirror',
+        'drill',
+        'suction',
+        'stop',
+      ];
+
+      for (final item in LibraryData.sampleItems) {
+        final captionLower = item.caption.toLowerCase();
+        final containsDentalKeyword = dentalKeywords.any(
+          (keyword) => captionLower.contains(keyword),
+        );
+        expect(
+          containsDentalKeyword,
+          isTrue,
+          reason:
+              'Caption "${item.caption}" should contain dental-related keyword',
+        );
+      }
+    });
+
+    test('sample items include expected dental items', () {
+      final captions = LibraryData.sampleItems.map((i) => i.caption).toList();
+
+      // Check for some expected items
+      expect(
+        captions.any((c) => c.toLowerCase().contains('chair')),
+        isTrue,
+        reason: 'Should have dentist chair item',
+      );
+      expect(
+        captions.any((c) => c.toLowerCase().contains('mask')),
+        isTrue,
+        reason: 'Should have mask item',
+      );
+      expect(
+        captions.any((c) => c.toLowerCase().contains('mirror')),
+        isTrue,
+        reason: 'Should have mirror item',
+      );
+    });
+
+    test('all image file names are unique', () {
+      final paths =
+          LibraryData.sampleItems.map((item) => item.imagePath).toList();
+      final uniquePaths = paths.toSet();
+      expect(uniquePaths.length, equals(paths.length));
+    });
+
+    test('items have meaningful ids', () {
+      final expectedIds = [
+        'dentist-chair',
+        'dentist-mask',
+        'dentist-gloves',
+        'bright-light',
+        'count-teeth',
+        'dental-mirror',
+        'dental-drill',
+        'suction',
+        'open-mouth',
+        'stop',
+      ];
+
+      for (int i = 0; i < LibraryData.sampleItems.length; i++) {
+        expect(LibraryData.sampleItems[i].id, equals(expectedIds[i]));
+      }
+    });
+
+    test('sampleItems is a fixed list', () {
+      // Should be the same instance each time
+      final list1 = LibraryData.sampleItems;
+      final list2 = LibraryData.sampleItems;
+      expect(identical(list1, list2), isTrue);
+    });
+  });
+}
