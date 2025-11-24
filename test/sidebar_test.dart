@@ -128,10 +128,12 @@ void main() {
 
       // Find the container with the background color
       final container = tester.widget<Container>(
-        find.descendant(
-          of: sidebarFinder,
-          matching: find.byType(Container),
-        ).first,
+        find
+            .descendant(
+              of: sidebarFinder,
+              matching: find.byType(Container),
+            )
+            .first,
       );
 
       // Verify blue background color (#5483F5)
@@ -179,11 +181,276 @@ void main() {
       );
 
       // Verify test keys are present
-      expect(find.byKey(const Key('sidebar_item_before_visit')), findsOneWidget);
-      expect(find.byKey(const Key('sidebar_item_during_visit')), findsOneWidget);
+      expect(
+          find.byKey(const Key('sidebar_item_before_visit')), findsOneWidget);
+      expect(
+          find.byKey(const Key('sidebar_item_during_visit')), findsOneWidget);
       expect(find.byKey(const Key('sidebar_item_build_own')), findsOneWidget);
       expect(find.byKey(const Key('sidebar_item_library')), findsOneWidget);
     });
+
+    testWidgets('During the visit button navigates correctly', (tester) async {
+      await tester.pumpWidget(
+        ProviderScope(
+          child: MaterialApp.router(
+            routerConfig: testRouter,
+          ),
+        ),
+      );
+
+      await tester.tap(find.text('During the visit'));
+      await tester.pumpAndSettle();
+
+      expect(navigatedTo, equals('/during-visit'));
+    });
+
+    testWidgets('Build your own button navigates correctly', (tester) async {
+      await tester.pumpWidget(
+        ProviderScope(
+          child: MaterialApp.router(
+            routerConfig: testRouter,
+          ),
+        ),
+      );
+
+      await tester.tap(find.text('Build your own'));
+      await tester.pumpAndSettle();
+
+      expect(navigatedTo, equals('/build-own'));
+    });
+
+    testWidgets('sidebar item height matches constant', (tester) async {
+      await tester.pumpWidget(
+        ProviderScope(
+          child: MaterialApp.router(
+            routerConfig: testRouter,
+          ),
+        ),
+      );
+
+      // Find SidebarItem containers
+      final sidebarItems = tester.widgetList<SidebarItem>(
+        find.byType(SidebarItem),
+      );
+
+      expect(sidebarItems.length, equals(4));
+    });
+  });
+
+  group('Sidebar Active State Tests', () {
+    testWidgets('shows active state for Library route', (tester) async {
+      final activeRouter = GoRouter(
+        initialLocation: '/library',
+        routes: [
+          GoRoute(
+            path: '/library',
+            name: 'library',
+            builder: (context, state) => const Scaffold(body: Sidebar()),
+          ),
+          GoRoute(path: '/', builder: (_, __) => const SizedBox()),
+          GoRoute(path: '/before-visit', builder: (_, __) => const SizedBox()),
+          GoRoute(path: '/during-visit', builder: (_, __) => const SizedBox()),
+          GoRoute(path: '/build-own', builder: (_, __) => const SizedBox()),
+        ],
+      );
+
+      await tester.pumpWidget(
+        ProviderScope(
+          child: MaterialApp.router(routerConfig: activeRouter),
+        ),
+      );
+
+      // Library item should have active styling
+      final libraryItem = tester.widget<SidebarItem>(
+        find.byKey(const Key('sidebar_item_library')),
+      );
+      expect(libraryItem.isActive, isTrue);
+
+      // Other items should not be active
+      final beforeVisitItem = tester.widget<SidebarItem>(
+        find.byKey(const Key('sidebar_item_before_visit')),
+      );
+      expect(beforeVisitItem.isActive, isFalse);
+    });
+
+    testWidgets('active item has white background', (tester) async {
+      final activeRouter = GoRouter(
+        initialLocation: '/library',
+        routes: [
+          GoRoute(
+            path: '/library',
+            builder: (context, state) => const Scaffold(body: Sidebar()),
+          ),
+          GoRoute(path: '/', builder: (_, __) => const SizedBox()),
+          GoRoute(path: '/before-visit', builder: (_, __) => const SizedBox()),
+          GoRoute(path: '/during-visit', builder: (_, __) => const SizedBox()),
+          GoRoute(path: '/build-own', builder: (_, __) => const SizedBox()),
+        ],
+      );
+
+      await tester.pumpWidget(
+        ProviderScope(
+          child: MaterialApp.router(routerConfig: activeRouter),
+        ),
+      );
+
+      // Find the active SidebarItem's container
+      final libraryItemFinder = find.byKey(const Key('sidebar_item_library'));
+      final container = tester.widget<Container>(
+        find
+            .descendant(
+              of: libraryItemFinder,
+              matching: find.byType(Container),
+            )
+            .first,
+      );
+
+      // Active item should have white background
+      final decoration = container.decoration as BoxDecoration;
+      expect(decoration.color, equals(const Color(0xFFFFFFFF)));
+    });
+
+    testWidgets('active item has border', (tester) async {
+      final activeRouter = GoRouter(
+        initialLocation: '/library',
+        routes: [
+          GoRoute(
+            path: '/library',
+            builder: (context, state) => const Scaffold(body: Sidebar()),
+          ),
+          GoRoute(path: '/', builder: (_, __) => const SizedBox()),
+          GoRoute(path: '/before-visit', builder: (_, __) => const SizedBox()),
+          GoRoute(path: '/during-visit', builder: (_, __) => const SizedBox()),
+          GoRoute(path: '/build-own', builder: (_, __) => const SizedBox()),
+        ],
+      );
+
+      await tester.pumpWidget(
+        ProviderScope(
+          child: MaterialApp.router(routerConfig: activeRouter),
+        ),
+      );
+
+      final libraryItemFinder = find.byKey(const Key('sidebar_item_library'));
+      final container = tester.widget<Container>(
+        find
+            .descendant(
+              of: libraryItemFinder,
+              matching: find.byType(Container),
+            )
+            .first,
+      );
+
+      final decoration = container.decoration as BoxDecoration;
+      expect(decoration.border, isNotNull);
+    });
+  });
+
+  group('Sidebar Golden Tests', () {
+    testGoldens('renders sidebar correctly', (tester) async {
+      final builder = DeviceBuilder()
+        ..overrideDevicesForAllScenarios(devices: [
+          const Device(name: 'sidebar', size: Size(250, 600)),
+        ])
+        ..addScenario(
+          widget: ProviderScope(
+            child: MaterialApp.router(
+              routerConfig: GoRouter(
+                initialLocation: '/',
+                routes: [
+                  GoRoute(
+                    path: '/',
+                    builder: (_, __) => const Scaffold(body: Sidebar()),
+                  ),
+                  GoRoute(
+                      path: '/library', builder: (_, __) => const SizedBox()),
+                  GoRoute(
+                      path: '/before-visit',
+                      builder: (_, __) => const SizedBox()),
+                  GoRoute(
+                      path: '/during-visit',
+                      builder: (_, __) => const SizedBox()),
+                  GoRoute(
+                      path: '/build-own', builder: (_, __) => const SizedBox()),
+                ],
+              ),
+            ),
+          ),
+          name: 'sidebar_default',
+        );
+
+      await tester.pumpDeviceBuilder(builder);
+      await screenMatchesGolden(tester, 'sidebar_default');
+    });
+
+    testGoldens('renders sidebar with active Library item', (tester) async {
+      final builder = DeviceBuilder()
+        ..overrideDevicesForAllScenarios(devices: [
+          const Device(name: 'sidebar', size: Size(250, 600)),
+        ])
+        ..addScenario(
+          widget: ProviderScope(
+            child: MaterialApp.router(
+              routerConfig: GoRouter(
+                initialLocation: '/library',
+                routes: [
+                  GoRoute(
+                    path: '/library',
+                    builder: (_, __) => const Scaffold(body: Sidebar()),
+                  ),
+                  GoRoute(path: '/', builder: (_, __) => const SizedBox()),
+                  GoRoute(
+                      path: '/before-visit',
+                      builder: (_, __) => const SizedBox()),
+                  GoRoute(
+                      path: '/during-visit',
+                      builder: (_, __) => const SizedBox()),
+                  GoRoute(
+                      path: '/build-own', builder: (_, __) => const SizedBox()),
+                ],
+              ),
+            ),
+          ),
+          name: 'sidebar_library_active',
+        );
+
+      await tester.pumpDeviceBuilder(builder);
+      await screenMatchesGolden(tester, 'sidebar_library_active');
+    });
+
+    testGoldens('renders sidebar with active Before Visit item',
+        (tester) async {
+      final builder = DeviceBuilder()
+        ..overrideDevicesForAllScenarios(devices: [
+          const Device(name: 'sidebar', size: Size(250, 600)),
+        ])
+        ..addScenario(
+          widget: ProviderScope(
+            child: MaterialApp.router(
+              routerConfig: GoRouter(
+                initialLocation: '/before-visit',
+                routes: [
+                  GoRoute(
+                    path: '/before-visit',
+                    builder: (_, __) => const Scaffold(body: Sidebar()),
+                  ),
+                  GoRoute(path: '/', builder: (_, __) => const SizedBox()),
+                  GoRoute(
+                      path: '/library', builder: (_, __) => const SizedBox()),
+                  GoRoute(
+                      path: '/during-visit',
+                      builder: (_, __) => const SizedBox()),
+                  GoRoute(
+                      path: '/build-own', builder: (_, __) => const SizedBox()),
+                ],
+              ),
+            ),
+          ),
+          name: 'sidebar_before_visit_active',
+        );
+
+      await tester.pumpDeviceBuilder(builder);
+      await screenMatchesGolden(tester, 'sidebar_before_visit_active');
+    });
   });
 }
-

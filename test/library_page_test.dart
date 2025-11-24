@@ -78,7 +78,8 @@ void main() {
 
       // Verify grid has 5 columns by checking the delegate
       final grid = tester.widget<SliverGrid>(gridFinder);
-      final delegate = grid.gridDelegate as SliverGridDelegateWithFixedCrossAxisCount;
+      final delegate =
+          grid.gridDelegate as SliverGridDelegateWithFixedCrossAxisCount;
       expect(delegate.crossAxisCount, equals(5));
 
       // Reset view
@@ -104,7 +105,8 @@ void main() {
 
       // Verify grid has 3 columns
       final grid = tester.widget<SliverGrid>(gridFinder);
-      final delegate = grid.gridDelegate as SliverGridDelegateWithFixedCrossAxisCount;
+      final delegate =
+          grid.gridDelegate as SliverGridDelegateWithFixedCrossAxisCount;
       expect(delegate.crossAxisCount, equals(3));
 
       // Reset view
@@ -130,7 +132,8 @@ void main() {
 
       // Verify grid has 2 columns
       final grid = tester.widget<SliverGrid>(gridFinder);
-      final delegate = grid.gridDelegate as SliverGridDelegateWithFixedCrossAxisCount;
+      final delegate =
+          grid.gridDelegate as SliverGridDelegateWithFixedCrossAxisCount;
       expect(delegate.crossAxisCount, equals(2));
 
       // Reset view
@@ -252,6 +255,192 @@ void main() {
       );
 
       // Reset view
+      tester.view.resetPhysicalSize();
+      tester.view.resetDevicePixelRatio();
+    });
+
+    testWidgets('shows sidebar on desktop', (tester) async {
+      tester.view.physicalSize = const Size(1400, 900);
+      tester.view.devicePixelRatio = 1.0;
+
+      await tester.pumpWidget(
+        ProviderScope(
+          child: MaterialApp.router(
+            routerConfig: createTestRouter(),
+          ),
+        ),
+      );
+
+      // Sidebar should be visible via AppShell
+      expect(find.text('Library'), findsAtLeast(1)); // In sidebar and header
+
+      tester.view.resetPhysicalSize();
+      tester.view.resetDevicePixelRatio();
+    });
+
+    testWidgets('shows hamburger menu on mobile', (tester) async {
+      tester.view.physicalSize = const Size(400, 800);
+      tester.view.devicePixelRatio = 1.0;
+
+      await tester.pumpWidget(
+        ProviderScope(
+          child: MaterialApp.router(
+            routerConfig: createTestRouter(),
+          ),
+        ),
+      );
+
+      // Hamburger menu should be visible
+      expect(find.byIcon(Icons.menu), findsOneWidget);
+
+      tester.view.resetPhysicalSize();
+      tester.view.resetDevicePixelRatio();
+    });
+
+    testWidgets('grid has correct spacing on desktop', (tester) async {
+      tester.view.physicalSize = const Size(1400, 900);
+      tester.view.devicePixelRatio = 1.0;
+
+      await tester.pumpWidget(
+        ProviderScope(
+          child: MaterialApp.router(
+            routerConfig: createTestRouter(),
+          ),
+        ),
+      );
+
+      final grid = tester.widget<SliverGrid>(find.byType(SliverGrid));
+      final delegate =
+          grid.gridDelegate as SliverGridDelegateWithFixedCrossAxisCount;
+
+      expect(delegate.mainAxisSpacing, equals(24.0)); // Desktop spacing
+      expect(delegate.crossAxisSpacing, equals(24.0));
+
+      tester.view.resetPhysicalSize();
+      tester.view.resetDevicePixelRatio();
+    });
+
+    testWidgets('grid has correct spacing on mobile', (tester) async {
+      tester.view.physicalSize = const Size(400, 800);
+      tester.view.devicePixelRatio = 1.0;
+
+      await tester.pumpWidget(
+        ProviderScope(
+          child: MaterialApp.router(
+            routerConfig: createTestRouter(),
+          ),
+        ),
+      );
+
+      final grid = tester.widget<SliverGrid>(find.byType(SliverGrid));
+      final delegate =
+          grid.gridDelegate as SliverGridDelegateWithFixedCrossAxisCount;
+
+      expect(delegate.mainAxisSpacing, equals(16.0)); // Mobile spacing
+      expect(delegate.crossAxisSpacing, equals(16.0));
+
+      tester.view.resetPhysicalSize();
+      tester.view.resetDevicePixelRatio();
+    });
+
+    testWidgets('renders all 10 sample items', (tester) async {
+      tester.view.physicalSize =
+          const Size(1400, 1200); // Tall to show all items
+      tester.view.devicePixelRatio = 1.0;
+
+      await tester.pumpWidget(
+        ProviderScope(
+          child: MaterialApp.router(
+            routerConfig: createTestRouter(),
+          ),
+        ),
+      );
+
+      // Scroll to load all items
+      await tester.drag(find.byType(CustomScrollView), const Offset(0, -500));
+      await tester.pumpAndSettle();
+
+      // Should have 10 LibraryCard widgets
+      expect(find.byType(LibraryCard), findsNWidgets(10));
+
+      tester.view.resetPhysicalSize();
+      tester.view.resetDevicePixelRatio();
+    });
+  });
+
+  group('LibraryPage Golden Tests', () {
+    testGoldens('desktop layout renders correctly', (tester) async {
+      final builder = DeviceBuilder()
+        ..overrideDevicesForAllScenarios(devices: [
+          const Device(name: 'desktop', size: Size(1400, 900)),
+        ])
+        ..addScenario(
+          widget: ProviderScope(
+            child: MaterialApp.router(
+              routerConfig: createTestRouter(),
+            ),
+          ),
+          name: 'library_page_desktop',
+        );
+
+      await tester.pumpDeviceBuilder(builder);
+      await screenMatchesGolden(tester, 'library_page_desktop');
+    });
+
+    testGoldens('tablet layout renders correctly', (tester) async {
+      final builder = DeviceBuilder()
+        ..overrideDevicesForAllScenarios(devices: [
+          const Device(name: 'tablet', size: Size(900, 700)),
+        ])
+        ..addScenario(
+          widget: ProviderScope(
+            child: MaterialApp.router(
+              routerConfig: createTestRouter(),
+            ),
+          ),
+          name: 'library_page_tablet',
+        );
+
+      await tester.pumpDeviceBuilder(builder);
+      await screenMatchesGolden(tester, 'library_page_tablet');
+    });
+
+    testGoldens('mobile layout renders correctly', (tester) async {
+      final builder = DeviceBuilder()
+        ..overrideDevicesForAllScenarios(devices: [
+          const Device(name: 'mobile', size: Size(400, 800)),
+        ])
+        ..addScenario(
+          widget: ProviderScope(
+            child: MaterialApp.router(
+              routerConfig: createTestRouter(),
+            ),
+          ),
+          name: 'library_page_mobile',
+        );
+
+      await tester.pumpDeviceBuilder(builder);
+      await screenMatchesGolden(tester, 'library_page_mobile');
+    });
+
+    testGoldens('collapsed header after scroll', (tester) async {
+      tester.view.physicalSize = const Size(1400, 900);
+      tester.view.devicePixelRatio = 1.0;
+
+      await tester.pumpWidget(
+        ProviderScope(
+          child: MaterialApp.router(
+            routerConfig: createTestRouter(),
+          ),
+        ),
+      );
+
+      // Scroll to collapse header
+      await tester.drag(find.byType(CustomScrollView), const Offset(0, -200));
+      await tester.pumpAndSettle();
+
+      await screenMatchesGolden(tester, 'library_page_collapsed_header');
+
       tester.view.resetPhysicalSize();
       tester.view.resetDevicePixelRatio();
     });

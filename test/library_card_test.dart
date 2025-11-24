@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:golden_toolkit/golden_toolkit.dart';
+import 'package:verbadent/src/constants/app_constants.dart';
 import 'package:verbadent/src/features/library/domain/library_item.dart';
 import 'package:verbadent/src/features/library/presentation/widgets/library_card.dart';
 import 'package:verbadent/src/theme/app_colors.dart';
@@ -11,13 +12,25 @@ void main() {
     await loadAppFonts();
   });
 
-  group('LibraryCard Widget Tests', () {
-    const testItem = LibraryItem(
-      id: 'test-1',
-      imagePath: 'assets/images/library/test_image.png',
-      caption: "This is the dentist's chair",
-    );
+  const testItem = LibraryItem(
+    id: 'test-1',
+    imagePath: 'assets/images/library/dentist_chair.png',
+    caption: "This is the dentist's chair",
+  );
 
+  const shortCaptionItem = LibraryItem(
+    id: 'test-2',
+    imagePath: 'assets/images/library/dental_mirror.png',
+    caption: 'Mirror',
+  );
+
+  const longCaptionItem = LibraryItem(
+    id: 'test-3',
+    imagePath: 'assets/images/library/bright_light.png',
+    caption: 'The bright light helps the dentist see inside your mouth clearly',
+  );
+
+  group('LibraryCard Widget Tests', () {
     testWidgets('renders with blue container border', (tester) async {
       await tester.pumpWidget(
         MaterialApp(
@@ -37,10 +50,12 @@ void main() {
 
       // Find the container with blue border color
       final container = tester.widget<Container>(
-        find.descendant(
-          of: find.byType(LibraryCard),
-          matching: find.byType(Container),
-        ).first,
+        find
+            .descendant(
+              of: find.byType(LibraryCard),
+              matching: find.byType(Container),
+            )
+            .first,
       );
 
       // Verify the container decoration has the correct border color
@@ -72,10 +87,12 @@ void main() {
 
       // Find ClipRRect for rounded corners
       final clipRRect = tester.widget<ClipRRect>(
-        find.descendant(
-          of: find.byType(LibraryCard),
-          matching: find.byType(ClipRRect),
-        ).first,
+        find
+            .descendant(
+              of: find.byType(LibraryCard),
+              matching: find.byType(ClipRRect),
+            )
+            .first,
       );
 
       // Verify border radius is present (inner radius accounts for border width)
@@ -192,6 +209,284 @@ void main() {
         ),
         findsOneWidget,
       );
+    });
+
+    testWidgets('uses correct border radius from constants', (tester) async {
+      await tester.pumpWidget(
+        MaterialApp(
+          home: Scaffold(
+            body: Center(
+              child: SizedBox(
+                width: 200,
+                height: 280,
+                child: LibraryCard(item: testItem),
+              ),
+            ),
+          ),
+        ),
+      );
+
+      final container = tester.widget<Container>(
+        find
+            .descendant(
+              of: find.byType(LibraryCard),
+              matching: find.byType(Container),
+            )
+            .first,
+      );
+
+      final decoration = container.decoration as BoxDecoration;
+      expect(
+        decoration.borderRadius,
+        equals(BorderRadius.circular(AppConstants.cardBorderRadius)),
+      );
+    });
+
+    testWidgets('uses correct border width from constants', (tester) async {
+      await tester.pumpWidget(
+        MaterialApp(
+          home: Scaffold(
+            body: Center(
+              child: SizedBox(
+                width: 200,
+                height: 280,
+                child: LibraryCard(item: testItem),
+              ),
+            ),
+          ),
+        ),
+      );
+
+      final container = tester.widget<Container>(
+        find
+            .descendant(
+              of: find.byType(LibraryCard),
+              matching: find.byType(Container),
+            )
+            .first,
+      );
+
+      final decoration = container.decoration as BoxDecoration;
+      expect(
+        decoration.border?.top.width,
+        equals(AppConstants.cardBorderWidth),
+      );
+    });
+
+    testWidgets('image container is square (1:1 aspect ratio)', (tester) async {
+      await tester.pumpWidget(
+        MaterialApp(
+          home: Scaffold(
+            body: Center(
+              child: SizedBox(
+                width: 200,
+                height: 280,
+                child: LibraryCard(item: testItem),
+              ),
+            ),
+          ),
+        ),
+      );
+
+      final aspectRatio = tester.widget<AspectRatio>(
+        find
+            .descendant(
+              of: find.byType(LibraryCard),
+              matching: find.byType(AspectRatio),
+            )
+            .first,
+      );
+
+      expect(aspectRatio.aspectRatio, equals(1.0));
+    });
+
+    testWidgets('shows placeholder icon when image fails to load',
+        (tester) async {
+      const brokenItem = LibraryItem(
+        id: 'broken',
+        imagePath: 'assets/images/library/nonexistent.png',
+        caption: 'Broken image',
+      );
+
+      await tester.pumpWidget(
+        MaterialApp(
+          home: Scaffold(
+            body: Center(
+              child: SizedBox(
+                width: 200,
+                height: 280,
+                child: LibraryCard(item: brokenItem),
+              ),
+            ),
+          ),
+        ),
+      );
+
+      // Trigger image error
+      await tester.pump();
+
+      // Placeholder icon should be shown
+      expect(find.byIcon(Icons.medical_services_outlined), findsOneWidget);
+    });
+
+    testWidgets('caption truncates with ellipsis for very long text',
+        (tester) async {
+      await tester.pumpWidget(
+        MaterialApp(
+          home: Scaffold(
+            body: Center(
+              child: SizedBox(
+                width: 120, // Small width to force truncation
+                height: 200,
+                child: LibraryCard(item: longCaptionItem),
+              ),
+            ),
+          ),
+        ),
+      );
+
+      final text = tester.widget<Text>(find.text(longCaptionItem.caption));
+      expect(text.maxLines, equals(3));
+      expect(text.overflow, equals(TextOverflow.ellipsis));
+    });
+
+    testWidgets('renders without error for short caption', (tester) async {
+      await tester.pumpWidget(
+        MaterialApp(
+          home: Scaffold(
+            body: Center(
+              child: SizedBox(
+                width: 200,
+                height: 280,
+                child: LibraryCard(item: shortCaptionItem),
+              ),
+            ),
+          ),
+        ),
+      );
+
+      expect(find.text(shortCaptionItem.caption), findsOneWidget);
+    });
+
+    testWidgets('does not trigger callback when onTap is null', (tester) async {
+      await tester.pumpWidget(
+        MaterialApp(
+          home: Scaffold(
+            body: Center(
+              child: SizedBox(
+                width: 200,
+                height: 280,
+                child: LibraryCard(
+                  item: testItem,
+                  onTap: null,
+                ),
+              ),
+            ),
+          ),
+        ),
+      );
+
+      // Should not throw when tapped with null callback
+      await tester.tap(find.byType(LibraryCard));
+      await tester.pump();
+    });
+  });
+
+  group('LibraryCard Golden Tests', () {
+    testGoldens('renders standard card correctly', (tester) async {
+      final builder = DeviceBuilder()
+        ..overrideDevicesForAllScenarios(devices: [
+          const Device(name: 'card', size: Size(200, 280)),
+        ])
+        ..addScenario(
+          widget: MaterialApp(
+            home: Scaffold(
+              body: Center(
+                child: SizedBox(
+                  width: 200,
+                  height: 280,
+                  child: LibraryCard(item: testItem),
+                ),
+              ),
+            ),
+          ),
+          name: 'library_card_standard',
+        );
+
+      await tester.pumpDeviceBuilder(builder);
+      await screenMatchesGolden(tester, 'library_card_standard');
+    });
+
+    testGoldens('renders card with short caption', (tester) async {
+      final builder = DeviceBuilder()
+        ..overrideDevicesForAllScenarios(devices: [
+          const Device(name: 'card', size: Size(200, 280)),
+        ])
+        ..addScenario(
+          widget: MaterialApp(
+            home: Scaffold(
+              body: Center(
+                child: SizedBox(
+                  width: 200,
+                  height: 280,
+                  child: LibraryCard(item: shortCaptionItem),
+                ),
+              ),
+            ),
+          ),
+          name: 'library_card_short_caption',
+        );
+
+      await tester.pumpDeviceBuilder(builder);
+      await screenMatchesGolden(tester, 'library_card_short_caption');
+    });
+
+    testGoldens('renders card with long caption', (tester) async {
+      final builder = DeviceBuilder()
+        ..overrideDevicesForAllScenarios(devices: [
+          const Device(name: 'card', size: Size(200, 280)),
+        ])
+        ..addScenario(
+          widget: MaterialApp(
+            home: Scaffold(
+              body: Center(
+                child: SizedBox(
+                  width: 200,
+                  height: 280,
+                  child: LibraryCard(item: longCaptionItem),
+                ),
+              ),
+            ),
+          ),
+          name: 'library_card_long_caption',
+        );
+
+      await tester.pumpDeviceBuilder(builder);
+      await screenMatchesGolden(tester, 'library_card_long_caption');
+    });
+
+    testGoldens('renders small card correctly', (tester) async {
+      final builder = DeviceBuilder()
+        ..overrideDevicesForAllScenarios(devices: [
+          const Device(name: 'small_card', size: Size(120, 180)),
+        ])
+        ..addScenario(
+          widget: MaterialApp(
+            home: Scaffold(
+              body: Center(
+                child: SizedBox(
+                  width: 120,
+                  height: 180,
+                  child: LibraryCard(item: testItem),
+                ),
+              ),
+            ),
+          ),
+          name: 'library_card_small',
+        );
+
+      await tester.pumpDeviceBuilder(builder);
+      await screenMatchesGolden(tester, 'library_card_small');
     });
   });
 }
