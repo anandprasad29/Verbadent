@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'src/localization/app_localizations.dart';
 import 'src/routing/app_router.dart';
 import 'src/theme/app_theme.dart';
 
@@ -15,6 +16,8 @@ class VerbadentApp extends ConsumerWidget {
       onGenerateTitle: (context) => 'Verbadent CareQuest',
       theme: AppTheme.staticLightTheme,
       debugShowCheckedModeBanner: false,
+      localizationsDelegates: AppLocalizations.localizationsDelegates,
+      supportedLocales: AppLocalizations.supportedLocales,
     );
   }
 }

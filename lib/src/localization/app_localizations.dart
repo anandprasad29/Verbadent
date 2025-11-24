@@ -6,6 +6,7 @@ import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:intl/intl.dart' as intl;
 
 import 'app_localizations_en.dart';
+import 'app_localizations_es.dart';
 
 // ignore_for_file: type=lint
 
@@ -92,13 +93,82 @@ abstract class AppLocalizations {
   ];
 
   /// A list of this localizations delegate's supported locales.
-  static const List<Locale> supportedLocales = <Locale>[Locale('en')];
+  static const List<Locale> supportedLocales = <Locale>[
+    Locale('en'),
+    Locale('es')
+  ];
 
   /// The title of the application
   ///
   /// In en, this message translates to:
   /// **'Verbadent CareQuest'**
   String get appTitle;
+
+  /// Navigation label for library section
+  ///
+  /// In en, this message translates to:
+  /// **'Library'**
+  String get navLibrary;
+
+  /// Navigation label for before visit section
+  ///
+  /// In en, this message translates to:
+  /// **'Before Visit'**
+  String get navBeforeVisit;
+
+  /// Navigation label for during visit section
+  ///
+  /// In en, this message translates to:
+  /// **'During Visit'**
+  String get navDuringVisit;
+
+  /// Navigation label for build your own section
+  ///
+  /// In en, this message translates to:
+  /// **'Build Your Own'**
+  String get navBuildOwn;
+
+  /// Page header for library page
+  ///
+  /// In en, this message translates to:
+  /// **'Library'**
+  String get pageHeaderLibrary;
+
+  /// Page header for before visit page
+  ///
+  /// In en, this message translates to:
+  /// **'Before Visit'**
+  String get pageHeaderBeforeVisit;
+
+  /// Page header for during visit page
+  ///
+  /// In en, this message translates to:
+  /// **'During Visit'**
+  String get pageHeaderDuringVisit;
+
+  /// Page header for build your own page
+  ///
+  /// In en, this message translates to:
+  /// **'Build Your Own'**
+  String get pageHeaderBuildOwn;
+
+  /// Label for language selector dropdown
+  ///
+  /// In en, this message translates to:
+  /// **'Language'**
+  String get languageSelectorLabel;
+
+  /// English language option
+  ///
+  /// In en, this message translates to:
+  /// **'English'**
+  String get languageEnglish;
+
+  /// Spanish language option
+  ///
+  /// In en, this message translates to:
+  /// **'Spanish'**
+  String get languageSpanish;
 }
 
 class _AppLocalizationsDelegate
@@ -112,7 +182,7 @@ class _AppLocalizationsDelegate
 
   @override
   bool isSupported(Locale locale) =>
-      <String>['en'].contains(locale.languageCode);
+      <String>['en', 'es'].contains(locale.languageCode);
 
   @override
   bool shouldReload(_AppLocalizationsDelegate old) => false;
@@ -123,6 +193,8 @@ AppLocalizations lookupAppLocalizations(Locale locale) {
   switch (locale.languageCode) {
     case 'en':
       return AppLocalizationsEn();
+    case 'es':
+      return AppLocalizationsEs();
   }
 
   throw FlutterError(

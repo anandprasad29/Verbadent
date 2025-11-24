@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../../../constants/app_constants.dart';
+import '../../../localization/content_language_provider.dart';
+import '../../../localization/content_translations.dart';
 import '../../../theme/app_colors.dart';
 import '../../../theme/app_text_styles.dart';
 import '../../../utils/responsive.dart';
@@ -50,13 +52,24 @@ class LibraryPage extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final ttsService = ref.watch(ttsServiceProvider);
-    
+    final contentLanguage = ref.watch(contentLanguageNotifierProvider);
+
+    // Update TTS language when content language changes
+    ref.listen<ContentLanguage>(contentLanguageNotifierProvider,
+        (previous, next) {
+      ttsService.setLanguage(next);
+    });
+
     return AppShell(
-      child: _buildLibraryContent(context, ttsService),
+      child: _buildLibraryContent(context, ttsService, contentLanguage),
     );
   }
 
-  Widget _buildLibraryContent(BuildContext context, TtsService ttsService) {
+  Widget _buildLibraryContent(
+    BuildContext context,
+    TtsService ttsService,
+    ContentLanguage contentLanguage,
+  ) {
     final columnCount = _getColumnCount(context);
     final spacing = _getGridSpacing(context);
     final padding = _getContentPadding(context);
@@ -95,9 +108,14 @@ class LibraryPage extends ConsumerWidget {
               delegate: SliverChildBuilderDelegate(
                 (context, index) {
                   final item = LibraryData.sampleItems[index];
+                  final translatedCaption = ContentTranslations.getCaption(
+                    item.id,
+                    contentLanguage,
+                  );
                   return LibraryCard(
                     item: item,
-                    onTap: () => ttsService.speak(item.caption),
+                    caption: translatedCaption,
+                    onTap: () => ttsService.speak(translatedCaption),
                   );
                 },
                 childCount: LibraryData.sampleItems.length,

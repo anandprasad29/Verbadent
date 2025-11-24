@@ -1,6 +1,7 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_tts/flutter_tts.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
+import '../../../localization/content_language_provider.dart';
 
 part 'tts_service.g.dart';
 
@@ -9,17 +10,24 @@ part 'tts_service.g.dart';
 class TtsService {
   final FlutterTts _flutterTts = FlutterTts();
   bool _isInitialized = false;
+  String _currentLanguage = 'en-US';
 
   /// Initialize the TTS engine with default settings.
   Future<void> init() async {
     if (_isInitialized) return;
 
-    await _flutterTts.setLanguage('en-US');
+    await _flutterTts.setLanguage(_currentLanguage);
     await _flutterTts.setSpeechRate(0.5);
     await _flutterTts.setVolume(1.0);
     await _flutterTts.setPitch(1.0);
 
     _isInitialized = true;
+  }
+
+  /// Set the TTS language based on ContentLanguage.
+  Future<void> setLanguage(ContentLanguage language) async {
+    _currentLanguage = language.ttsCode;
+    await _flutterTts.setLanguage(_currentLanguage);
   }
 
   /// Speak the given text.

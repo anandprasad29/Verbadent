@@ -8,18 +8,27 @@ import '../../domain/library_item.dart';
 /// Tapping the card triggers the onTap callback for TTS playback.
 class LibraryCard extends StatelessWidget {
   final LibraryItem item;
+  
+  /// Optional caption override for localization.
+  /// If not provided, falls back to item.caption.
+  final String? caption;
+  
   final VoidCallback? onTap;
 
   const LibraryCard({
     super.key,
     required this.item,
+    this.caption,
     this.onTap,
   });
+
+  /// Returns the caption to display, using override if available.
+  String get displayCaption => caption ?? item.caption;
 
   @override
   Widget build(BuildContext context) {
     return Semantics(
-      label: item.caption,
+      label: displayCaption,
       button: true,
       child: GestureDetector(
         onTap: onTap,
@@ -65,7 +74,7 @@ class LibraryCard extends StatelessWidget {
             // Caption text below the image
             Flexible(
               child: Text(
-                item.caption,
+                displayCaption,
                 style: AppTextStyles.caption,
                 textAlign: TextAlign.center,
                 maxLines: 3,

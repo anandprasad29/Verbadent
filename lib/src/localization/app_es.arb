@@ -1,0 +1,16 @@
+{
+  "@@locale": "es",
+  "appTitle": "Verbadent CareQuest",
+  "navLibrary": "Biblioteca",
+  "navBeforeVisit": "Antes de la Visita",
+  "navDuringVisit": "Durante la Visita",
+  "navBuildOwn": "Crea el Tuyo",
+  "pageHeaderLibrary": "Biblioteca",
+  "pageHeaderBeforeVisit": "Antes de la Visita",
+  "pageHeaderDuringVisit": "Durante la Visita",
+  "pageHeaderBuildOwn": "Crea el Tuyo",
+  "languageSelectorLabel": "Idioma",
+  "languageEnglish": "Inglés",
+  "languageSpanish": "Español"
+}
+

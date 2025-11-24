@@ -1,6 +1,51 @@
 {
+  "@@locale": "en",
   "appTitle": "Verbadent CareQuest",
   "@appTitle": {
     "description": "The title of the application"
+  },
+  "navLibrary": "Library",
+  "@navLibrary": {
+    "description": "Navigation label for library section"
+  },
+  "navBeforeVisit": "Before Visit",
+  "@navBeforeVisit": {
+    "description": "Navigation label for before visit section"
+  },
+  "navDuringVisit": "During Visit",
+  "@navDuringVisit": {
+    "description": "Navigation label for during visit section"
+  },
+  "navBuildOwn": "Build Your Own",
+  "@navBuildOwn": {
+    "description": "Navigation label for build your own section"
+  },
+  "pageHeaderLibrary": "Library",
+  "@pageHeaderLibrary": {
+    "description": "Page header for library page"
+  },
+  "pageHeaderBeforeVisit": "Before Visit",
+  "@pageHeaderBeforeVisit": {
+    "description": "Page header for before visit page"
+  },
+  "pageHeaderDuringVisit": "During Visit",
+  "@pageHeaderDuringVisit": {
+    "description": "Page header for during visit page"
+  },
+  "pageHeaderBuildOwn": "Build Your Own",
+  "@pageHeaderBuildOwn": {
+    "description": "Page header for build your own page"
+  },
+  "languageSelectorLabel": "Language",
+  "@languageSelectorLabel": {
+    "description": "Label for language selector dropdown"
+  },
+  "languageEnglish": "English",
+  "@languageEnglish": {
+    "description": "English language option"
+  },
+  "languageSpanish": "Spanish",
+  "@languageSpanish": {
+    "description": "Spanish language option"
   }
 }
