@@ -60,6 +60,12 @@ We follow a **Feature-First** architecture. Code is organized by business domain
 - Add new strings to `lib/src/localization/app_en.arb`.
 - Access strings via `AppLocalizations.of(context)`.
 
+### 6. Testing Strategy
+- **Widget Tests**: Run `flutter test` to verify UI components, responsiveness, and accessibility.
+- **Golden Tests**: Run `flutter test --update-goldens` to generate/update reference images.
+- **Integration Tests**: Run `flutter test integration_test/app_test.dart` on a real device/emulator.
+- **Regression Policy**: **ALWAYS** run `flutter test` after completing a task to ensure no regressions were introduced.
+
 ## Development Workflow
 
 ### Code Generation

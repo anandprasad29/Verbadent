@@ -11,6 +11,7 @@ class DashboardScreen extends StatelessWidget {
           // Desktop/Wide Layout
           return Scaffold(
             body: Row(
+              key: const Key('dashboard_desktop_layout'),
               children: [
                 const SizedBox(
                   width: 250,
@@ -43,6 +44,7 @@ class DashboardScreen extends StatelessWidget {
               iconTheme: const IconThemeData(color: Colors.white),
             ),
             drawer: const Drawer(
+              key: Key('dashboard_mobile_drawer'),
               width: 250,
               child: Sidebar(),
             ),
@@ -78,13 +80,25 @@ class Sidebar extends StatelessWidget {
         crossAxisAlignment: CrossAxisAlignment.stretch,
         children: [
           const SizedBox(height: 100), // Spacing from top
-          SidebarItem(label: 'Before the visit', onTap: () {}),
+          SidebarItem(
+              key: const Key('sidebar_item_before_visit'),
+              label: 'Before the visit',
+              onTap: () {}),
           const SizedBox(height: 20),
-          SidebarItem(label: 'During the visit', onTap: () {}),
+          SidebarItem(
+              key: const Key('sidebar_item_during_visit'),
+              label: 'During the visit',
+              onTap: () {}),
           const SizedBox(height: 20),
-          SidebarItem(label: 'Build your own', onTap: () {}),
+          SidebarItem(
+              key: const Key('sidebar_item_build_own'),
+              label: 'Build your own',
+              onTap: () {}),
           const SizedBox(height: 20),
-          SidebarItem(label: 'Library', onTap: () {}),
+          SidebarItem(
+              key: const Key('sidebar_item_library'),
+              label: 'Library',
+              onTap: () {}),
           const Spacer(), // Push content up
         ],
       ),
