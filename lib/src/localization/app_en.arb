@@ -24,7 +24,7 @@
   "@pageHeaderLibrary": {
     "description": "Page header for library page"
   },
-  "pageHeaderBeforeVisit": "Before Visit",
+  "pageHeaderBeforeVisit": "Before the visit",
   "@pageHeaderBeforeVisit": {
     "description": "Page header for before visit page"
   },

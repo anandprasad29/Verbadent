@@ -137,7 +137,7 @@ abstract class AppLocalizations {
   /// Page header for before visit page
   ///
   /// In en, this message translates to:
-  /// **'Before Visit'**
+  /// **'Before the visit'**
   String get pageHeaderBeforeVisit;
 
   /// Page header for during visit page

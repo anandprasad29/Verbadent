@@ -27,7 +27,7 @@ class AppLocalizationsEn extends AppLocalizations {
   String get pageHeaderLibrary => 'Library';
 
   @override
-  String get pageHeaderBeforeVisit => 'Before Visit';
+  String get pageHeaderBeforeVisit => 'Before the visit';
 
   @override
   String get pageHeaderDuringVisit => 'During Visit';
