@@ -10,18 +10,19 @@ class DashboardPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final isWideScreen = 
+    final isWideScreen =
         MediaQuery.of(context).size.width >= AppConstants.sidebarBreakpoint;
 
     return AppShell(
+      showLanguageSelector: false,
       child: Container(
         key: const Key('dashboard_content'),
         color: AppColors.background,
         child: Center(
           child: Text(
             'VERBADENT',
-            style: isWideScreen 
-                ? AppTextStyles.titleLarge 
+            style: isWideScreen
+                ? AppTextStyles.titleLarge
                 : AppTextStyles.titleMobile,
           ),
         ),

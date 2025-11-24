@@ -27,17 +27,20 @@ GoRouter goRouter(Ref ref) {
       GoRoute(
         path: Routes.beforeVisit,
         name: 'beforeVisit',
-        builder: (context, state) => const DashboardPage(), // TODO: Create BeforeVisitPage
+        builder: (context, state) =>
+            const DashboardPage(), // TODO: Create BeforeVisitPage
       ),
       GoRoute(
         path: Routes.duringVisit,
         name: 'duringVisit',
-        builder: (context, state) => const DashboardPage(), // TODO: Create DuringVisitPage
+        builder: (context, state) =>
+            const DashboardPage(), // TODO: Create DuringVisitPage
       ),
       GoRoute(
         path: Routes.buildOwn,
         name: 'buildOwn',
-        builder: (context, state) => const DashboardPage(), // TODO: Create BuildOwnPage
+        builder: (context, state) =>
+            const DashboardPage(), // TODO: Create BuildOwnPage
       ),
     ],
   );

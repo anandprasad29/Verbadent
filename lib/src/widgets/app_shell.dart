@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import '../constants/app_constants.dart';
 import '../theme/app_colors.dart';
+import 'language_selector.dart';
 import 'sidebar.dart';
 
 /// Shared application shell that provides consistent layout across pages.
@@ -8,23 +9,29 @@ import 'sidebar.dart';
 class AppShell extends StatelessWidget {
   /// The main content of the page
   final Widget child;
-  
+
   /// Optional app bar title for mobile layout
   final String? title;
-  
+
   /// Whether to show the hamburger menu on mobile (defaults to true)
   final bool showDrawer;
+
+  /// Whether to show the language selector (defaults to true)
+  /// Set to false for dashboard page
+  final bool showLanguageSelector;
 
   const AppShell({
     super.key,
     required this.child,
     this.title,
     this.showDrawer = true,
+    this.showLanguageSelector = true,
   });
 
   @override
   Widget build(BuildContext context) {
-    final isWideScreen = MediaQuery.of(context).size.width >= AppConstants.sidebarBreakpoint;
+    final isWideScreen =
+        MediaQuery.of(context).size.width >= AppConstants.sidebarBreakpoint;
 
     if (isWideScreen) {
       return _buildDesktopLayout(context);
@@ -43,9 +50,19 @@ class AppShell extends StatelessWidget {
             child: Sidebar(),
           ),
           Expanded(
-            child: Container(
-              color: AppColors.background,
-              child: child,
+            child: Stack(
+              children: [
+                Container(
+                  color: AppColors.background,
+                  child: child,
+                ),
+                if (showLanguageSelector)
+                  const Positioned(
+                    top: 16,
+                    right: 16,
+                    child: LanguageSelector(),
+                  ),
+              ],
             ),
           ),
         ],
@@ -76,6 +93,14 @@ class AppShell extends StatelessWidget {
                 ),
               )
             : null,
+        actions: showLanguageSelector
+            ? const [
+                Padding(
+                  padding: EdgeInsets.only(right: 8),
+                  child: LanguageSelector(),
+                ),
+              ]
+            : null,
       ),
       drawer: showDrawer
           ? const Drawer(
@@ -90,4 +115,3 @@ class AppShell extends StatelessWidget {
     );
   }
 }
-
