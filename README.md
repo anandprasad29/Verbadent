@@ -25,11 +25,19 @@ Flutter application for Verbadent CareQuest with support for iPad, Android table
 - Main landing page with VERBADENT branding
 - Responsive sidebar navigation (desktop) or drawer menu (mobile)
 
+### Before the Visit
+- **Story Sequence**: Horizontal flow of dental visit steps connected by arrows
+- **Tools Grid**: Responsive grid of dental tools and actions
+- Text-to-speech: tap any item to hear its caption
+- Content localization (English/Spanish)
+- Tap feedback animations
+
 ### Library
 - Scrollable grid of dental-related images with captions
 - Text-to-speech: tap any image to hear its caption
 - Collapsing header that minimizes on scroll
 - Responsive grid layout (5/3/2 columns based on screen size)
+- Content localization (English/Spanish)
 
 ## Design Tokens
 
@@ -92,11 +100,20 @@ The app includes responsive utilities for adapting to different screen sizes:
 lib/
 ├── main.dart                    # App entry point
 ├── app.dart                     # MaterialApp.router configuration
-├── dashboard_screen.dart        # Legacy (to be removed)
 └── src/
+    ├── common/                  # Shared components
+    │   ├── domain/
+    │   │   └── dental_item.dart # Shared data model
+    │   └── widgets/
+    │       ├── image_card.dart      # Generic image+caption card
+    │       ├── story_sequence.dart  # Horizontal story with arrows
+    │       └── tappable_card.dart   # Tap feedback wrapper
     ├── constants/
     │   └── app_constants.dart   # Dimensions, breakpoints, grid settings
     ├── features/
+    │   ├── before_visit/
+    │   │   ├── data/            # Content data
+    │   │   └── presentation/    # UI (before_visit_page.dart)
     │   ├── dashboard/
     │   │   └── presentation/
     │   │       └── dashboard_page.dart
@@ -105,6 +122,11 @@ lib/
     │       ├── domain/          # Data models
     │       ├── presentation/    # UI widgets
     │       └── services/        # TTS service
+    ├── localization/
+    │   ├── app_en.arb           # English UI strings
+    │   ├── app_es.arb           # Spanish UI strings
+    │   ├── content_language_provider.dart  # Language state
+    │   └── content_translations.dart       # Caption translations
     ├── routing/
     │   ├── app_router.dart      # GoRouter configuration
     │   └── routes.dart          # Route path constants
@@ -120,6 +142,7 @@ lib/
 
 assets/
 └── images/
+    ├── before_visit/            # Before Visit content images
     └── library/                 # Library content images
 
 fonts/
@@ -127,16 +150,18 @@ fonts/
 └── InstrumentSans-Bold.ttf
 
 test/
+├── before_visit_page_test.dart  # Before Visit page tests
 ├── library_card_test.dart       # LibraryCard widget tests
 ├── library_page_test.dart       # LibraryPage widget tests
 ├── sidebar_test.dart            # Sidebar navigation tests
-└── dashboard_screen_test.dart   # Dashboard tests
+├── story_sequence_test.dart     # StorySequence widget tests
+└── ...                          # Additional test files
 ```
 
 ## Testing
 
 ```bash
-# Run all tests
+# Run all tests (209 tests)
 flutter test
 
 # Run with coverage
@@ -146,12 +171,31 @@ flutter test --coverage
 flutter test --update-goldens
 ```
 
+## Localization
+
+The app supports content in multiple languages:
+
+| Language | Code | TTS Code |
+|----------|------|----------|
+| English  | en   | en-US    |
+| Spanish  | es   | es-ES    |
+
+Content captions can be localized independently of the UI language. The TTS engine automatically syncs with the selected content language.
+
 ## Architecture
 
 The app follows a **Feature-First** architecture with:
 - **Riverpod** for state management (code generation)
 - **GoRouter** for navigation
 - **AppShell** for consistent layout across pages
+- **Shared components** in `common/` for cross-feature reuse
 - Centralized constants, colors, and text styles
+- Content localization with TTS integration
+
+### Key Patterns
+- `TappableCard` - Wrap interactive elements for tap feedback
+- `StorySequence` - Display sequential content with arrows
+- `DentalItem` - Unified model for dental content
+- `Responsive.getGridColumnCount()` - Responsive grid helpers
 
 See [Agents.md](./Agents.md) for detailed architecture documentation.

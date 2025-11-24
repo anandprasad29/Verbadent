@@ -5,12 +5,15 @@ Verbadent CareQuest is a Flutter application for dental/healthcare management, t
 
 ## Current Status
 - **Phase**: Feature Development
-- **Focus**: Building the Library feature and establishing reusable architecture patterns.
+- **Focus**: Building dental visit journey features with reusable component architecture.
 - **Completed Features**: 
   - Dashboard page with responsive sidebar navigation
   - Library page with image grid and text-to-speech
+  - **Before Visit page** with story sequence and tools grid
   - Shared AppShell layout component
   - Data-driven sidebar with active route highlighting
+  - Content localization (English/Spanish) with TTS language sync
+  - Tap feedback animations on interactive cards
 
 ## Tech Stack
 - **Framework**: Flutter (SDK > 3.5.2)
@@ -21,15 +24,27 @@ Verbadent CareQuest is a Flutter application for dental/healthcare management, t
 - **Design**: Custom design system using "Kumar One" and "Instrument Sans" fonts.
 
 ## Architecture & Folder Structure
-We follow a **Feature-First** architecture. Code is organized by business domain rather than technical layer.
+We follow a **Feature-First** architecture. Code is organized by business domain rather than technical layer. Shared components are extracted to `common/` for cross-feature reuse.
 
 ### Directory Structure (`lib/src/`)
 
 ```
 lib/src/
+├── common/                         # Shared components across features
+│   ├── domain/
+│   │   └── dental_item.dart        # Shared data model for dental content
+│   └── widgets/
+│       ├── image_card.dart         # Generic image+caption card
+│       ├── story_sequence.dart     # Horizontal story row with arrows
+│       └── tappable_card.dart      # Tap feedback animation wrapper
 ├── constants/
-│   └── app_constants.dart      # Dimensions, breakpoints, grid settings
+│   └── app_constants.dart          # Dimensions, breakpoints, grid settings
 ├── features/
+│   ├── before_visit/
+│   │   ├── data/
+│   │   │   └── before_visit_data.dart  # Story and tools content
+│   │   └── presentation/
+│   │       └── before_visit_page.dart
 │   ├── dashboard/
 │   │   └── presentation/
 │   │       └── dashboard_page.dart
@@ -37,26 +52,32 @@ lib/src/
 │       ├── data/
 │       │   └── library_data.dart       # Sample data
 │       ├── domain/
-│       │   └── library_item.dart       # Data model
+│       │   └── library_item.dart       # Re-exports DentalItem
 │       ├── presentation/
 │       │   ├── library_page.dart
 │       │   └── widgets/
 │       │       └── library_card.dart
 │       └── services/
 │           └── tts_service.dart        # Text-to-speech (Riverpod)
+├── localization/
+│   ├── app_en.arb                  # English UI strings
+│   ├── app_es.arb                  # Spanish UI strings
+│   ├── app_localizations.dart      # Generated localization
+│   ├── content_language_provider.dart  # Content language state
+│   └── content_translations.dart   # Caption translations by ID
 ├── routing/
-│   ├── app_router.dart         # GoRouter configuration
-│   ├── app_router.g.dart       # Generated
-│   └── routes.dart             # Route path constants
+│   ├── app_router.dart             # GoRouter configuration
+│   ├── app_router.g.dart           # Generated
+│   └── routes.dart                 # Route path constants
 ├── theme/
-│   ├── app_colors.dart         # Centralized color definitions
-│   ├── app_text_styles.dart    # Centralized text styles
-│   └── app_theme.dart          # Theme configuration
+│   ├── app_colors.dart             # Centralized color definitions
+│   ├── app_text_styles.dart        # Centralized text styles
+│   └── app_theme.dart              # Theme configuration
 ├── utils/
-│   └── responsive.dart         # Responsive layout utilities
+│   └── responsive.dart             # Responsive layout utilities + grid helpers
 └── widgets/
-    ├── app_shell.dart          # Shared desktop/mobile layout
-    └── sidebar.dart            # Data-driven sidebar with navigation
+    ├── app_shell.dart              # Shared desktop/mobile layout
+    └── sidebar.dart                # Data-driven sidebar with navigation
 ```
 
 ## Coding Standards & Patterns
@@ -78,7 +99,11 @@ lib/src/
 - **Text Styles**: Use `AppTextStyles` class for consistent typography.
 
 ### 4. UI & Responsiveness
-- Use the `responsive.dart` utilities to handle screen sizes.
+- Use the `Responsive` class utilities for screen size checks and grid layout values.
+- **Grid Layout Helpers** (use these instead of duplicating logic):
+  - `Responsive.getGridColumnCount(context)` - Returns 5/3/2 columns
+  - `Responsive.getGridSpacing(context)` - Returns 24/20/16 spacing
+  - `Responsive.getContentPadding(context)` - Returns responsive EdgeInsets
 - **Breakpoints** (defined in `AppConstants`):
   - Mobile: < 600px
   - Tablet: 600px - 1200px
@@ -100,7 +125,21 @@ lib/src/
   );
   ```
 
-### 6. Sidebar Navigation
+### 6. Shared Components (common/)
+- **DentalItem**: Use for any dental content with id, imagePath, caption.
+- **TappableCard**: Wrap interactive elements for tap feedback animation.
+- **StorySequence**: Use for horizontal story flows with arrow connectors.
+- **ImageCard**: Use for standalone image+caption cards.
+
+Example using TappableCard:
+```dart
+TappableCard(
+  onTap: () => handleTap(),
+  child: YourContent(),
+)
+```
+
+### 7. Sidebar Navigation
 - Sidebar items are configured in `SidebarConfig.items` (data-driven).
 - Active route is automatically highlighted.
 - To add a new sidebar item:
@@ -108,12 +147,27 @@ lib/src/
   2. Add `GoRoute` in `app_router.dart`
   3. Add `SidebarItemData` to `SidebarConfig.items`
 
-### 7. Testing Strategy
+### 8. Localization
+- **UI Strings**: Use `AppLocalizations.of(context)` for page headers, labels.
+- **Content Captions**: Use `ContentTranslations.getCaption(itemId, language)` for dental content.
+- **TTS Language**: Sync with `contentLanguageNotifierProvider` using `ref.listen`.
+- Pattern for pages with localized content:
+  ```dart
+  final l10n = AppLocalizations.of(context);
+  final contentLanguage = ref.watch(contentLanguageNotifierProvider);
+  
+  ref.listen<ContentLanguage>(contentLanguageNotifierProvider, (prev, next) {
+    ttsService.setLanguage(next);
+  });
+  ```
+
+### 9. Testing Strategy
 - **Widget Tests**: Run `flutter test` to verify UI components, responsiveness, and accessibility.
 - **Golden Tests**: Run `flutter test --update-goldens` to generate/update reference images.
 - **Integration Tests**: Run `flutter test integration_test/app_test.dart` on a real device/emulator.
 - **Regression Policy**: **ALWAYS** run `flutter test` after completing a task to ensure no regressions were introduced.
 - Test files location: `test/` directory with `*_test.dart` naming.
+- Current test count: **209 tests**
 
 ## Development Workflow
 
@@ -134,10 +188,21 @@ Since we use `riverpod_generator` and `go_router_builder`, you must run the buil
 4. Add route to `app_router.dart`
 5. Add sidebar item to `SidebarConfig` if navigable
 6. Use `AppShell` for consistent layout
-7. Write tests in `test/<feature>_test.dart`
+7. Use `Responsive.getGridColumnCount()` etc. for responsive grids
+8. Use `TappableCard` for interactive elements
+9. Add localization entries to ARB files and `ContentTranslations`
+10. Write tests in `test/<feature>_test.dart`
+
+### Adding Dental Content
+1. Use `DentalItem` model with unique `id`
+2. Add images to `assets/images/<feature>/`
+3. Register asset folder in `pubspec.yaml`
+4. Add caption translations to `ContentTranslations._captions`
 
 ## Assets
-- **Images**: `assets/images/library/` - Library content images
+- **Images**: 
+  - `assets/images/library/` - Library content images
+  - `assets/images/before_visit/` - Before Visit content images
 - **Fonts**: 
   - `fonts/KumarOne-Regular.ttf` - Headers
   - `fonts/InstrumentSans-Bold.ttf` - Captions
