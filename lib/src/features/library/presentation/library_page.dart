@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../../../constants/app_constants.dart';
+import '../../../localization/app_localizations.dart';
 import '../../../localization/content_language_provider.dart';
 import '../../../localization/content_translations.dart';
 import '../../../theme/app_colors.dart';
@@ -15,39 +16,6 @@ import 'widgets/library_card.dart';
 /// with captions. Tapping an image triggers text-to-speech of the caption.
 class LibraryPage extends ConsumerWidget {
   const LibraryPage({super.key});
-
-  /// Get the number of grid columns based on screen width
-  int _getColumnCount(BuildContext context) {
-    if (Responsive.isDesktop(context)) {
-      return AppConstants.gridColumnsDesktop;
-    } else if (Responsive.isTablet(context)) {
-      return AppConstants.gridColumnsTablet;
-    } else {
-      return AppConstants.gridColumnsMobile;
-    }
-  }
-
-  /// Get grid spacing based on screen width
-  double _getGridSpacing(BuildContext context) {
-    if (Responsive.isDesktop(context)) {
-      return AppConstants.gridSpacingDesktop;
-    } else if (Responsive.isTablet(context)) {
-      return AppConstants.gridSpacingTablet;
-    } else {
-      return AppConstants.gridSpacingMobile;
-    }
-  }
-
-  /// Get content padding based on screen width
-  EdgeInsets _getContentPadding(BuildContext context) {
-    if (Responsive.isDesktop(context)) {
-      return AppConstants.contentPaddingDesktop;
-    } else if (Responsive.isTablet(context)) {
-      return AppConstants.contentPaddingTablet;
-    } else {
-      return AppConstants.contentPaddingMobile;
-    }
-  }
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -70,9 +38,10 @@ class LibraryPage extends ConsumerWidget {
     TtsService ttsService,
     ContentLanguage contentLanguage,
   ) {
-    final columnCount = _getColumnCount(context);
-    final spacing = _getGridSpacing(context);
-    final padding = _getContentPadding(context);
+    final columnCount = Responsive.getGridColumnCount(context);
+    final spacing = Responsive.getGridSpacing(context);
+    final padding = Responsive.getContentPadding(context);
+    final l10n = AppLocalizations.of(context);
 
     return Container(
       color: AppColors.background,
@@ -89,7 +58,7 @@ class LibraryPage extends ConsumerWidget {
               centerTitle: true,
               titlePadding: const EdgeInsets.only(bottom: 16),
               title: Text(
-                'Library',
+                l10n?.pageHeaderLibrary ?? 'Library',
                 style: AppTextStyles.pageHeader,
               ),
               expandedTitleScale: AppConstants.headerExpandedScale,

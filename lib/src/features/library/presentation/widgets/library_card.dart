@@ -1,11 +1,13 @@
 import 'package:flutter/material.dart';
+import '../../../../common/domain/dental_item.dart';
+import '../../../../common/widgets/tappable_card.dart';
 import '../../../../constants/app_constants.dart';
 import '../../../../theme/app_colors.dart';
 import '../../../../theme/app_text_styles.dart';
-import '../../../../common/domain/dental_item.dart';
 
 /// A card widget displaying a library item with image and caption.
 /// Tapping the card triggers the onTap callback for TTS playback.
+/// Includes visual tap feedback with scale animation.
 class LibraryCard extends StatelessWidget {
   final DentalItem item;
   final VoidCallback? onTap;
@@ -29,7 +31,7 @@ class LibraryCard extends StatelessWidget {
     return Semantics(
       label: displayCaption,
       button: true,
-      child: GestureDetector(
+      child: TappableCard(
         onTap: onTap,
         child: Column(
           mainAxisSize: MainAxisSize.min,

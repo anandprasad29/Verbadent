@@ -1,25 +1,8 @@
-/// Data model for a library item with image and caption
-class LibraryItem {
-  final String id;
-  final String imagePath;
-  final String caption;
+import '../../../common/domain/dental_item.dart';
 
-  const LibraryItem({
-    required this.id,
-    required this.imagePath,
-    required this.caption,
-  });
+// Re-export DentalItem for backwards compatibility
+export '../../../common/domain/dental_item.dart' show DentalItem;
 
-  @override
-  bool operator ==(Object other) =>
-      identical(this, other) ||
-      other is LibraryItem &&
-          runtimeType == other.runtimeType &&
-          id == other.id &&
-          imagePath == other.imagePath &&
-          caption == other.caption;
-
-  @override
-  int get hashCode => id.hashCode ^ imagePath.hashCode ^ caption.hashCode;
-}
-
+/// @deprecated Use [DentalItem] from common/domain/ instead.
+/// This typedef is provided for backwards compatibility.
+typedef LibraryItem = DentalItem;
