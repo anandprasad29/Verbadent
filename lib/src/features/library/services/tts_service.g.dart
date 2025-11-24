@@ -6,9 +6,10 @@ part of 'tts_service.dart';
 // RiverpodGenerator
 // **************************************************************************
 
-String _$ttsServiceHash() => r'd198448a5a7fe227ec96329b93f3ca6c0c65d550';
+String _$ttsServiceHash() => r'3a0c6cf3bd4969b92b6e34a33e184f42002daa76';
 
 /// Provider for TtsService with automatic lifecycle management.
+/// Pre-initializes on creation to avoid first-tap delays.
 ///
 /// Copied from [ttsService].
 @ProviderFor(ttsService)

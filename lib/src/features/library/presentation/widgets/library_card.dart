@@ -2,27 +2,26 @@ import 'package:flutter/material.dart';
 import '../../../../constants/app_constants.dart';
 import '../../../../theme/app_colors.dart';
 import '../../../../theme/app_text_styles.dart';
-import '../../domain/library_item.dart';
+import '../../../../common/domain/dental_item.dart';
 
 /// A card widget displaying a library item with image and caption.
 /// Tapping the card triggers the onTap callback for TTS playback.
 class LibraryCard extends StatelessWidget {
-  final LibraryItem item;
-  
-  /// Optional caption override for localization.
-  /// If not provided, falls back to item.caption.
-  final String? caption;
-  
+  final DentalItem item;
   final VoidCallback? onTap;
+  
+  /// Optional caption override for translations. 
+  /// If null, uses item.caption.
+  final String? caption;
 
   const LibraryCard({
     super.key,
     required this.item,
-    this.caption,
     this.onTap,
+    this.caption,
   });
 
-  /// Returns the caption to display, using override if available.
+  /// The displayed caption (uses override if provided, otherwise item.caption)
   String get displayCaption => caption ?? item.caption;
 
   @override

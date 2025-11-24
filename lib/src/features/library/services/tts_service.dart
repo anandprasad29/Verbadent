@@ -20,6 +20,8 @@ class TtsService {
     await _flutterTts.setSpeechRate(0.5);
     await _flutterTts.setVolume(1.0);
     await _flutterTts.setPitch(1.0);
+    // Ensure speak completes before returning, helps with reliability
+    await _flutterTts.awaitSpeakCompletion(true);
 
     _isInitialized = true;
   }
@@ -51,9 +53,14 @@ class TtsService {
 }
 
 /// Provider for TtsService with automatic lifecycle management.
+/// Pre-initializes on creation to avoid first-tap delays.
 @riverpod
 TtsService ttsService(Ref ref) {
   final service = TtsService();
+  // Pre-initialize TTS to avoid first-tap delay from lazy initialization.
+  // Browser autoplay policies and TTS engine warm-up can cause the first
+  // speak() call to fail if initialization happens at the same time.
+  service.init();
   ref.onDispose(() => service.dispose());
   return service;
 }
