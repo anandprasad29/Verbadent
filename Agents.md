@@ -148,9 +148,22 @@ TappableCard(
   3. Add `SidebarItemData` to `SidebarConfig.items`
 
 ### 8. Localization
+- **NEVER hardcode strings** in the app. All user-facing text must be localizable.
+- **ALWAYS** use localization for any text displayed to users, including:
+  - Page titles and headers
+  - Button labels
+  - Error messages
+  - Placeholder text
+  - Tooltips and hints
+  - Accessibility labels
 - **UI Strings**: Use `AppLocalizations.of(context)` for page headers, labels.
 - **Content Captions**: Use `ContentTranslations.getCaption(itemId, language)` for dental content.
 - **TTS Language**: Sync with `contentLanguageNotifierProvider` using `ref.listen`.
+- **Adding new strings**:
+  1. Add the string key and English text to `lib/src/localization/app_en.arb`
+  2. Add the corresponding Spanish translation to `lib/src/localization/app_es.arb`
+  3. Run `flutter gen-l10n` or rebuild to generate the localization code
+  4. Use `AppLocalizations.of(context)!.yourStringKey` in your widget
 - Pattern for pages with localized content:
   ```dart
   final l10n = AppLocalizations.of(context);
