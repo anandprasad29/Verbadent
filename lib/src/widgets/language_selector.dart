@@ -60,17 +60,24 @@ class LanguageSelector extends ConsumerWidget {
           items: ContentLanguage.values.map((language) {
             return DropdownMenuItem<ContentLanguage>(
               value: language,
-              child: Row(
-                mainAxisSize: MainAxisSize.min,
-                children: [
-                  Text(
-                    language.flag,
-                    style: TextStyle(fontSize: compact ? 16 : 18),
-                  ),
-                  const SizedBox(width: 8),
-                  Text(language.displayName),
-                ],
-              ),
+              child: compact
+                  // Compact mode: show only flag in dropdown items
+                  ? Text(
+                      language.flag,
+                      style: const TextStyle(fontSize: 16),
+                    )
+                  // Full mode: show flag + name
+                  : Row(
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        Text(
+                          language.flag,
+                          style: const TextStyle(fontSize: 18),
+                        ),
+                        const SizedBox(width: 8),
+                        Text(language.displayName),
+                      ],
+                    ),
             );
           }).toList(),
           onChanged: (ContentLanguage? newLanguage) {
