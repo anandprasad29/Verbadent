@@ -49,7 +49,9 @@ CustomTransitionPage<void> _buildPageWithTransition({
   );
 }
 
-@riverpod
+/// GoRouter provider with keepAlive to prevent disposal during navigation.
+/// AutoDispose would cause router recreation and navigation issues.
+@Riverpod(keepAlive: true)
 GoRouter goRouter(Ref ref) {
   return GoRouter(
     initialLocation: Routes.home,

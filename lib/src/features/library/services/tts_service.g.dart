@@ -6,14 +6,15 @@ part of 'tts_service.dart';
 // RiverpodGenerator
 // **************************************************************************
 
-String _$ttsServiceHash() => r'3a0c6cf3bd4969b92b6e34a33e184f42002daa76';
+String _$ttsServiceHash() => r'13f4fec27ae215a230eece3f2e1c056745d1937d';
 
 /// Provider for TtsService with automatic lifecycle management.
-/// Pre-initializes on creation to avoid first-tap delays.
+/// Uses keepAlive to prevent disposal and re-initialization issues.
+/// TTS is NOT pre-initialized - it initializes lazily on first speak().
 ///
 /// Copied from [ttsService].
 @ProviderFor(ttsService)
-final ttsServiceProvider = AutoDisposeProvider<TtsService>.internal(
+final ttsServiceProvider = Provider<TtsService>.internal(
   ttsService,
   name: r'ttsServiceProvider',
   debugGetCreateSourceHash:
@@ -24,15 +25,15 @@ final ttsServiceProvider = AutoDisposeProvider<TtsService>.internal(
 
 @Deprecated('Will be removed in 3.0. Use Ref instead')
 // ignore: unused_element
-typedef TtsServiceRef = AutoDisposeProviderRef<TtsService>;
-String _$ttsSpeakingStateHash() => r'02f1ac8af569e3daae31603721fc9c6b2041a3aa';
+typedef TtsServiceRef = ProviderRef<TtsService>;
+String _$ttsSpeakingStateHash() => r'8cf51558d87e0cc414b96370ed0029b4199db82f';
 
 /// Provider that exposes the current speaking state as a stream.
 /// Updates whenever TTS starts or stops speaking.
 ///
 /// Copied from [ttsSpeakingState].
 @ProviderFor(ttsSpeakingState)
-final ttsSpeakingStateProvider = AutoDisposeStreamProvider<bool>.internal(
+final ttsSpeakingStateProvider = StreamProvider<bool>.internal(
   ttsSpeakingState,
   name: r'ttsSpeakingStateProvider',
   debugGetCreateSourceHash: const bool.fromEnvironment('dart.vm.product')
@@ -44,11 +45,33 @@ final ttsSpeakingStateProvider = AutoDisposeStreamProvider<bool>.internal(
 
 @Deprecated('Will be removed in 3.0. Use Ref instead')
 // ignore: unused_element
-typedef TtsSpeakingStateRef = AutoDisposeStreamProviderRef<bool>;
-String _$ttsSpeakingTextHash() => r'267c98f370dc57f19a4bdfe99a3838829ca8deb1';
+typedef TtsSpeakingStateRef = StreamProviderRef<bool>;
+String _$ttsSpeakingTextStreamHash() =>
+    r'eba842a721c1463bd05f8cdf85c1bd2c1ac6a1b2';
 
-/// Provider that exposes the currently speaking text.
+/// Provider that exposes the currently speaking text as a stream.
 /// Returns null when not speaking.
+/// Uses stream-based approach instead of invalidateSelf for better performance.
+///
+/// Copied from [ttsSpeakingTextStream].
+@ProviderFor(ttsSpeakingTextStream)
+final ttsSpeakingTextStreamProvider = StreamProvider<String?>.internal(
+  ttsSpeakingTextStream,
+  name: r'ttsSpeakingTextStreamProvider',
+  debugGetCreateSourceHash: const bool.fromEnvironment('dart.vm.product')
+      ? null
+      : _$ttsSpeakingTextStreamHash,
+  dependencies: null,
+  allTransitiveDependencies: null,
+);
+
+@Deprecated('Will be removed in 3.0. Use Ref instead')
+// ignore: unused_element
+typedef TtsSpeakingTextStreamRef = StreamProviderRef<String?>;
+String _$ttsSpeakingTextHash() => r'64ee187005b214405a90b685e7f61b2e580b0f3f';
+
+/// Provider that exposes the currently speaking text synchronously.
+/// Watches the stream provider for updates.
 ///
 /// Copied from [ttsSpeakingText].
 @ProviderFor(ttsSpeakingText)

@@ -59,17 +59,14 @@ void main() {
       expect(ttsService, isNotNull);
     });
 
-    test('init completes without error', () async {
-      await expectLater(ttsService.init(), completes);
-    });
-
-    test('init is idempotent (can be called multiple times)', () async {
-      await ttsService.init();
-      await expectLater(ttsService.init(), completes);
-    });
-
-    test('speak initializes if not already initialized', () async {
+    test('speak initializes lazily on first call', () async {
+      // TTS should initialize lazily when speak is called
       await expectLater(ttsService.speak('Hello'), completes);
+    });
+
+    test('speak can be called multiple times', () async {
+      await ttsService.speak('First');
+      await expectLater(ttsService.speak('Second'), completes);
     });
 
     test('speak accepts non-empty string', () async {
@@ -88,13 +85,12 @@ void main() {
       expect(() => ttsService.dispose(), returnsNormally);
     });
 
-    test('speak works after init', () async {
-      await ttsService.init();
-      await expectLater(ttsService.speak('After init'), completes);
+    test('speak works after previous speak', () async {
+      await ttsService.speak('First message');
+      await expectLater(ttsService.speak('After first'), completes);
     });
 
     test('stop can be called even if not speaking', () async {
-      await ttsService.init();
       await expectLater(ttsService.stop(), completes);
     });
 

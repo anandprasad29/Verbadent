@@ -7,10 +7,14 @@
         android:xlargeScreens="true"
         android:anyDensity="true" />
     
+    <!-- Required for TTS engines that download voice data -->
+    <uses-permission android:name="android.permission.INTERNET"/>
+    
     <application
         android:label="Verbadent"
         android:name="${applicationName}"
-        android:icon="@mipmap/ic_launcher">
+        android:icon="@mipmap/ic_launcher"
+        android:enableOnBackInvokedCallback="true">
         <activity
             android:name=".MainActivity"
             android:exported="true"
