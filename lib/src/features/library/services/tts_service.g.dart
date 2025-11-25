@@ -45,7 +45,7 @@ final ttsSpeakingStateProvider = AutoDisposeStreamProvider<bool>.internal(
 @Deprecated('Will be removed in 3.0. Use Ref instead')
 // ignore: unused_element
 typedef TtsSpeakingStateRef = AutoDisposeStreamProviderRef<bool>;
-String _$ttsSpeakingTextHash() => r'9add1ad1755344cd00e694f29e2fffa5dc3af410';
+String _$ttsSpeakingTextHash() => r'267c98f370dc57f19a4bdfe99a3838829ca8deb1';
 
 /// Provider that exposes the currently speaking text.
 /// Returns null when not speaking.
