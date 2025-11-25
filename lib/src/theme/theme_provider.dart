@@ -45,10 +45,12 @@ class ThemeModeNotifier extends _$ThemeModeNotifier {
     state = mode;
   }
 
-  /// Toggle between light and dark (ignoring system)
+  /// Toggle between light and dark modes.
+  /// - light → dark
+  /// - dark → light
+  /// - system → dark (switches from auto to explicit dark mode)
   void toggle() {
-    state =
-        state == AppThemeMode.light ? AppThemeMode.dark : AppThemeMode.light;
+    state = state == AppThemeMode.dark ? AppThemeMode.light : AppThemeMode.dark;
   }
 
   /// Cycle through all theme modes
