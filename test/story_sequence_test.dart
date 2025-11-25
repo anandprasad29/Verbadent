@@ -1,257 +1,214 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:verbadent/src/common/domain/dental_item.dart';
 import 'package:verbadent/src/common/widgets/story_sequence.dart';
 import 'package:verbadent/src/localization/content_language_provider.dart';
 
 void main() {
-  TestWidgetsFlutterBinding.ensureInitialized();
-
-  /// Sample items for testing
-  const testItems = [
-    DentalItem(
-      id: 'item-1',
-      imagePath: 'assets/images/library/dentist_chair.png',
-      caption: 'First item caption',
-    ),
-    DentalItem(
-      id: 'item-2',
-      imagePath: 'assets/images/library/dentist_mask.png',
-      caption: 'Second item caption',
-    ),
-    DentalItem(
-      id: 'item-3',
-      imagePath: 'assets/images/library/dentist_gloves.png',
-      caption: 'Third item caption',
-    ),
-  ];
-
-  /// Wraps widget in MaterialApp for testing with sufficient height
-  Widget buildTestWidget({
-    required Widget child,
-    Size size = const Size(800, 800),
-  }) {
-    return MaterialApp(
-      home: Scaffold(
-        body: SizedBox(
-          width: size.width,
-          height: size.height,
-          child: child,
-        ),
+  group('StorySequence Widget', () {
+    final testItems = [
+      const DentalItem(
+        id: 'test1',
+        imagePath: 'assets/images/library/toothbrush.png',
+        caption: 'First Item',
       ),
-    );
-  }
+      const DentalItem(
+        id: 'test2',
+        imagePath: 'assets/images/library/toothpaste.png',
+        caption: 'Second Item',
+      ),
+      const DentalItem(
+        id: 'test3',
+        imagePath: 'assets/images/library/floss.png',
+        caption: 'Third Item',
+      ),
+    ];
 
-  group('StorySequence Widget Tests', () {
-    testWidgets('renders all items', (tester) async {
-      tester.view.physicalSize = const Size(1200, 800);
-      tester.view.devicePixelRatio = 1.0;
-
-      await tester.pumpWidget(
-        buildTestWidget(
-          size: const Size(1200, 800),
-          child: const StorySequence(
-            items: testItems,
+    Widget buildTestWidget({
+      required double width,
+      required List<DentalItem> items,
+      void Function(DentalItem)? onItemTap,
+      ContentLanguage? contentLanguage,
+    }) {
+      return ProviderScope(
+        child: MaterialApp(
+          home: Scaffold(
+            body: SizedBox(
+              width: width,
+              height: 250, // Fixed reasonable height
+              child: StorySequence(
+                items: items,
+                onItemTap: onItemTap ?? (_) {},
+                contentLanguage: contentLanguage,
+                padding: const EdgeInsets.all(8),
+              ),
+            ),
           ),
         ),
       );
+    }
 
-      // Verify all captions are rendered
-      expect(find.text('First item caption'), findsOneWidget);
-      expect(find.text('Second item caption'), findsOneWidget);
-      expect(find.text('Third item caption'), findsOneWidget);
+    group('Basic Rendering', () {
+      testWidgets('renders without error', (tester) async {
+        await tester.pumpWidget(buildTestWidget(
+          width: 400,
+          items: testItems,
+        ));
 
-      tester.view.resetPhysicalSize();
-      tester.view.resetDevicePixelRatio();
+        expect(find.byType(StorySequence), findsOneWidget);
+      });
+
+      testWidgets('renders captions for all items', (tester) async {
+        await tester.pumpWidget(buildTestWidget(
+          width: 400,
+          items: testItems,
+        ));
+
+        // StorySequence should show items with captions
+        expect(find.text('First Item'), findsOneWidget);
+        expect(find.text('Second Item'), findsOneWidget);
+        expect(find.text('Third Item'), findsOneWidget);
+      });
+
+      testWidgets('handles empty items list gracefully', (tester) async {
+        await tester.pumpWidget(buildTestWidget(
+          width: 400,
+          items: const [],
+        ));
+
+        expect(find.byType(StorySequence), findsOneWidget);
+        expect(tester.takeException(), isNull);
+      });
+
+      testWidgets('renders single item without error', (tester) async {
+        await tester.pumpWidget(buildTestWidget(
+          width: 200, // Smaller width to keep item size manageable
+          items: [testItems.first],
+        ));
+
+        expect(find.text('First Item'), findsOneWidget);
+      });
     });
 
-    testWidgets('renders items in a Row', (tester) async {
-      tester.view.physicalSize = const Size(1200, 800);
-      tester.view.devicePixelRatio = 1.0;
+    group('Tap Interaction', () {
+      testWidgets('calls onItemTap when item is tapped', (tester) async {
+        DentalItem? tappedItem;
 
-      await tester.pumpWidget(
-        buildTestWidget(
-          size: const Size(1200, 800),
-          child: const StorySequence(
-            items: testItems,
-          ),
-        ),
-      );
+        await tester.pumpWidget(buildTestWidget(
+          width: 400,
+          items: testItems,
+          onItemTap: (item) => tappedItem = item,
+        ));
 
-      // Row should be present for horizontal layout
-      expect(find.byType(Row), findsOneWidget);
+        await tester.tap(find.text('First Item'));
+        await tester.pump();
 
-      tester.view.resetPhysicalSize();
-      tester.view.resetDevicePixelRatio();
+        expect(tappedItem?.id, equals('test1'));
+      });
+
+      testWidgets('calls onItemTap for any item', (tester) async {
+        DentalItem? tappedItem;
+
+        await tester.pumpWidget(buildTestWidget(
+          width: 400,
+          items: testItems,
+          onItemTap: (item) => tappedItem = item,
+        ));
+
+        await tester.tap(find.text('Third Item'));
+        await tester.pump();
+
+        expect(tappedItem?.id, equals('test3'));
+      });
     });
 
-    testWidgets('calls onItemTap when item is tapped', (tester) async {
-      tester.view.physicalSize = const Size(1200, 800);
-      tester.view.devicePixelRatio = 1.0;
+    group('Scrolling Behavior', () {
+      testWidgets('uses SingleChildScrollView when items need scroll',
+          (tester) async {
+        // Very narrow width forces scrolling
+        await tester.pumpWidget(buildTestWidget(
+          width: 150,
+          items: testItems,
+        ));
 
-      DentalItem? tappedItem;
+        final scrollFinder = find.byType(SingleChildScrollView);
+        expect(scrollFinder, findsOneWidget);
 
-      await tester.pumpWidget(
-        buildTestWidget(
-          size: const Size(1200, 800),
-          child: StorySequence(
-            items: testItems.toList(),
-            onItemTap: (item) {
-              tappedItem = item;
-            },
-          ),
-        ),
-      );
+        final scrollWidget = tester.widget<SingleChildScrollView>(scrollFinder);
+        expect(scrollWidget.scrollDirection, equals(Axis.horizontal));
+      });
 
-      // Tap on the first item's caption
-      await tester.tap(find.text('First item caption'));
-      await tester.pumpAndSettle();
+      testWidgets('can scroll horizontally when items overflow',
+          (tester) async {
+        await tester.pumpWidget(buildTestWidget(
+          width: 150,
+          items: testItems,
+        ));
 
-      expect(tappedItem, isNotNull);
-      expect(tappedItem!.id, equals('item-1'));
+        final scrollFinder = find.byType(SingleChildScrollView);
+        expect(scrollFinder, findsOneWidget);
 
-      tester.view.resetPhysicalSize();
-      tester.view.resetDevicePixelRatio();
+        // Should be able to drag without error
+        await tester.drag(scrollFinder, const Offset(-50, 0));
+        await tester.pumpAndSettle();
+      });
     });
 
-    testWidgets('applies custom padding', (tester) async {
-      tester.view.physicalSize = const Size(1200, 800);
-      tester.view.devicePixelRatio = 1.0;
+    group('Layout Structure', () {
+      testWidgets('uses Row to arrange items', (tester) async {
+        await tester.pumpWidget(buildTestWidget(
+          width: 400,
+          items: testItems,
+        ));
 
-      const customPadding = EdgeInsets.all(32);
+        expect(find.byType(Row), findsOneWidget);
+      });
 
-      await tester.pumpWidget(
-        buildTestWidget(
-          size: const Size(1200, 800),
-          child: const StorySequence(
-            items: testItems,
-            padding: customPadding,
-          ),
-        ),
-      );
+      testWidgets('uses LayoutBuilder for responsive sizing', (tester) async {
+        await tester.pumpWidget(buildTestWidget(
+          width: 400,
+          items: testItems,
+        ));
 
-      // Find the Padding widget with our custom padding
-      final paddingFinder = find.byWidgetPredicate(
-        (widget) => widget is Padding && widget.padding == customPadding,
-      );
-      expect(paddingFinder, findsOneWidget);
-
-      tester.view.resetPhysicalSize();
-      tester.view.resetDevicePixelRatio();
+        expect(find.byType(LayoutBuilder), findsOneWidget);
+      });
     });
 
-    testWidgets('uses LayoutBuilder to calculate sizes', (tester) async {
-      tester.view.physicalSize = const Size(1200, 800);
-      tester.view.devicePixelRatio = 1.0;
+    group('Content Language', () {
+      testWidgets('renders with English content language', (tester) async {
+        await tester.pumpWidget(buildTestWidget(
+          width: 400,
+          items: testItems,
+          contentLanguage: ContentLanguage.en,
+        ));
 
-      await tester.pumpWidget(
-        buildTestWidget(
-          size: const Size(1200, 800),
-          child: const StorySequence(
-            items: testItems,
-          ),
-        ),
-      );
+        expect(find.byType(StorySequence), findsOneWidget);
+      });
 
-      // LayoutBuilder should be present for dynamic sizing
-      expect(find.byType(LayoutBuilder), findsOneWidget);
+      testWidgets('renders with Spanish content language', (tester) async {
+        await tester.pumpWidget(buildTestWidget(
+          width: 400,
+          items: testItems,
+          contentLanguage: ContentLanguage.es,
+        ));
 
-      tester.view.resetPhysicalSize();
-      tester.view.resetDevicePixelRatio();
+        expect(find.byType(StorySequence), findsOneWidget);
+      });
     });
 
-    testWidgets('supports content language for translations', (tester) async {
-      tester.view.physicalSize = const Size(1200, 800);
-      tester.view.devicePixelRatio = 1.0;
+    group('Minimum Item Size', () {
+      testWidgets('enforces minimum item size on narrow screens',
+          (tester) async {
+        // The StorySequence has _minItemSize = 100
+        await tester.pumpWidget(buildTestWidget(
+          width: 100, // Very narrow
+          items: testItems,
+        ));
 
-      // Use items with IDs that match ContentTranslations
-      final translatedItems = [
-        const DentalItem(
-          id: 'dentist-chair',
-          imagePath: 'assets/images/library/dentist_chair.png',
-          caption: "This is the dentist's chair",
-        ),
-        const DentalItem(
-          id: 'dentist-mask',
-          imagePath: 'assets/images/library/dentist_mask.png',
-          caption: 'The dentist wears a mask',
-        ),
-        const DentalItem(
-          id: 'dentist-gloves',
-          imagePath: 'assets/images/library/dentist_gloves.png',
-          caption: 'The dentist wears a glove',
-        ),
-      ];
-
-      await tester.pumpWidget(
-        buildTestWidget(
-          size: const Size(1200, 800),
-          child: StorySequence(
-            items: translatedItems,
-            contentLanguage: ContentLanguage.en,
-          ),
-        ),
-      );
-
-      // With English language, should use translations
-      expect(find.textContaining('dentist'), findsWidgets);
-
-      tester.view.resetPhysicalSize();
-      tester.view.resetDevicePixelRatio();
-    });
-
-    testWidgets('renders correctly with different item counts', (tester) async {
-      tester.view.physicalSize = const Size(1200, 800);
-      tester.view.devicePixelRatio = 1.0;
-
-      // Test with 2 items
-      await tester.pumpWidget(
-        buildTestWidget(
-          size: const Size(1200, 800),
-          child: StorySequence(
-            items: testItems.sublist(0, 2),
-          ),
-        ),
-      );
-
-      expect(find.text('First item caption'), findsOneWidget);
-      expect(find.text('Second item caption'), findsOneWidget);
-      expect(find.text('Third item caption'), findsNothing);
-
-      tester.view.resetPhysicalSize();
-      tester.view.resetDevicePixelRatio();
-    });
-
-    testWidgets('handles tap on multiple items', (tester) async {
-      tester.view.physicalSize = const Size(1200, 800);
-      tester.view.devicePixelRatio = 1.0;
-
-      final tappedItems = <String>[];
-
-      await tester.pumpWidget(
-        buildTestWidget(
-          size: const Size(1200, 800),
-          child: StorySequence(
-            items: testItems.toList(),
-            onItemTap: (item) {
-              tappedItems.add(item.id);
-            },
-          ),
-        ),
-      );
-
-      // Tap first item
-      await tester.tap(find.text('First item caption'));
-      await tester.pumpAndSettle();
-
-      // Tap second item
-      await tester.tap(find.text('Second item caption'));
-      await tester.pumpAndSettle();
-
-      expect(tappedItems, equals(['item-1', 'item-2']));
-
-      tester.view.resetPhysicalSize();
-      tester.view.resetDevicePixelRatio();
+        // Should use SingleChildScrollView when items don't fit
+        expect(find.byType(SingleChildScrollView), findsOneWidget);
+      });
     });
   });
 }

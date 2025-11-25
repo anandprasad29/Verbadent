@@ -341,6 +341,112 @@ void main() {
       });
     });
 
+    group('Text Overflow Prevention', () {
+      testWidgets('text does not overflow in landscape mode with sidebar',
+          (tester) async {
+        // Tablet landscape with sidebar (e.g., 1200x800)
+        tester.view.physicalSize = const Size(1200, 800);
+        tester.view.devicePixelRatio = 1.0;
+
+        await tester.pumpWidget(
+          ProviderScope(
+            child: MaterialApp.router(routerConfig: createTestRouter()),
+          ),
+        );
+
+        // FittedBox should ensure text scales down
+        expect(find.byType(FittedBox), findsOneWidget);
+
+        // Text should be visible
+        expect(find.text('VERBADENT'), findsOneWidget);
+
+        // No overflow errors should occur
+        expect(tester.takeException(), isNull);
+
+        tester.view.resetPhysicalSize();
+        tester.view.resetDevicePixelRatio();
+      });
+
+      testWidgets('text does not overflow on narrow landscape (800x500)',
+          (tester) async {
+        // Short landscape view (but tall enough for sidebar)
+        tester.view.physicalSize = const Size(800, 500);
+        tester.view.devicePixelRatio = 1.0;
+
+        await tester.pumpWidget(
+          ProviderScope(
+            child: MaterialApp.router(routerConfig: createTestRouter()),
+          ),
+        );
+
+        // FittedBox should handle sizing
+        expect(find.byType(FittedBox), findsOneWidget);
+        expect(find.text('VERBADENT'), findsOneWidget);
+        expect(tester.takeException(), isNull);
+
+        tester.view.resetPhysicalSize();
+        tester.view.resetDevicePixelRatio();
+      });
+
+      testWidgets('text does not overflow on very narrow screen (320x568)',
+          (tester) async {
+        // iPhone SE first gen width
+        tester.view.physicalSize = const Size(320, 568);
+        tester.view.devicePixelRatio = 1.0;
+
+        await tester.pumpWidget(
+          ProviderScope(
+            child: MaterialApp.router(routerConfig: createTestRouter()),
+          ),
+        );
+
+        expect(find.byType(FittedBox), findsOneWidget);
+        expect(find.text('VERBADENT'), findsOneWidget);
+        expect(tester.takeException(), isNull);
+
+        tester.view.resetPhysicalSize();
+        tester.view.resetDevicePixelRatio();
+      });
+
+      testWidgets('text has horizontal padding', (tester) async {
+        tester.view.physicalSize = const Size(1024, 768);
+        tester.view.devicePixelRatio = 1.0;
+
+        await tester.pumpWidget(
+          ProviderScope(
+            child: MaterialApp.router(routerConfig: createTestRouter()),
+          ),
+        );
+
+        // Find the Padding widget that wraps FittedBox
+        final paddingFinder = find.ancestor(
+          of: find.byType(FittedBox),
+          matching: find.byType(Padding),
+        );
+        expect(paddingFinder, findsWidgets);
+
+        tester.view.resetPhysicalSize();
+        tester.view.resetDevicePixelRatio();
+      });
+
+      testWidgets('FittedBox uses scaleDown fit', (tester) async {
+        tester.view.physicalSize = const Size(1024, 768);
+        tester.view.devicePixelRatio = 1.0;
+
+        await tester.pumpWidget(
+          ProviderScope(
+            child: MaterialApp.router(routerConfig: createTestRouter()),
+          ),
+        );
+
+        final fittedBox = tester.widget<FittedBox>(find.byType(FittedBox));
+        expect(fittedBox.fit, equals(BoxFit.scaleDown));
+
+        tester.view.resetPhysicalSize();
+        tester.view.resetDevicePixelRatio();
+      });
+    });
+
     group('Accessibility', () {
       testWidgets('title uses KumarOne font', (tester) async {
         tester.view.physicalSize = const Size(1024, 768);
