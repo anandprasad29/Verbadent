@@ -12,7 +12,7 @@ part 'tts_service.g.dart';
 class TtsService {
   final FlutterTts _flutterTts = FlutterTts();
   String _currentLanguage = 'en-US';
-  
+
   /// Initialization future to prevent race conditions.
   /// All callers await this same future to ensure init completes once.
   Future<void>? _initFuture;
@@ -38,7 +38,7 @@ class TtsService {
     _initFuture ??= _doInit();
     return _initFuture!;
   }
-  
+
   /// Internal initialization logic.
   Future<void> _doInit() async {
     await _flutterTts.setLanguage(_currentLanguage);
@@ -129,7 +129,9 @@ Stream<bool> ttsSpeakingState(Ref ref) {
 @riverpod
 String? ttsSpeakingText(Ref ref) {
   final ttsService = ref.watch(ttsServiceProvider);
-  // Listen to state changes to trigger rebuilds
-  ref.listen(ttsSpeakingStateProvider, (_, __) {});
+  // Listen to state changes and invalidate self to trigger rebuilds
+  ref.listen(ttsSpeakingStateProvider, (_, __) {
+    ref.invalidateSelf();
+  });
   return ttsService.currentText;
 }
