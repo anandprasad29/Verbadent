@@ -6,16 +6,16 @@ import '../domain/dental_item.dart';
 
 /// A card widget displaying a dental item with image and caption.
 /// Tapping the card triggers the onTap callback for TTS playback.
-/// 
+///
 /// This is a shared component used by Library, Before Visit, and other pages.
 class ImageCard extends StatelessWidget {
   final DentalItem item;
   final VoidCallback? onTap;
-  
+
   /// Optional caption override for translations.
   /// If null, uses item.caption.
   final String? caption;
-  
+
   /// Optional fixed size for the image. If null, uses AspectRatio of 1:1.
   final double? imageSize;
 

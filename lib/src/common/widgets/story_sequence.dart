@@ -12,16 +12,16 @@ import 'tappable_card.dart';
 class StorySequence extends StatelessWidget {
   final List<DentalItem> items;
   final void Function(DentalItem item)? onItemTap;
-  
+
   /// Content language for translations
   final ContentLanguage? contentLanguage;
-  
+
   /// Padding around the sequence (should match grid padding)
   final EdgeInsets padding;
-  
+
   /// Horizontal padding between arrow and adjacent images
   final double arrowPadding;
-  
+
   /// Width of the arrow line (excluding padding)
   final double arrowWidth;
 
@@ -44,13 +44,13 @@ class StorySequence extends StatelessWidget {
           final availableWidth = constraints.maxWidth;
           final itemCount = items.length;
           final arrowCount = itemCount - 1;
-          
+
           // Total space taken by arrows (arrow width + padding on both sides)
           final totalArrowSpace = arrowCount * (arrowWidth + arrowPadding * 2);
-          
+
           // Calculate item size to fit all items in available width
           final itemSize = (availableWidth - totalArrowSpace) / itemCount;
-          
+
           return Row(
             mainAxisAlignment: MainAxisAlignment.center,
             crossAxisAlignment: CrossAxisAlignment.start,
@@ -63,13 +63,13 @@ class StorySequence extends StatelessWidget {
 
   List<Widget> _buildSequenceItems(double itemSize) {
     final List<Widget> widgets = [];
-    
+
     for (int i = 0; i < items.length; i++) {
       // Get translated caption if language is provided
       final caption = contentLanguage != null
           ? ContentTranslations.getCaption(items[i].id, contentLanguage!)
           : items[i].caption;
-      
+
       // Add the story item
       widgets.add(_StoryItem(
         item: items[i],
@@ -77,7 +77,7 @@ class StorySequence extends StatelessWidget {
         size: itemSize,
         onTap: onItemTap != null ? () => onItemTap!(items[i]) : null,
       ));
-      
+
       // Add arrow between items (not after the last one)
       if (i < items.length - 1) {
         widgets.add(_ArrowConnector(
@@ -87,7 +87,7 @@ class StorySequence extends StatelessWidget {
         ));
       }
     }
-    
+
     return widgets;
   }
 }
@@ -128,11 +128,13 @@ class _StoryItem extends StatelessWidget {
                     color: context.appCardBorder,
                     width: AppConstants.cardBorderWidth,
                   ),
-                  borderRadius: BorderRadius.circular(AppConstants.cardBorderRadius),
+                  borderRadius:
+                      BorderRadius.circular(AppConstants.cardBorderRadius),
                 ),
                 child: ClipRRect(
                   borderRadius: BorderRadius.circular(
-                    AppConstants.cardBorderRadius - AppConstants.cardBorderWidth,
+                    AppConstants.cardBorderRadius -
+                        AppConstants.cardBorderWidth,
                   ),
                   child: Image.asset(
                     item.imagePath,

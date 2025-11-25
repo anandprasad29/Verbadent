@@ -5,10 +5,10 @@ import 'package:flutter/material.dart';
 class TappableCard extends StatefulWidget {
   final Widget child;
   final VoidCallback? onTap;
-  
+
   /// Scale factor when pressed (1.0 = no scale, 0.95 = shrink to 95%)
   final double pressedScale;
-  
+
   /// Duration of the scale animation
   final Duration animationDuration;
 
@@ -83,4 +83,3 @@ class _TappableCardState extends State<TappableCard>
     );
   }
 }
-

@@ -21,7 +21,7 @@ class LibraryPage extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final ttsService = ref.watch(ttsServiceProvider);
     final contentLanguage = ref.watch(contentLanguageNotifierProvider);
-    
+
     // Watch speaking state to trigger rebuilds when TTS state changes
     final speakingText = ref.watch(ttsSpeakingTextProvider);
 
