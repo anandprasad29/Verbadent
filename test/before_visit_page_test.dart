@@ -58,7 +58,7 @@ void main() {
 
   group('BeforeVisitPage Widget Tests', () {
     testWidgets('renders header in SliverAppBar', (tester) async {
-      tester.view.physicalSize = const Size(1400, 900);
+      tester.view.physicalSize = const Size(1450, 900);
       tester.view.devicePixelRatio = 1.0;
 
       await tester.pumpWidget(
@@ -81,7 +81,7 @@ void main() {
     });
 
     testWidgets('renders StorySequence widget', (tester) async {
-      tester.view.physicalSize = const Size(1400, 900);
+      tester.view.physicalSize = const Size(1450, 900);
       tester.view.devicePixelRatio = 1.0;
 
       await tester.pumpWidget(
@@ -100,7 +100,7 @@ void main() {
     });
 
     testWidgets('renders tools grid with LibraryCard items', (tester) async {
-      tester.view.physicalSize = const Size(1400, 900);
+      tester.view.physicalSize = const Size(1450, 900);
       tester.view.devicePixelRatio = 1.0;
 
       await tester.pumpWidget(
@@ -121,8 +121,10 @@ void main() {
       tester.view.resetDevicePixelRatio();
     });
 
-    testWidgets('renders 5 columns on desktop (>=1200px)', (tester) async {
-      tester.view.physicalSize = const Size(1400, 900);
+    testWidgets('renders 5 columns on desktop (>=1200px content width)',
+        (tester) async {
+      // Screen width 1450 gives content 1200 (1450 - 250 sidebar)
+      tester.view.physicalSize = const Size(1450, 900);
       tester.view.devicePixelRatio = 1.0;
 
       await tester.pumpWidget(
@@ -192,7 +194,7 @@ void main() {
     });
 
     testWidgets('uses SliverAppBar for collapsible header', (tester) async {
-      tester.view.physicalSize = const Size(1400, 900);
+      tester.view.physicalSize = const Size(1450, 900);
       tester.view.devicePixelRatio = 1.0;
 
       await tester.pumpWidget(
@@ -214,7 +216,7 @@ void main() {
     });
 
     testWidgets('displays dental content captions', (tester) async {
-      tester.view.physicalSize = const Size(1400, 900);
+      tester.view.physicalSize = const Size(1450, 900);
       tester.view.devicePixelRatio = 1.0;
 
       await tester.pumpWidget(
@@ -251,7 +253,8 @@ void main() {
     });
 
     testWidgets('tools grid has correct desktop spacing', (tester) async {
-      tester.view.physicalSize = const Size(1400, 900);
+      // Screen width 1450 gives content 1200 (1450 - 250 sidebar) = desktop
+      tester.view.physicalSize = const Size(1450, 900);
       tester.view.devicePixelRatio = 1.0;
 
       await tester.pumpWidget(
@@ -297,7 +300,7 @@ void main() {
     });
 
     testWidgets('renders 5 tool items in grid', (tester) async {
-      tester.view.physicalSize = const Size(1400, 1200);
+      tester.view.physicalSize = const Size(1450, 1200);
       tester.view.devicePixelRatio = 1.0;
 
       await tester.pumpWidget(
@@ -320,7 +323,7 @@ void main() {
     });
 
     testWidgets('uses CustomScrollView for scrolling', (tester) async {
-      tester.view.physicalSize = const Size(1400, 900);
+      tester.view.physicalSize = const Size(1450, 900);
       tester.view.devicePixelRatio = 1.0;
 
       await tester.pumpWidget(

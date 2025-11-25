@@ -65,7 +65,7 @@ void main() {
 
   group('LibraryPage Widget Tests', () {
     testWidgets('renders Library header in SliverAppBar', (tester) async {
-      tester.view.physicalSize = const Size(1400, 900);
+      tester.view.physicalSize = const Size(1450, 900);
       tester.view.devicePixelRatio = 1.0;
 
       await tester.pumpWidget(
@@ -98,7 +98,7 @@ void main() {
     });
 
     testWidgets('renders 5 columns on desktop (>=1200px)', (tester) async {
-      tester.view.physicalSize = const Size(1400, 900);
+      tester.view.physicalSize = const Size(1450, 900);
       tester.view.devicePixelRatio = 1.0;
 
       await tester.pumpWidget(
@@ -179,7 +179,7 @@ void main() {
     });
 
     testWidgets('displays LibraryCard items in grid', (tester) async {
-      tester.view.physicalSize = const Size(1400, 900);
+      tester.view.physicalSize = const Size(1450, 900);
       tester.view.devicePixelRatio = 1.0;
 
       await tester.pumpWidget(
@@ -199,7 +199,7 @@ void main() {
     });
 
     testWidgets('uses SliverAppBar for collapsible header', (tester) async {
-      tester.view.physicalSize = const Size(1400, 900);
+      tester.view.physicalSize = const Size(1450, 900);
       tester.view.devicePixelRatio = 1.0;
 
       await tester.pumpWidget(
@@ -224,7 +224,7 @@ void main() {
     });
 
     testWidgets('header collapses on scroll', (tester) async {
-      tester.view.physicalSize = const Size(1400, 900);
+      tester.view.physicalSize = const Size(1450, 900);
       tester.view.devicePixelRatio = 1.0;
 
       await tester.pumpWidget(
@@ -254,7 +254,7 @@ void main() {
     });
 
     testWidgets('uses CustomScrollView for scrolling', (tester) async {
-      tester.view.physicalSize = const Size(1400, 900);
+      tester.view.physicalSize = const Size(1450, 900);
       tester.view.devicePixelRatio = 1.0;
 
       await tester.pumpWidget(
@@ -274,7 +274,7 @@ void main() {
     });
 
     testWidgets('displays sample dental content', (tester) async {
-      tester.view.physicalSize = const Size(1400, 900);
+      tester.view.physicalSize = const Size(1450, 900);
       tester.view.devicePixelRatio = 1.0;
 
       await tester.pumpWidget(
@@ -297,7 +297,7 @@ void main() {
     });
 
     testWidgets('shows sidebar on desktop', (tester) async {
-      tester.view.physicalSize = const Size(1400, 900);
+      tester.view.physicalSize = const Size(1450, 900);
       tester.view.devicePixelRatio = 1.0;
 
       await tester.pumpWidget(
@@ -335,7 +335,7 @@ void main() {
     });
 
     testWidgets('grid has correct spacing on desktop', (tester) async {
-      tester.view.physicalSize = const Size(1400, 900);
+      tester.view.physicalSize = const Size(1450, 900);
       tester.view.devicePixelRatio = 1.0;
 
       await tester.pumpWidget(
@@ -382,7 +382,7 @@ void main() {
 
     testWidgets('renders all 10 sample items', (tester) async {
       tester.view.physicalSize =
-          const Size(1400, 1200); // Tall to show all items
+          const Size(1450, 1200); // Tall to show all items
       tester.view.devicePixelRatio = 1.0;
 
       await tester.pumpWidget(
@@ -409,7 +409,7 @@ void main() {
     testGoldens('desktop layout renders correctly', (tester) async {
       final builder = DeviceBuilder()
         ..overrideDevicesForAllScenarios(devices: [
-          const Device(name: 'desktop', size: Size(1400, 900)),
+          const Device(name: 'desktop', size: Size(1450, 900)),
         ])
         ..addScenario(
           widget: ProviderScope(
@@ -461,7 +461,7 @@ void main() {
     });
 
     testGoldens('collapsed header after scroll', (tester) async {
-      tester.view.physicalSize = const Size(1400, 900);
+      tester.view.physicalSize = const Size(1450, 900);
       tester.view.devicePixelRatio = 1.0;
 
       await tester.pumpWidget(
@@ -485,7 +485,7 @@ void main() {
 
   group('LibraryPage Search Widget Tests', () {
     testWidgets('renders search bar', (tester) async {
-      tester.view.physicalSize = const Size(1400, 900);
+      tester.view.physicalSize = const Size(1450, 900);
       tester.view.devicePixelRatio = 1.0;
 
       await tester.pumpWidget(
@@ -507,7 +507,7 @@ void main() {
     });
 
     testWidgets('search bar has placeholder text', (tester) async {
-      tester.view.physicalSize = const Size(1400, 900);
+      tester.view.physicalSize = const Size(1450, 900);
       tester.view.devicePixelRatio = 1.0;
 
       await tester.pumpWidget(
@@ -526,7 +526,7 @@ void main() {
     });
 
     testWidgets('typing in search bar shows clear button', (tester) async {
-      tester.view.physicalSize = const Size(1400, 900);
+      tester.view.physicalSize = const Size(1450, 900);
       tester.view.devicePixelRatio = 1.0;
 
       await tester.pumpWidget(
@@ -552,7 +552,7 @@ void main() {
     });
 
     testWidgets('clear button clears search', (tester) async {
-      tester.view.physicalSize = const Size(1400, 900);
+      tester.view.physicalSize = const Size(1450, 900);
       tester.view.devicePixelRatio = 1.0;
 
       await tester.pumpWidget(
@@ -590,7 +590,7 @@ void main() {
 
     testWidgets('shows no results message when search has no matches',
         (tester) async {
-      tester.view.physicalSize = const Size(1400, 900);
+      tester.view.physicalSize = const Size(1450, 900);
       tester.view.devicePixelRatio = 1.0;
 
       await tester.pumpWidget(
@@ -619,7 +619,7 @@ void main() {
     });
 
     testWidgets('shows result count when searching', (tester) async {
-      tester.view.physicalSize = const Size(1400, 900);
+      tester.view.physicalSize = const Size(1450, 900);
       tester.view.devicePixelRatio = 1.0;
 
       await tester.pumpWidget(
@@ -681,7 +681,7 @@ void main() {
 
   group('LibraryPage Search Golden Tests', () {
     testGoldens('search bar with matching results', (tester) async {
-      tester.view.physicalSize = const Size(1400, 900);
+      tester.view.physicalSize = const Size(1450, 900);
       tester.view.devicePixelRatio = 1.0;
 
       await tester.pumpWidget(
@@ -705,7 +705,7 @@ void main() {
     });
 
     testGoldens('search bar with no results', (tester) async {
-      tester.view.physicalSize = const Size(1400, 900);
+      tester.view.physicalSize = const Size(1450, 900);
       tester.view.devicePixelRatio = 1.0;
 
       await tester.pumpWidget(

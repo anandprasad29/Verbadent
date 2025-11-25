@@ -148,8 +148,12 @@ void main() {
         expect(AppConstants.captionFontSize, equals(14.0));
       });
 
-      test('header expanded scale is approximately 2.67', () {
-        expect(AppConstants.headerExpandedScale, closeTo(2.67, 0.01));
+      test('header expanded scale large is 2.5', () {
+        expect(AppConstants.headerExpandedScaleLarge, equals(2.5));
+      });
+
+      test('header expanded scale small is 1.5', () {
+        expect(AppConstants.headerExpandedScaleSmall, equals(1.5));
       });
     });
   });
