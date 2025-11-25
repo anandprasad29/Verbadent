@@ -16,6 +16,9 @@
   "speakingIndicator": "Hablando",
   "darkMode": "Modo oscuro",
   "lightMode": "Modo claro",
-  "themeSystem": "Sistema"
+  "themeSystem": "Sistema",
+  "searchPlaceholder": "Buscar por texto...",
+  "searchNoResults": "No se encontraron resultados",
+  "searchResultCount": "{count, plural, =0{Sin elementos} =1{1 elemento} other{{count} elementos}}"
 }
 

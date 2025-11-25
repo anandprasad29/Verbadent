@@ -4,8 +4,11 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:go_router/go_router.dart';
 import 'package:golden_toolkit/golden_toolkit.dart';
+import 'package:verbadent/src/features/library/data/library_data.dart';
 import 'package:verbadent/src/features/library/presentation/library_page.dart';
+import 'package:verbadent/src/features/library/presentation/library_search_provider.dart';
 import 'package:verbadent/src/features/library/presentation/widgets/library_card.dart';
+import 'package:verbadent/src/localization/content_language_provider.dart';
 
 void main() {
   TestWidgetsFlutterBinding.ensureInitialized();
@@ -477,6 +480,370 @@ void main() {
 
       tester.view.resetPhysicalSize();
       tester.view.resetDevicePixelRatio();
+    });
+  });
+
+  group('LibraryPage Search Widget Tests', () {
+    testWidgets('renders search bar', (tester) async {
+      tester.view.physicalSize = const Size(1400, 900);
+      tester.view.devicePixelRatio = 1.0;
+
+      await tester.pumpWidget(
+        ProviderScope(
+          child: MaterialApp.router(
+            routerConfig: createTestRouter(),
+          ),
+        ),
+      );
+
+      // Find the search TextField
+      expect(find.byType(TextField), findsOneWidget);
+
+      // Find the search icon
+      expect(find.byIcon(Icons.search), findsOneWidget);
+
+      tester.view.resetPhysicalSize();
+      tester.view.resetDevicePixelRatio();
+    });
+
+    testWidgets('search bar has placeholder text', (tester) async {
+      tester.view.physicalSize = const Size(1400, 900);
+      tester.view.devicePixelRatio = 1.0;
+
+      await tester.pumpWidget(
+        ProviderScope(
+          child: MaterialApp.router(
+            routerConfig: createTestRouter(),
+          ),
+        ),
+      );
+
+      // Find the placeholder text
+      expect(find.text('Search by caption...'), findsOneWidget);
+
+      tester.view.resetPhysicalSize();
+      tester.view.resetDevicePixelRatio();
+    });
+
+    testWidgets('typing in search bar shows clear button', (tester) async {
+      tester.view.physicalSize = const Size(1400, 900);
+      tester.view.devicePixelRatio = 1.0;
+
+      await tester.pumpWidget(
+        ProviderScope(
+          child: MaterialApp.router(
+            routerConfig: createTestRouter(),
+          ),
+        ),
+      );
+
+      // Initially no clear button
+      expect(find.byIcon(Icons.clear), findsNothing);
+
+      // Enter search text
+      await tester.enterText(find.byType(TextField), 'dentist');
+      await tester.pump();
+
+      // Clear button should appear
+      expect(find.byIcon(Icons.clear), findsOneWidget);
+
+      tester.view.resetPhysicalSize();
+      tester.view.resetDevicePixelRatio();
+    });
+
+    testWidgets('clear button clears search', (tester) async {
+      tester.view.physicalSize = const Size(1400, 900);
+      tester.view.devicePixelRatio = 1.0;
+
+      await tester.pumpWidget(
+        ProviderScope(
+          child: MaterialApp.router(
+            routerConfig: createTestRouter(),
+          ),
+        ),
+      );
+
+      // Enter search text
+      await tester.enterText(find.byType(TextField), 'dentist');
+      await tester.pump();
+
+      // Tap clear button
+      await tester.tap(find.byIcon(Icons.clear));
+      await tester.pump();
+
+      // TextField should be empty
+      final textField = tester.widget<TextField>(find.byType(TextField));
+      expect(textField.controller?.text, isEmpty);
+
+      // Clear button should be gone
+      expect(find.byIcon(Icons.clear), findsNothing);
+
+      tester.view.resetPhysicalSize();
+      tester.view.resetDevicePixelRatio();
+    });
+
+    // Note: Search filtering is tested via unit tests for the provider logic.
+    // Widget integration tests for filtering with debounce are covered by:
+    // - "search works on mobile layout" test
+    // - "shows no results message when search has no matches" test
+    // - Provider unit tests for case-insensitivity and filtering
+
+    testWidgets('shows no results message when search has no matches',
+        (tester) async {
+      tester.view.physicalSize = const Size(1400, 900);
+      tester.view.devicePixelRatio = 1.0;
+
+      await tester.pumpWidget(
+        ProviderScope(
+          child: MaterialApp.router(
+            routerConfig: createTestRouter(),
+          ),
+        ),
+      );
+      await tester.pumpAndSettle();
+
+      // Enter search text that won't match anything
+      await tester.enterText(find.byType(TextField), 'xyznonexistent');
+      await tester.pump(const Duration(milliseconds: 500));
+      await tester.pumpAndSettle();
+
+      // Should show no results message
+      expect(find.text('No results found'), findsOneWidget);
+      expect(find.byIcon(Icons.search_off), findsOneWidget);
+
+      // No LibraryCards should be visible
+      expect(find.byType(LibraryCard), findsNothing);
+
+      tester.view.resetPhysicalSize();
+      tester.view.resetDevicePixelRatio();
+    });
+
+    testWidgets('shows result count when searching', (tester) async {
+      tester.view.physicalSize = const Size(1400, 900);
+      tester.view.devicePixelRatio = 1.0;
+
+      await tester.pumpWidget(
+        ProviderScope(
+          child: MaterialApp.router(
+            routerConfig: createTestRouter(),
+          ),
+        ),
+      );
+      await tester.pumpAndSettle();
+
+      // Result count should not be visible initially
+      expect(find.textContaining('items'), findsNothing);
+
+      // Enter search text that matches multiple items
+      await tester.enterText(find.byType(TextField), 'dentist');
+      await tester.pump(const Duration(milliseconds: 500));
+      await tester.pumpAndSettle();
+
+      // Result count should be visible
+      expect(find.textContaining('items'), findsOneWidget);
+
+      tester.view.resetPhysicalSize();
+      tester.view.resetDevicePixelRatio();
+    });
+
+    // Note: Result count pluralization is handled by Flutter's l10n system.
+    // The presence of result count is verified in "shows result count when searching" test.
+    // Singular/plural behavior is tested implicitly via the golden tests.
+
+    testWidgets('search works on mobile layout', (tester) async {
+      tester.view.physicalSize = const Size(400, 800);
+      tester.view.devicePixelRatio = 1.0;
+
+      await tester.pumpWidget(
+        ProviderScope(
+          child: MaterialApp.router(
+            routerConfig: createTestRouter(),
+          ),
+        ),
+      );
+      await tester.pumpAndSettle();
+
+      // Search bar should be visible on mobile
+      expect(find.byType(TextField), findsOneWidget);
+
+      // Enter search text
+      await tester.enterText(find.byType(TextField), 'chair');
+      await tester.pump(const Duration(milliseconds: 500));
+      await tester.pumpAndSettle();
+
+      // Should filter to 1 item
+      expect(find.byType(LibraryCard), findsOneWidget);
+
+      tester.view.resetPhysicalSize();
+      tester.view.resetDevicePixelRatio();
+    });
+  });
+
+  group('LibraryPage Search Golden Tests', () {
+    testGoldens('search bar with matching results', (tester) async {
+      tester.view.physicalSize = const Size(1400, 900);
+      tester.view.devicePixelRatio = 1.0;
+
+      await tester.pumpWidget(
+        ProviderScope(
+          child: MaterialApp.router(
+            routerConfig: createTestRouter(),
+          ),
+        ),
+      );
+      await tester.pumpAndSettle();
+
+      // Enter search text
+      await tester.enterText(find.byType(TextField), 'dentist');
+      await tester.pump(const Duration(milliseconds: 500));
+      await tester.pumpAndSettle();
+
+      await screenMatchesGolden(tester, 'library_page_search_with_results');
+
+      tester.view.resetPhysicalSize();
+      tester.view.resetDevicePixelRatio();
+    });
+
+    testGoldens('search bar with no results', (tester) async {
+      tester.view.physicalSize = const Size(1400, 900);
+      tester.view.devicePixelRatio = 1.0;
+
+      await tester.pumpWidget(
+        ProviderScope(
+          child: MaterialApp.router(
+            routerConfig: createTestRouter(),
+          ),
+        ),
+      );
+      await tester.pumpAndSettle();
+
+      // Enter search text that won't match
+      await tester.enterText(find.byType(TextField), 'xyznonexistent');
+      await tester.pump(const Duration(milliseconds: 500));
+      await tester.pumpAndSettle();
+
+      await screenMatchesGolden(tester, 'library_page_search_no_results');
+
+      tester.view.resetPhysicalSize();
+      tester.view.resetDevicePixelRatio();
+    });
+
+    testGoldens('search on mobile layout', (tester) async {
+      tester.view.physicalSize = const Size(400, 800);
+      tester.view.devicePixelRatio = 1.0;
+
+      await tester.pumpWidget(
+        ProviderScope(
+          child: MaterialApp.router(
+            routerConfig: createTestRouter(),
+          ),
+        ),
+      );
+      await tester.pumpAndSettle();
+
+      // Enter search text
+      await tester.enterText(find.byType(TextField), 'mirror');
+      await tester.pump(const Duration(milliseconds: 500));
+      await tester.pumpAndSettle();
+
+      await screenMatchesGolden(tester, 'library_page_search_mobile');
+
+      tester.view.resetPhysicalSize();
+      tester.view.resetDevicePixelRatio();
+    });
+  });
+
+  group('Search Provider Unit Tests', () {
+    test('librarySearchQueryProvider starts with empty string', () {
+      final container = ProviderContainer();
+      addTearDown(container.dispose);
+
+      final query = container.read(librarySearchQueryProvider);
+      expect(query, isEmpty);
+    });
+
+    test('librarySearchInputProvider starts with empty string', () {
+      final container = ProviderContainer();
+      addTearDown(container.dispose);
+
+      final input = container.read(librarySearchInputProvider);
+      expect(input, isEmpty);
+    });
+
+    test('filteredLibraryItemsProvider returns all items when query is empty',
+        () {
+      final container = ProviderContainer();
+      addTearDown(container.dispose);
+
+      final items = container.read(filteredLibraryItemsProvider);
+      expect(items.length, equals(LibraryData.sampleItems.length));
+    });
+
+    test('filteredLibraryItemsProvider filters items by caption', () {
+      final container = ProviderContainer();
+      addTearDown(container.dispose);
+
+      // Set search query
+      container.read(librarySearchQueryProvider.notifier).state = 'mirror';
+
+      final items = container.read(filteredLibraryItemsProvider);
+      expect(items.length, equals(1));
+      expect(items.first.id, equals('dental-mirror'));
+    });
+
+    test('filteredLibraryItemsProvider is case-insensitive', () {
+      final container = ProviderContainer();
+      addTearDown(container.dispose);
+
+      // Set uppercase search query
+      container.read(librarySearchQueryProvider.notifier).state = 'MIRROR';
+
+      final items = container.read(filteredLibraryItemsProvider);
+      expect(items.length, equals(1));
+      expect(items.first.id, equals('dental-mirror'));
+    });
+
+    test('filteredLibraryItemsProvider returns empty list for no matches', () {
+      final container = ProviderContainer();
+      addTearDown(container.dispose);
+
+      container.read(librarySearchQueryProvider.notifier).state =
+          'xyznonexistent';
+
+      final items = container.read(filteredLibraryItemsProvider);
+      expect(items, isEmpty);
+    });
+
+    test('filteredLibraryItemsProvider filters by translated caption', () {
+      final container = ProviderContainer();
+      addTearDown(container.dispose);
+
+      // Set language to Spanish
+      container.read(contentLanguageNotifierProvider.notifier).setLanguage(
+            ContentLanguage.es,
+          );
+
+      // Search for Spanish word "espejo" (mirror)
+      container.read(librarySearchQueryProvider.notifier).state = 'espejo';
+
+      final items = container.read(filteredLibraryItemsProvider);
+      expect(items.length, equals(1));
+      expect(items.first.id, equals('dental-mirror'));
+    });
+
+    test('LibrarySearchNotifier clearSearch clears both providers', () {
+      final container = ProviderContainer();
+      addTearDown(container.dispose);
+
+      // Set initial values
+      container.read(librarySearchInputProvider.notifier).state = 'test';
+      container.read(librarySearchQueryProvider.notifier).state = 'test';
+
+      // Clear search
+      container.read(librarySearchNotifierProvider.notifier).clearSearch();
+
+      expect(container.read(librarySearchInputProvider), isEmpty);
+      expect(container.read(librarySearchQueryProvider), isEmpty);
     });
   });
 }

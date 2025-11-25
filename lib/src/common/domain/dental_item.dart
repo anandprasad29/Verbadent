@@ -23,3 +23,4 @@ class DentalItem {
   @override
   int get hashCode => id.hashCode ^ imagePath.hashCode ^ caption.hashCode;
 }
+

@@ -16,3 +16,4 @@ echo ""
 # If l10n files get deleted, run: flutter gen-l10n
 dart run build_runner watch --delete-conflicting-outputs
 
+

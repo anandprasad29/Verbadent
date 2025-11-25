@@ -67,5 +67,23 @@
   "themeSystem": "System",
   "@themeSystem": {
     "description": "System theme option"
+  },
+  "searchPlaceholder": "Search by caption...",
+  "@searchPlaceholder": {
+    "description": "Placeholder text for search input"
+  },
+  "searchNoResults": "No results found",
+  "@searchNoResults": {
+    "description": "Message shown when search returns no results"
+  },
+  "searchResultCount": "{count, plural, =0{No items} =1{1 item} other{{count} items}}",
+  "@searchResultCount": {
+    "description": "Shows the number of search results",
+    "placeholders": {
+      "count": {
+        "type": "int",
+        "example": "5"
+      }
+    }
   }
 }

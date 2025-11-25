@@ -62,3 +62,4 @@ class ContentTranslations {
   // Private constructor to prevent instantiation
   ContentTranslations._();
 }
+

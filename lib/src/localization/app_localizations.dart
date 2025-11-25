@@ -199,6 +199,24 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'System'**
   String get themeSystem;
+
+  /// Placeholder text for search input
+  ///
+  /// In en, this message translates to:
+  /// **'Search by caption...'**
+  String get searchPlaceholder;
+
+  /// Message shown when search returns no results
+  ///
+  /// In en, this message translates to:
+  /// **'No results found'**
+  String get searchNoResults;
+
+  /// Shows the number of search results
+  ///
+  /// In en, this message translates to:
+  /// **'{count, plural, =0{No items} =1{1 item} other{{count} items}}'**
+  String searchResultCount(int count);
 }
 
 class _AppLocalizationsDelegate
