@@ -11,8 +11,11 @@ part 'tts_service.g.dart';
 /// Exposes speaking state for UI feedback.
 class TtsService {
   final FlutterTts _flutterTts = FlutterTts();
-  bool _isInitialized = false;
   String _currentLanguage = 'en-US';
+  
+  /// Initialization future to prevent race conditions.
+  /// All callers await this same future to ensure init completes once.
+  Future<void>? _initFuture;
 
   /// Controller for speaking state changes
   final _speakingController = StreamController<bool>.broadcast();
@@ -29,9 +32,15 @@ class TtsService {
   String? get currentText => _currentText;
 
   /// Initialize the TTS engine with default settings.
-  Future<void> init() async {
-    if (_isInitialized) return;
-
+  /// Safe to call multiple times - all callers await the same future.
+  Future<void> init() {
+    // Return existing future if init is already in progress or complete
+    _initFuture ??= _doInit();
+    return _initFuture!;
+  }
+  
+  /// Internal initialization logic.
+  Future<void> _doInit() async {
     await _flutterTts.setLanguage(_currentLanguage);
     await _flutterTts.setSpeechRate(0.5);
     await _flutterTts.setVolume(1.0);
@@ -62,22 +71,19 @@ class TtsService {
       _currentText = null;
       _speakingController.add(false);
     });
-
-    _isInitialized = true;
   }
 
   /// Set the TTS language based on ContentLanguage.
   Future<void> setLanguage(ContentLanguage language) async {
+    await init(); // Ensure initialized before setting language
     _currentLanguage = language.ttsCode;
     await _flutterTts.setLanguage(_currentLanguage);
   }
 
   /// Speak the given text.
-  /// Automatically initializes if not already done.
+  /// Automatically waits for initialization to complete.
   Future<void> speak(String text) async {
-    if (!_isInitialized) {
-      await init();
-    }
+    await init();
     _currentText = text;
     await _flutterTts.speak(text);
   }
