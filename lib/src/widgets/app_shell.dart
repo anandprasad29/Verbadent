@@ -3,7 +3,6 @@ import '../constants/app_constants.dart';
 import '../theme/app_colors.dart';
 import 'language_selector.dart';
 import 'sidebar.dart';
-import 'theme_toggle.dart';
 
 /// Shared application shell that provides consistent layout across pages.
 /// Handles responsive design with sidebar (desktop) or drawer (mobile).
@@ -42,6 +41,7 @@ class AppShell extends StatelessWidget {
   }
 
   /// Desktop layout with permanent sidebar
+  /// Language selector is handled by individual pages in their SliverAppBar
   Widget _buildDesktopLayout(BuildContext context) {
     return Scaffold(
       backgroundColor: context.appBackground,
@@ -52,26 +52,9 @@ class AppShell extends StatelessWidget {
             child: Sidebar(),
           ),
           Expanded(
-            child: Stack(
-              children: [
-                Container(
-                  color: context.appBackground,
-                  child: child,
-                ),
-                if (showLanguageSelector)
-                  Positioned(
-                    top: 16,
-                    right: 16,
-                    child: Row(
-                      mainAxisSize: MainAxisSize.min,
-                      children: [
-                        const LanguageSelector(),
-                        const SizedBox(width: 8),
-                        const ThemeToggleCompact(),
-                      ],
-                    ),
-                  ),
-              ],
+            child: Container(
+              color: context.appBackground,
+              child: child,
             ),
           ),
         ],
@@ -106,11 +89,10 @@ class AppShell extends StatelessWidget {
         actions: [
           if (showLanguageSelector)
             const Padding(
-              padding: EdgeInsets.only(right: 4),
-              child: LanguageSelector(),
+              padding: EdgeInsets.only(right: 8),
+              // Use compact selector in mobile app bar
+              child: LanguageSelector(compact: true),
             ),
-          const ThemeToggleCompact(),
-          const SizedBox(width: 4),
         ],
       ),
       drawer: showDrawer

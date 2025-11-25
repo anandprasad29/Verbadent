@@ -7,6 +7,7 @@ import '../../../localization/content_translations.dart';
 import '../../../theme/app_colors.dart';
 import '../../../utils/responsive.dart';
 import '../../../widgets/app_shell.dart';
+import '../../../widgets/language_selector.dart';
 import '../data/library_data.dart';
 import '../services/tts_service.dart';
 import 'widgets/library_card.dart';
@@ -42,6 +43,9 @@ class LibraryPage extends ConsumerWidget {
     final padding = Responsive.getContentPadding(context);
     final l10n = AppLocalizations.of(context);
 
+    // Check if we're on desktop (wide screen with sidebar)
+    final isDesktop = MediaQuery.of(context).size.width >= AppConstants.sidebarBreakpoint;
+    
     return Container(
       color: context.appBackground,
       child: CustomScrollView(
@@ -53,6 +57,15 @@ class LibraryPage extends ConsumerWidget {
             floating: false,
             backgroundColor: context.appBackground,
             automaticallyImplyLeading: false,
+            // Language selector in actions (only on desktop, mobile uses app bar)
+            actions: isDesktop
+                ? [
+                    Padding(
+                      padding: const EdgeInsets.only(right: 16, top: 8),
+                      child: LanguageSelector(compact: true),
+                    ),
+                  ]
+                : null,
             flexibleSpace: FlexibleSpaceBar(
               centerTitle: true,
               titlePadding: const EdgeInsets.only(bottom: 16),
