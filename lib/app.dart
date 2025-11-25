@@ -1,15 +1,38 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_native_splash/flutter_native_splash.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'src/localization/app_localizations.dart';
 import 'src/routing/app_router.dart';
 import 'src/theme/app_theme.dart';
 import 'src/theme/theme_provider.dart';
 
-class VerbadentApp extends ConsumerWidget {
+class VerbadentApp extends ConsumerStatefulWidget {
   const VerbadentApp({super.key});
 
   @override
-  Widget build(BuildContext context, WidgetRef ref) {
+  ConsumerState<VerbadentApp> createState() => _VerbadentAppState();
+}
+
+class _VerbadentAppState extends ConsumerState<VerbadentApp> {
+  bool _initialized = false;
+
+  @override
+  void initState() {
+    super.initState();
+    // Remove splash screen after first frame is rendered
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      if (!_initialized) {
+        _initialized = true;
+        // Small delay to ensure smooth transition
+        Future.delayed(const Duration(milliseconds: 100), () {
+          FlutterNativeSplash.remove();
+        });
+      }
+    });
+  }
+
+  @override
+  Widget build(BuildContext context) {
     final goRouter = ref.watch(goRouterProvider);
     final themeMode = ref.watch(themeModeNotifierProvider);
 

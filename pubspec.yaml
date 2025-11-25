@@ -17,9 +17,12 @@ dependencies:
   equatable: ^2.0.5
   riverpod_annotation: ^2.3.5
   flutter_tts: ^4.0.2
+  flutter_native_splash: ^2.4.7
 
 dev_dependencies:
   flutter_test:
+    sdk: flutter
+  flutter_driver:
     sdk: flutter
   golden_toolkit: ^0.15.0
   integration_test:
@@ -45,3 +48,22 @@ flutter:
       fonts:
         - asset: fonts/InstrumentSans-Bold.ttf
           weight: 700
+
+# Native splash screen configuration
+# Hides Flutter initialization frame drops behind a native splash
+flutter_native_splash:
+  # Background color matching app theme
+  color: "#1a1a2e"
+  
+  # Android 12+ splash screen
+  android_12:
+    color: "#1a1a2e"
+    
+  # iOS configuration
+  ios: true
+  
+  # Web configuration  
+  web: false
+  
+  # Keep splash until explicitly removed
+  fullscreen: true
