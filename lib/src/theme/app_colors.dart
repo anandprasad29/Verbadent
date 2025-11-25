@@ -2,7 +2,12 @@ import 'package:flutter/material.dart';
 
 /// App color constants based on Figma design.
 /// Centralized color definitions for consistent theming.
+/// Supports both light and dark mode color schemes.
 class AppColors {
+  // ============================================
+  // LIGHT THEME COLORS
+  // ============================================
+
   // Primary colors
   static const Color primary =
       Color(0xFF5483F5); // Blue for sidebar and accents
@@ -31,6 +36,107 @@ class AppColors {
   static const Color neutral = Color(0xFFD9D9D9); // Light gray
   static const Color divider = Color(0xFFE0E0E0); // Divider gray
 
+  // ============================================
+  // DARK THEME COLORS
+  // ============================================
+
+  // Primary colors (slightly brighter for dark mode)
+  static const Color primaryDarkMode = Color(0xFF6B9AFF);
+  static const Color primaryDarkModeDark = Color(0xFF5483F5);
+
+  // Background colors
+  static const Color backgroundDark = Color(0xFF121218); // Deep dark
+  static const Color surfaceDark = Color(0xFF1E1E26); // Slightly lighter
+
+  // Text colors
+  static const Color textPrimaryDark =
+      Color(0xFFB4C7F5); // Light blue for headers
+  static const Color textTitleDark =
+      Color(0xFFE8EEFF); // Almost white for main titles
+  static const Color textSecondaryDark =
+      Color(0xFFE0E0E0); // Light gray for body
+
+  // Sidebar colors
+  static const Color sidebarBackgroundDark = Color(0xFF1A1A24); // Dark sidebar
+  static const Color sidebarItemBackgroundDark =
+      Color(0xFF2A2A36); // Dark gray buttons
+  static const Color sidebarItemActiveDark =
+      Color(0xFF3A3A4A); // Lighter for active
+  static const Color sidebarItemTextDark = Color(0xFFE0E0E0); // Light text
+
+  // Card colors
+  static const Color cardBorderDark = Color(0xFF6B9AFF); // Brighter blue border
+  static const Color cardBackgroundDark =
+      Color(0xFF1E1E26); // Dark card background
+
+  // Neutral colors
+  static const Color neutralDark = Color(0xFF3A3A46); // Dark gray
+  static const Color dividerDark = Color(0xFF2A2A36); // Dark divider
+
+  // ============================================
+  // SEMANTIC COLORS (same for both themes)
+  // ============================================
+
+  static const Color success = Color(0xFF4CAF50);
+  static const Color error = Color(0xFFE53935);
+  static const Color warning = Color(0xFFFFA726);
+  static const Color info = Color(0xFF29B6F6);
+
+  // Speaking indicator color
+  static const Color speakingIndicator = Color(0xFF4CAF50);
+  static const Color speakingIndicatorDark = Color(0xFF66BB6A);
+
+  // Skeleton loading colors
+  static const Color skeletonBase = Color(0xFFE0E0E0);
+  static const Color skeletonHighlight = Color(0xFFF5F5F5);
+  static const Color skeletonBaseDark = Color(0xFF2A2A36);
+  static const Color skeletonHighlightDark = Color(0xFF3A3A46);
+
   // Private constructor to prevent instantiation
   AppColors._();
+}
+
+/// Extension to get theme-aware colors
+extension AppColorsExtension on BuildContext {
+  bool get isDarkMode => Theme.of(this).brightness == Brightness.dark;
+
+  Color get appBackground =>
+      isDarkMode ? AppColors.backgroundDark : AppColors.background;
+  Color get appSurface =>
+      isDarkMode ? AppColors.surfaceDark : AppColors.surface;
+  Color get appPrimary =>
+      isDarkMode ? AppColors.primaryDarkMode : AppColors.primary;
+  Color get appTextPrimary =>
+      isDarkMode ? AppColors.textPrimaryDark : AppColors.textPrimary;
+  Color get appTextTitle =>
+      isDarkMode ? AppColors.textTitleDark : AppColors.textTitle;
+  Color get appTextSecondary =>
+      isDarkMode ? AppColors.textSecondaryDark : AppColors.textSecondary;
+  Color get appSidebarBackground => isDarkMode
+      ? AppColors.sidebarBackgroundDark
+      : AppColors.sidebarBackground;
+  Color get appSidebarItemBackground => isDarkMode
+      ? AppColors.sidebarItemBackgroundDark
+      : AppColors.sidebarItemBackground;
+  Color get appSidebarItemActive => isDarkMode
+      ? AppColors.sidebarItemActiveDark
+      : AppColors.sidebarItemActive;
+  Color get appSidebarItemText =>
+      isDarkMode ? AppColors.sidebarItemTextDark : AppColors.sidebarItemText;
+  Color get appCardBorder =>
+      isDarkMode ? AppColors.cardBorderDark : AppColors.cardBorder;
+  Color get appCardBackground =>
+      isDarkMode ? AppColors.cardBackgroundDark : AppColors.cardBackground;
+  Color get appNeutral =>
+      isDarkMode ? AppColors.neutralDark : AppColors.neutral;
+  Color get appDivider =>
+      isDarkMode ? AppColors.dividerDark : AppColors.divider;
+  Color get appSkeletonBase =>
+      isDarkMode ? AppColors.skeletonBaseDark : AppColors.skeletonBase;
+  Color get appSkeletonHighlight => isDarkMode
+      ? AppColors.skeletonHighlightDark
+      : AppColors.skeletonHighlight;
+  Color get appSpeakingIndicator => isDarkMode
+      ? AppColors.speakingIndicatorDark
+      : AppColors.speakingIndicator;
 }

@@ -113,19 +113,19 @@ abstract class AppLocalizations {
   /// Navigation label for before visit section
   ///
   /// In en, this message translates to:
-  /// **'Before Visit'**
+  /// **'Before the visit'**
   String get navBeforeVisit;
 
   /// Navigation label for during visit section
   ///
   /// In en, this message translates to:
-  /// **'During Visit'**
+  /// **'During the visit'**
   String get navDuringVisit;
 
   /// Navigation label for build your own section
   ///
   /// In en, this message translates to:
-  /// **'Build Your Own'**
+  /// **'Build your own'**
   String get navBuildOwn;
 
   /// Page header for library page
@@ -143,13 +143,13 @@ abstract class AppLocalizations {
   /// Page header for during visit page
   ///
   /// In en, this message translates to:
-  /// **'During Visit'**
+  /// **'During the visit'**
   String get pageHeaderDuringVisit;
 
   /// Page header for build your own page
   ///
   /// In en, this message translates to:
-  /// **'Build Your Own'**
+  /// **'Build your own'**
   String get pageHeaderBuildOwn;
 
   /// Label for language selector dropdown
@@ -169,6 +169,36 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Spanish'**
   String get languageSpanish;
+
+  /// Loading indicator text
+  ///
+  /// In en, this message translates to:
+  /// **'Loading...'**
+  String get loadingContent;
+
+  /// Indicator shown when TTS is speaking
+  ///
+  /// In en, this message translates to:
+  /// **'Speaking'**
+  String get speakingIndicator;
+
+  /// Dark mode toggle label
+  ///
+  /// In en, this message translates to:
+  /// **'Dark mode'**
+  String get darkMode;
+
+  /// Light mode toggle label
+  ///
+  /// In en, this message translates to:
+  /// **'Light mode'**
+  String get lightMode;
+
+  /// System theme option
+  ///
+  /// In en, this message translates to:
+  /// **'System'**
+  String get themeSystem;
 }
 
 class _AppLocalizationsDelegate

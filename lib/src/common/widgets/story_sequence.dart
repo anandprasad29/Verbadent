@@ -3,7 +3,6 @@ import '../../constants/app_constants.dart';
 import '../../localization/content_language_provider.dart';
 import '../../localization/content_translations.dart';
 import '../../theme/app_colors.dart';
-import '../../theme/app_text_styles.dart';
 import '../domain/dental_item.dart';
 import 'tappable_card.dart';
 
@@ -126,7 +125,7 @@ class _StoryItem extends StatelessWidget {
                 height: size,
                 decoration: BoxDecoration(
                   border: Border.all(
-                    color: AppColors.cardBorder,
+                    color: context.appCardBorder,
                     width: AppConstants.cardBorderWidth,
                   ),
                   borderRadius: BorderRadius.circular(AppConstants.cardBorderRadius),
@@ -140,11 +139,11 @@ class _StoryItem extends StatelessWidget {
                     fit: BoxFit.cover,
                     errorBuilder: (context, error, stackTrace) {
                       return Container(
-                        color: AppColors.background,
+                        color: context.appBackground,
                         child: Icon(
                           Icons.medical_services_outlined,
                           size: 48,
-                          color: AppColors.cardBorder,
+                          color: context.appCardBorder,
                         ),
                       );
                     },
@@ -155,7 +154,12 @@ class _StoryItem extends StatelessWidget {
               // Caption text
               Text(
                 caption,
-                style: AppTextStyles.caption,
+                style: TextStyle(
+                  fontFamily: 'InstrumentSans',
+                  fontWeight: FontWeight.bold,
+                  fontSize: AppConstants.captionFontSize,
+                  color: context.appTextSecondary,
+                ),
                 textAlign: TextAlign.center,
                 maxLines: 3,
                 overflow: TextOverflow.ellipsis,
@@ -191,7 +195,7 @@ class _ArrowConnector extends StatelessWidget {
           padding: EdgeInsets.only(top: imageSize / 2 - 8),
           child: CustomPaint(
             size: Size(width, 16),
-            painter: _ArrowPainter(color: AppColors.cardBorder),
+            painter: _ArrowPainter(color: context.appCardBorder),
           ),
         ),
       ),

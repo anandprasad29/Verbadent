@@ -3,6 +3,7 @@ import '../constants/app_constants.dart';
 import '../theme/app_colors.dart';
 import 'language_selector.dart';
 import 'sidebar.dart';
+import 'theme_toggle.dart';
 
 /// Shared application shell that provides consistent layout across pages.
 /// Handles responsive design with sidebar (desktop) or drawer (mobile).
@@ -43,6 +44,7 @@ class AppShell extends StatelessWidget {
   /// Desktop layout with permanent sidebar
   Widget _buildDesktopLayout(BuildContext context) {
     return Scaffold(
+      backgroundColor: context.appBackground,
       body: Row(
         children: [
           const SizedBox(
@@ -53,14 +55,21 @@ class AppShell extends StatelessWidget {
             child: Stack(
               children: [
                 Container(
-                  color: AppColors.background,
+                  color: context.appBackground,
                   child: child,
                 ),
                 if (showLanguageSelector)
-                  const Positioned(
+                  Positioned(
                     top: 16,
                     right: 16,
-                    child: LanguageSelector(),
+                    child: Row(
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        const LanguageSelector(),
+                        const SizedBox(width: 8),
+                        const ThemeToggleCompact(),
+                      ],
+                    ),
                   ),
               ],
             ),
@@ -73,8 +82,9 @@ class AppShell extends StatelessWidget {
   /// Mobile layout with hamburger menu and drawer
   Widget _buildMobileLayout(BuildContext context) {
     return Scaffold(
+      backgroundColor: context.appBackground,
       appBar: AppBar(
-        backgroundColor: AppColors.sidebarBackground,
+        backgroundColor: context.appSidebarBackground,
         iconTheme: const IconThemeData(color: Colors.white),
         title: title != null
             ? Text(
@@ -93,14 +103,15 @@ class AppShell extends StatelessWidget {
                 ),
               )
             : null,
-        actions: showLanguageSelector
-            ? const [
-                Padding(
-                  padding: EdgeInsets.only(right: 8),
-                  child: LanguageSelector(),
-                ),
-              ]
-            : null,
+        actions: [
+          if (showLanguageSelector)
+            const Padding(
+              padding: EdgeInsets.only(right: 4),
+              child: LanguageSelector(),
+            ),
+          const ThemeToggleCompact(),
+          const SizedBox(width: 4),
+        ],
       ),
       drawer: showDrawer
           ? const Drawer(
@@ -109,7 +120,7 @@ class AppShell extends StatelessWidget {
             )
           : null,
       body: Container(
-        color: AppColors.background,
+        color: context.appBackground,
         child: child,
       ),
     );

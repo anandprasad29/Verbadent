@@ -1,3 +1,4 @@
+import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
@@ -8,6 +9,46 @@ import 'routes.dart';
 
 part 'app_router.g.dart';
 
+/// Page transition duration
+const _transitionDuration = Duration(milliseconds: 300);
+
+/// Creates a custom page with fade transition
+CustomTransitionPage<void> _buildPageWithTransition({
+  required BuildContext context,
+  required GoRouterState state,
+  required Widget child,
+}) {
+  return CustomTransitionPage<void>(
+    key: state.pageKey,
+    child: child,
+    transitionDuration: _transitionDuration,
+    reverseTransitionDuration: _transitionDuration,
+    transitionsBuilder: (context, animation, secondaryAnimation, child) {
+      // Fade transition with subtle slide from right
+      final fadeAnimation = CurvedAnimation(
+        parent: animation,
+        curve: Curves.easeOutCubic,
+      );
+
+      final slideAnimation = Tween<Offset>(
+        begin: const Offset(0.03, 0),
+        end: Offset.zero,
+      ).animate(CurvedAnimation(
+        parent: animation,
+        curve: Curves.easeOutCubic,
+      ));
+
+      return FadeTransition(
+        opacity: fadeAnimation,
+        child: SlideTransition(
+          position: slideAnimation,
+          child: child,
+        ),
+      );
+    },
+  );
+}
+
 @riverpod
 GoRouter goRouter(Ref ref) {
   return GoRouter(
@@ -17,30 +58,48 @@ GoRouter goRouter(Ref ref) {
       GoRoute(
         path: Routes.home,
         name: 'home',
-        builder: (context, state) => const DashboardPage(),
+        pageBuilder: (context, state) => _buildPageWithTransition(
+          context: context,
+          state: state,
+          child: const DashboardPage(),
+        ),
       ),
       GoRoute(
         path: Routes.library,
         name: 'library',
-        builder: (context, state) => const LibraryPage(),
+        pageBuilder: (context, state) => _buildPageWithTransition(
+          context: context,
+          state: state,
+          child: const LibraryPage(),
+        ),
       ),
       GoRoute(
         path: Routes.beforeVisit,
         name: 'beforeVisit',
-        builder: (context, state) => const BeforeVisitPage(),
+        pageBuilder: (context, state) => _buildPageWithTransition(
+          context: context,
+          state: state,
+          child: const BeforeVisitPage(),
+        ),
       ),
       // Placeholder routes for future pages
       GoRoute(
         path: Routes.duringVisit,
         name: 'duringVisit',
-        builder: (context, state) =>
-            const DashboardPage(), // TODO: Create DuringVisitPage
+        pageBuilder: (context, state) => _buildPageWithTransition(
+          context: context,
+          state: state,
+          child: const DashboardPage(), // TODO: Create DuringVisitPage
+        ),
       ),
       GoRoute(
         path: Routes.buildOwn,
         name: 'buildOwn',
-        builder: (context, state) =>
-            const DashboardPage(), // TODO: Create BuildOwnPage
+        pageBuilder: (context, state) => _buildPageWithTransition(
+          context: context,
+          state: state,
+          child: const DashboardPage(), // TODO: Create BuildOwnPage
+        ),
       ),
     ],
   );

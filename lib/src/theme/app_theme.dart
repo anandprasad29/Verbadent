@@ -15,6 +15,7 @@ class AppTheme {
 
     return ThemeData(
       useMaterial3: true,
+      brightness: Brightness.light,
 
       // Color scheme
       colorScheme: ColorScheme.light(
@@ -63,10 +64,11 @@ class AppTheme {
     );
   }
 
-  /// Static theme for cases where context is not available
+  /// Static light theme for cases where context is not available
   static ThemeData get staticLightTheme {
     return ThemeData(
       useMaterial3: true,
+      brightness: Brightness.light,
       colorScheme: ColorScheme.light(
         primary: AppColors.primary,
         surface: AppColors.background,
@@ -94,6 +96,44 @@ class AppTheme {
           fontFamily: 'KumarOne',
           fontSize: 24,
           color: AppColors.textPrimary,
+          fontWeight: FontWeight.w400,
+        ),
+      ),
+    );
+  }
+
+  /// Static dark theme
+  static ThemeData get staticDarkTheme {
+    return ThemeData(
+      useMaterial3: true,
+      brightness: Brightness.dark,
+      colorScheme: ColorScheme.dark(
+        primary: AppColors.primaryDarkMode,
+        surface: AppColors.surfaceDark,
+      ),
+      scaffoldBackgroundColor: AppColors.backgroundDark,
+      textTheme: const TextTheme(
+        displayLarge: TextStyle(
+          fontFamily: 'KumarOne',
+          fontSize: 85,
+          color: AppColors.textPrimaryDark,
+          fontWeight: FontWeight.w400,
+        ),
+        bodyLarge: TextStyle(
+          fontFamily: 'KumarOne',
+          fontSize: 12,
+          color: AppColors.textSecondaryDark,
+          fontWeight: FontWeight.w400,
+        ),
+      ),
+      appBarTheme: const AppBarTheme(
+        backgroundColor: AppColors.backgroundDark,
+        elevation: 0,
+        centerTitle: true,
+        titleTextStyle: TextStyle(
+          fontFamily: 'KumarOne',
+          fontSize: 24,
+          color: AppColors.textPrimaryDark,
           fontWeight: FontWeight.w400,
         ),
       ),

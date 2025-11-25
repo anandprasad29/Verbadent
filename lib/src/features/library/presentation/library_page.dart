@@ -5,7 +5,6 @@ import '../../../localization/app_localizations.dart';
 import '../../../localization/content_language_provider.dart';
 import '../../../localization/content_translations.dart';
 import '../../../theme/app_colors.dart';
-import '../../../theme/app_text_styles.dart';
 import '../../../utils/responsive.dart';
 import '../../../widgets/app_shell.dart';
 import '../data/library_data.dart';
@@ -44,7 +43,7 @@ class LibraryPage extends ConsumerWidget {
     final l10n = AppLocalizations.of(context);
 
     return Container(
-      color: AppColors.background,
+      color: context.appBackground,
       child: CustomScrollView(
         slivers: [
           // Collapsible header with "Library" title
@@ -52,14 +51,18 @@ class LibraryPage extends ConsumerWidget {
             expandedHeight: AppConstants.headerExpandedHeight,
             pinned: true,
             floating: false,
-            backgroundColor: AppColors.background,
+            backgroundColor: context.appBackground,
             automaticallyImplyLeading: false,
             flexibleSpace: FlexibleSpaceBar(
               centerTitle: true,
               titlePadding: const EdgeInsets.only(bottom: 16),
               title: Text(
                 l10n?.pageHeaderLibrary ?? 'Library',
-                style: AppTextStyles.pageHeader,
+                style: TextStyle(
+                  fontFamily: 'KumarOne',
+                  fontSize: AppConstants.headerFontSize,
+                  color: context.appTextPrimary,
+                ),
               ),
               expandedTitleScale: AppConstants.headerExpandedScale,
             ),
@@ -85,6 +88,8 @@ class LibraryPage extends ConsumerWidget {
                     item: item,
                     caption: translatedCaption,
                     onTap: () => ttsService.speak(translatedCaption),
+                    isSpeaking: ttsService.isSpeaking &&
+                        ttsService.currentText == translatedCaption,
                   );
                 },
                 childCount: LibraryData.sampleItems.length,

@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import '../../../constants/app_constants.dart';
 import '../../../theme/app_colors.dart';
-import '../../../theme/app_text_styles.dart';
 import '../../../widgets/app_shell.dart';
 
 /// Main dashboard page displaying the VERBADENT title.
@@ -17,13 +16,18 @@ class DashboardPage extends StatelessWidget {
       showLanguageSelector: false,
       child: Container(
         key: const Key('dashboard_content'),
-        color: AppColors.background,
+        color: context.appBackground,
         child: Center(
           child: Text(
             'VERBADENT',
-            style: isWideScreen
-                ? AppTextStyles.titleLarge
-                : AppTextStyles.titleMobile,
+            style: TextStyle(
+              fontFamily: 'KumarOne',
+              fontSize: isWideScreen
+                  ? AppConstants.titleFontSizeDesktop
+                  : AppConstants.titleFontSizeMobile,
+              fontWeight: FontWeight.bold,
+              color: context.appTextTitle,
+            ),
           ),
         ),
       ),

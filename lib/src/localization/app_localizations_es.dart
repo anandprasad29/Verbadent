@@ -15,13 +15,13 @@ class AppLocalizationsEs extends AppLocalizations {
   String get navLibrary => 'Biblioteca';
 
   @override
-  String get navBeforeVisit => 'Antes de la Visita';
+  String get navBeforeVisit => 'Antes de la visita';
 
   @override
-  String get navDuringVisit => 'Durante la Visita';
+  String get navDuringVisit => 'Durante la visita';
 
   @override
-  String get navBuildOwn => 'Crea el Tuyo';
+  String get navBuildOwn => 'Crea el tuyo';
 
   @override
   String get pageHeaderLibrary => 'Biblioteca';
@@ -30,10 +30,10 @@ class AppLocalizationsEs extends AppLocalizations {
   String get pageHeaderBeforeVisit => 'Antes de la visita';
 
   @override
-  String get pageHeaderDuringVisit => 'Durante la Visita';
+  String get pageHeaderDuringVisit => 'Durante la visita';
 
   @override
-  String get pageHeaderBuildOwn => 'Crea el Tuyo';
+  String get pageHeaderBuildOwn => 'Crea el tuyo';
 
   @override
   String get languageSelectorLabel => 'Idioma';
@@ -43,4 +43,19 @@ class AppLocalizationsEs extends AppLocalizations {
 
   @override
   String get languageSpanish => 'Español';
+
+  @override
+  String get loadingContent => 'Cargando...';
+
+  @override
+  String get speakingIndicator => 'Hablando';
+
+  @override
+  String get darkMode => 'Modo oscuro';
+
+  @override
+  String get lightMode => 'Modo claro';
+
+  @override
+  String get themeSystem => 'Sistema';
 }

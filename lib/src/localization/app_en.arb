@@ -8,15 +8,15 @@
   "@navLibrary": {
     "description": "Navigation label for library section"
   },
-  "navBeforeVisit": "Before Visit",
+  "navBeforeVisit": "Before the visit",
   "@navBeforeVisit": {
     "description": "Navigation label for before visit section"
   },
-  "navDuringVisit": "During Visit",
+  "navDuringVisit": "During the visit",
   "@navDuringVisit": {
     "description": "Navigation label for during visit section"
   },
-  "navBuildOwn": "Build Your Own",
+  "navBuildOwn": "Build your own",
   "@navBuildOwn": {
     "description": "Navigation label for build your own section"
   },
@@ -28,11 +28,11 @@
   "@pageHeaderBeforeVisit": {
     "description": "Page header for before visit page"
   },
-  "pageHeaderDuringVisit": "During Visit",
+  "pageHeaderDuringVisit": "During the visit",
   "@pageHeaderDuringVisit": {
     "description": "Page header for during visit page"
   },
-  "pageHeaderBuildOwn": "Build Your Own",
+  "pageHeaderBuildOwn": "Build your own",
   "@pageHeaderBuildOwn": {
     "description": "Page header for build your own page"
   },
@@ -47,5 +47,25 @@
   "languageSpanish": "Spanish",
   "@languageSpanish": {
     "description": "Spanish language option"
+  },
+  "loadingContent": "Loading...",
+  "@loadingContent": {
+    "description": "Loading indicator text"
+  },
+  "speakingIndicator": "Speaking",
+  "@speakingIndicator": {
+    "description": "Indicator shown when TTS is speaking"
+  },
+  "darkMode": "Dark mode",
+  "@darkMode": {
+    "description": "Dark mode toggle label"
+  },
+  "lightMode": "Light mode",
+  "@lightMode": {
+    "description": "Light mode toggle label"
+  },
+  "themeSystem": "System",
+  "@themeSystem": {
+    "description": "System theme option"
   }
 }
