@@ -21,6 +21,9 @@ class LibraryPage extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final ttsService = ref.watch(ttsServiceProvider);
     final contentLanguage = ref.watch(contentLanguageNotifierProvider);
+    
+    // Watch speaking state to trigger rebuilds when TTS state changes
+    final speakingText = ref.watch(ttsSpeakingTextProvider);
 
     // Update TTS language when content language changes
     ref.listen<ContentLanguage>(contentLanguageNotifierProvider,
@@ -29,7 +32,12 @@ class LibraryPage extends ConsumerWidget {
     });
 
     return AppShell(
-      child: _buildLibraryContent(context, ttsService, contentLanguage),
+      child: _buildLibraryContent(
+        context,
+        ttsService,
+        contentLanguage,
+        speakingText,
+      ),
     );
   }
 
@@ -37,6 +45,7 @@ class LibraryPage extends ConsumerWidget {
     BuildContext context,
     TtsService ttsService,
     ContentLanguage contentLanguage,
+    String? speakingText,
   ) {
     final columnCount = Responsive.getGridColumnCount(context);
     final spacing = Responsive.getGridSpacing(context);
@@ -44,8 +53,9 @@ class LibraryPage extends ConsumerWidget {
     final l10n = AppLocalizations.of(context);
 
     // Check if we're on desktop (wide screen with sidebar)
-    final isDesktop = MediaQuery.of(context).size.width >= AppConstants.sidebarBreakpoint;
-    
+    final isDesktop =
+        MediaQuery.of(context).size.width >= AppConstants.sidebarBreakpoint;
+
     return Container(
       color: context.appBackground,
       child: CustomScrollView(
@@ -101,8 +111,7 @@ class LibraryPage extends ConsumerWidget {
                     item: item,
                     caption: translatedCaption,
                     onTap: () => ttsService.speak(translatedCaption),
-                    isSpeaking: ttsService.isSpeaking &&
-                        ttsService.currentText == translatedCaption,
+                    isSpeaking: speakingText == translatedCaption,
                   );
                 },
                 childCount: LibraryData.sampleItems.length,
