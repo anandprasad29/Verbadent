@@ -42,7 +42,8 @@ class AppConstants {
   static const double titleFontSizeDesktop = 80.0;
   static const double titleFontSizeMobile = 40.0;
   static const double headerFontSize = 24.0;
-  static const double headerExpandedScale = 2.67; // 64 / 24
+  static const double headerExpandedScaleLarge = 2.5; // For wide screens (>= 1000px content)
+  static const double headerExpandedScaleSmall = 1.5; // For narrow screens (< 1000px content)
   static const double sidebarItemFontSize = 16.0;
   static const double captionFontSize = 14.0;
 

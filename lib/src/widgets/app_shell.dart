@@ -45,19 +45,25 @@ class AppShell extends StatelessWidget {
   Widget _buildDesktopLayout(BuildContext context) {
     return Scaffold(
       backgroundColor: context.appBackground,
-      body: Row(
-        children: [
-          const SizedBox(
-            width: AppConstants.sidebarWidth,
-            child: Sidebar(),
-          ),
-          Expanded(
-            child: Container(
-              color: context.appBackground,
-              child: child,
+      body: SafeArea(
+        // Keep content below status bar but allow content to extend to edges
+        left: false,
+        right: false,
+        bottom: false,
+        child: Row(
+          children: [
+            const SizedBox(
+              width: AppConstants.sidebarWidth,
+              child: Sidebar(),
             ),
-          ),
-        ],
+            Expanded(
+              child: Container(
+                color: context.appBackground,
+                child: child,
+              ),
+            ),
+          ],
+        ),
       ),
     );
   }

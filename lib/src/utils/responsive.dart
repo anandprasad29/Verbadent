@@ -8,20 +8,31 @@ class Responsive {
   static const double tabletBreakpoint = 900;
   static const double desktopBreakpoint = 1200;
 
-  /// Check if the screen is mobile
+  /// Get the actual content width, accounting for sidebar on wide screens.
+  /// Use this for determining grid columns, not raw screen width.
+  static double getContentWidth(BuildContext context) {
+    final screenWidth = MediaQuery.of(context).size.width;
+    // If sidebar is showing, subtract its width
+    if (screenWidth >= AppConstants.sidebarBreakpoint) {
+      return screenWidth - AppConstants.sidebarWidth;
+    }
+    return screenWidth;
+  }
+
+  /// Check if the content area is mobile-sized (< 600px)
   static bool isMobile(BuildContext context) {
-    return MediaQuery.of(context).size.width < mobileBreakpoint;
+    return getContentWidth(context) < mobileBreakpoint;
   }
 
-  /// Check if the screen is tablet
+  /// Check if the content area is tablet-sized (600-1199px)
   static bool isTablet(BuildContext context) {
-    final width = MediaQuery.of(context).size.width;
-    return width >= mobileBreakpoint && width < desktopBreakpoint;
+    final contentWidth = getContentWidth(context);
+    return contentWidth >= mobileBreakpoint && contentWidth < desktopBreakpoint;
   }
 
-  /// Check if the screen is desktop/web
+  /// Check if the content area is desktop-sized (>= 1200px)
   static bool isDesktop(BuildContext context) {
-    return MediaQuery.of(context).size.width >= desktopBreakpoint;
+    return getContentWidth(context) >= desktopBreakpoint;
   }
 
   /// Get responsive width based on screen size
@@ -130,5 +141,33 @@ class Responsive {
     } else {
       return AppConstants.contentPaddingMobile;
     }
+  }
+
+  /// Get grid cell aspect ratio based on screen size.
+  /// Smaller screens get a lower ratio (taller cells) to fit captions better.
+  /// Desktop: 0.75, Tablet: 0.7, Mobile: 0.65
+  static double getGridAspectRatio(BuildContext context) {
+    if (isDesktop(context)) {
+      return 0.75;
+    } else if (isTablet(context)) {
+      return 0.70;
+    } else {
+      return 0.65; // Taller cells for more caption space on mobile
+    }
+  }
+
+  /// Check if we should show an embedded page header (SliverAppBar).
+  /// Returns true only on desktop where AppShell doesn't provide an AppBar.
+  static bool shouldShowPageHeader(BuildContext context) {
+    return MediaQuery.of(context).size.width >= AppConstants.sidebarBreakpoint;
+  }
+
+  /// Get the header title expanded scale based on content width.
+  /// Larger scale for wide screens, smaller for narrow to prevent overflow.
+  static double getHeaderExpandedScale(BuildContext context) {
+    final contentWidth = getContentWidth(context);
+    return contentWidth >= 1000
+        ? AppConstants.headerExpandedScaleLarge
+        : AppConstants.headerExpandedScaleSmall;
   }
 }

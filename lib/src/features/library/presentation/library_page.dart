@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import '../../../common/domain/dental_item.dart';
 import '../../../constants/app_constants.dart';
 import '../../../localization/app_localizations.dart';
 import '../../../localization/content_language_provider.dart';
@@ -42,13 +43,17 @@ class _LibraryPageState extends ConsumerState<LibraryPage> {
 
   @override
   Widget build(BuildContext context) {
-    final ttsService = ref.watch(ttsServiceProvider);
+    // Read TTS service (don't watch - only need for speak calls)
+    final ttsService = ref.read(ttsServiceProvider);
+
+    // Watch only what's needed for UI updates
     final contentLanguage = ref.watch(contentLanguageNotifierProvider);
     final searchInput = ref.watch(librarySearchInputProvider);
     final filteredItems = ref.watch(filteredLibraryItemsProvider);
 
-    // Watch speaking state to trigger rebuilds when TTS state changes
-    final speakingText = ref.watch(ttsSpeakingTextProvider);
+    // Watch speaking text stream for UI feedback
+    final speakingTextAsync = ref.watch(ttsSpeakingTextStreamProvider);
+    final speakingText = speakingTextAsync.valueOrNull;
 
     // Update TTS language when content language changes
     ref.listen<ContentLanguage>(contentLanguageNotifierProvider,
@@ -82,65 +87,71 @@ class _LibraryPageState extends ConsumerState<LibraryPage> {
     TtsService ttsService,
     ContentLanguage contentLanguage,
     String? speakingText,
-    List filteredItems,
+    List<DentalItem> filteredItems,
     String searchInput,
   ) {
     final columnCount = Responsive.getGridColumnCount(context);
     final spacing = Responsive.getGridSpacing(context);
     final padding = Responsive.getContentPadding(context);
+    final aspectRatio = Responsive.getGridAspectRatio(context);
     final l10n = AppLocalizations.of(context);
 
-    // Check if we're on desktop (wide screen with sidebar)
-    final isDesktop =
-        MediaQuery.of(context).size.width >= AppConstants.sidebarBreakpoint;
+    // Only show page header on desktop (mobile has AppBar from AppShell)
+    final showHeader = Responsive.shouldShowPageHeader(context);
+    final headerScale = Responsive.getHeaderExpandedScale(context);
 
     return Container(
       color: context.appBackground,
       child: CustomScrollView(
         slivers: [
-          // Collapsible header with "Library" title
-          SliverAppBar(
-            expandedHeight: AppConstants.headerExpandedHeight,
-            pinned: true,
-            floating: false,
-            backgroundColor: context.appBackground,
-            automaticallyImplyLeading: false,
-            // Language selector in actions (only on desktop, mobile uses app bar)
-            actions: isDesktop
-                ? [
-                    Padding(
-                      padding: const EdgeInsets.only(right: 16, top: 8),
-                      child: LanguageSelector(compact: true),
-                    ),
-                  ]
-                : null,
-            flexibleSpace: FlexibleSpaceBar(
-              centerTitle: true,
-              titlePadding: const EdgeInsets.only(bottom: 16),
-              title: Text(
-                l10n?.pageHeaderLibrary ?? 'Library',
-                style: TextStyle(
-                  fontFamily: 'KumarOne',
-                  fontSize: AppConstants.headerFontSize,
-                  color: context.appTextPrimary,
+          // Collapsible header with "Library" title (desktop only)
+          if (showHeader)
+            SliverAppBar(
+              expandedHeight: AppConstants.headerExpandedHeight,
+              pinned: true,
+              floating: false,
+              backgroundColor: context.appBackground,
+              automaticallyImplyLeading: false,
+              // Language selector in actions
+              actions: [
+                Padding(
+                  padding: const EdgeInsets.only(right: 16, top: 8),
+                  child: LanguageSelector(compact: true),
                 ),
+              ],
+              flexibleSpace: FlexibleSpaceBar(
+                centerTitle: true,
+                titlePadding: const EdgeInsets.only(bottom: 16),
+                title: FittedBox(
+                  fit: BoxFit.scaleDown,
+                  child: Text(
+                    l10n?.pageHeaderLibrary ?? 'Library',
+                    style: TextStyle(
+                      fontFamily: 'KumarOne',
+                      fontSize: AppConstants.headerFontSize,
+                      color: context.appTextPrimary,
+                    ),
+                  ),
+                ),
+                expandedTitleScale: headerScale,
               ),
-              expandedTitleScale: AppConstants.headerExpandedScale,
             ),
-          ),
           // Search bar
           SliverToBoxAdapter(
             child: Padding(
-              padding: EdgeInsets.symmetric(
-                horizontal: padding.left,
-                vertical: 16,
+              padding: EdgeInsets.only(
+                left: padding.left,
+                right: padding.right,
+                top: showHeader ? 16 : 24,
+                bottom: 16,
               ),
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   _buildSearchBar(context, l10n, searchInput),
                   const SizedBox(height: 8),
-                  _buildResultCount(context, l10n, filteredItems.length, searchInput),
+                  _buildResultCount(
+                      context, l10n, filteredItems.length, searchInput),
                 ],
               ),
             ),
@@ -179,7 +190,7 @@ class _LibraryPageState extends ConsumerState<LibraryPage> {
                   crossAxisCount: columnCount,
                   mainAxisSpacing: spacing,
                   crossAxisSpacing: spacing,
-                  childAspectRatio: 0.7, // Square image + caption below
+                  childAspectRatio: aspectRatio, // Responsive aspect ratio
                 ),
                 delegate: SliverChildBuilderDelegate(
                   (context, index) {

@@ -8,7 +8,8 @@ import 'tappable_card.dart';
 
 /// A horizontal widget displaying dental items in a story sequence
 /// with arrow connectors between each item. Used for showing step-by-step
-/// dental visit flows. Items are sized to fit within the available width.
+/// dental visit flows. Items are sized to fit within the available width,
+/// or scrollable if items would be too small.
 class StorySequence extends StatelessWidget {
   final List<DentalItem> items;
   final void Function(DentalItem item)? onItemTap;
@@ -24,6 +25,9 @@ class StorySequence extends StatelessWidget {
 
   /// Width of the arrow line (excluding padding)
   final double arrowWidth;
+
+  /// Minimum item size to ensure captions are readable
+  static const double _minItemSize = 100.0;
 
   const StorySequence({
     super.key,
@@ -49,13 +53,32 @@ class StorySequence extends StatelessWidget {
           final totalArrowSpace = arrowCount * (arrowWidth + arrowPadding * 2);
 
           // Calculate item size to fit all items in available width
-          final itemSize = (availableWidth - totalArrowSpace) / itemCount;
+          final calculatedItemSize = (availableWidth - totalArrowSpace) / itemCount;
+          
+          // Use minimum size if calculated size is too small
+          final itemSize = calculatedItemSize < _minItemSize 
+              ? _minItemSize 
+              : calculatedItemSize;
+          
+          // Check if we need to scroll (items don't fit in available width)
+          final needsScroll = calculatedItemSize < _minItemSize;
 
-          return Row(
+          final content = Row(
             mainAxisAlignment: MainAxisAlignment.center,
             crossAxisAlignment: CrossAxisAlignment.start,
+            mainAxisSize: needsScroll ? MainAxisSize.min : MainAxisSize.max,
             children: _buildSequenceItems(itemSize),
           );
+
+          // Wrap in horizontal scroll view if items don't fit
+          if (needsScroll) {
+            return SingleChildScrollView(
+              scrollDirection: Axis.horizontal,
+              child: content,
+            );
+          }
+
+          return content;
         },
       ),
     );
