@@ -7,6 +7,12 @@ class Routes {
   static const String duringVisit = '/during-visit';
   static const String buildOwn = '/build-own';
 
+  /// Dynamic route for custom templates
+  static const String customTemplate = '/template/:id';
+
+  /// Helper to generate custom template path with ID
+  static String customTemplatePath(String id) => '/template/$id';
+
   // Private constructor to prevent instantiation
   Routes._();
 }

@@ -3,6 +3,8 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 import '../features/before_visit/presentation/before_visit_page.dart';
+import '../features/build_own/presentation/build_own_page.dart';
+import '../features/build_own/presentation/custom_template_page.dart';
 import '../features/dashboard/presentation/dashboard_page.dart';
 import '../features/library/presentation/library_page.dart';
 import 'routes.dart';
@@ -100,8 +102,21 @@ GoRouter goRouter(Ref ref) {
         pageBuilder: (context, state) => _buildPageWithTransition(
           context: context,
           state: state,
-          child: const DashboardPage(), // TODO: Create BuildOwnPage
+          child: const BuildOwnPage(),
         ),
+      ),
+      // Dynamic route for custom templates
+      GoRoute(
+        path: '/template/:id',
+        name: 'customTemplate',
+        pageBuilder: (context, state) {
+          final templateId = state.pathParameters['id']!;
+          return _buildPageWithTransition(
+            context: context,
+            state: state,
+            child: CustomTemplatePage(templateId: templateId),
+          );
+        },
       ),
     ],
   );
