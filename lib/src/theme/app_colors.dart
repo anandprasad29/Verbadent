@@ -139,4 +139,6 @@ extension AppColorsExtension on BuildContext {
   Color get appSpeakingIndicator => isDarkMode
       ? AppColors.speakingIndicatorDark
       : AppColors.speakingIndicator;
+  Color get appError => AppColors.error;
+  Color get appSuccess => AppColors.success;
 }
