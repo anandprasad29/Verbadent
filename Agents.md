@@ -180,7 +180,66 @@ TappableCard(
 - **Integration Tests**: Run `flutter test integration_test/app_test.dart` on a real device/emulator.
 - **Regression Policy**: **ALWAYS** run `flutter test` after completing a task to ensure no regressions were introduced.
 - Test files location: `test/` directory with `*_test.dart` naming.
-- Current test count: **209 tests**
+- Current test count: **340 tests**
+
+### 10. Git Best Practices
+Follow these git conventions for all commits:
+
+#### Commit Size & Atomicity
+- **Keep commits small and focused**: Each commit should represent ONE logical change.
+- **Atomic commits**: Every commit should leave the codebase in a working state (tests pass, app compiles).
+- **Single responsibility**: One commit = one feature, one bug fix, or one refactor. Never mix.
+
+#### Commit Message Format
+Use conventional commit format:
+```
+<type>(<scope>): <short summary>
+
+[optional body with more details]
+
+[optional footer with breaking changes or issue references]
+```
+
+**Types**:
+- `feat`: New feature
+- `fix`: Bug fix
+- `refactor`: Code change that neither fixes a bug nor adds a feature
+- `test`: Adding or updating tests
+- `docs`: Documentation changes
+- `style`: Formatting, missing semicolons, etc. (no code change)
+- `chore`: Maintenance tasks, dependency updates
+
+**Examples**:
+```
+feat(build-own): add CustomTemplate domain model
+
+fix(sidebar): resolve template loading state flicker
+
+test(build-own): add storage service unit tests
+
+refactor(providers): extract template validation logic
+```
+
+#### Commit Ordering for Features
+When implementing a new feature, commit in this order:
+1. **Dependencies**: Package additions (pubspec.yaml)
+2. **Domain/Models**: Data models and entities
+3. **Data Layer**: Services, repositories, storage
+4. **State Management**: Providers, notifiers
+5. **UI Components**: Reusable widgets
+6. **Pages/Screens**: Feature pages
+7. **Routing**: Route definitions and navigation
+8. **Integration**: Connecting to existing code (sidebar, etc.)
+9. **Localization**: Strings and translations
+10. **Tests**: Unit tests, widget tests
+
+#### Pre-Commit Checklist
+Before each commit:
+- [ ] Run `flutter analyze` - no errors
+- [ ] Run `flutter test` - all tests pass
+- [ ] Code compiles without errors
+- [ ] Changes are logically grouped
+- [ ] Commit message follows convention
 
 ## Development Workflow
 
