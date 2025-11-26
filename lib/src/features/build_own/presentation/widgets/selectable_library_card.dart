@@ -443,7 +443,7 @@ class DraggableLibraryCard extends StatelessWidget {
 
 /// A reorderable wrap widget that allows drag-and-drop reordering of children.
 /// Wraps children in a flow layout and supports reordering via drag.
-/// Works on both mobile (touch) and web (mouse).
+/// Works on both mobile (long-press to drag) and web/desktop (click to drag).
 class ReorderableWrap extends StatefulWidget {
   final List<Widget> children;
   final double spacing;
@@ -466,8 +466,16 @@ class _ReorderableWrapState extends State<ReorderableWrap> {
   int? _draggedIndex;
   int? _targetIndex;
 
+  /// Check if we're on a touch-primary platform (mobile/tablet)
+  bool _isTouchPlatform(BuildContext context) {
+    final platform = Theme.of(context).platform;
+    return platform == TargetPlatform.iOS || platform == TargetPlatform.android;
+  }
+
   @override
   Widget build(BuildContext context) {
+    final isTouchPlatform = _isTouchPlatform(context);
+    
     return Wrap(
       spacing: widget.spacing,
       runSpacing: widget.runSpacing,
@@ -498,59 +506,89 @@ class _ReorderableWrapState extends State<ReorderableWrap> {
             final isTarget = _targetIndex == index && _draggedIndex != index;
             final isDragging = _draggedIndex == index;
             
-            return Draggable<int>(
-              data: index,
-              feedback: Material(
-                elevation: 8,
-                borderRadius: BorderRadius.circular(AppConstants.cardBorderRadius),
-                child: Opacity(
-                  opacity: 0.9,
-                  child: SizedBox(
-                    width: sizedChild.width,
-                    height: sizedChild.height,
-                    child: sizedChild.child,
-                  ),
-                ),
-              ),
-              childWhenDragging: Opacity(
-                opacity: 0.3,
-                child: child,
-              ),
-              onDragStarted: () {
-                setState(() {
-                  _draggedIndex = index;
-                });
-              },
-              onDragEnd: (_) {
-                setState(() {
-                  _draggedIndex = null;
-                  _targetIndex = null;
-                });
-              },
-              child: AnimatedContainer(
-                duration: const Duration(milliseconds: 200),
-                transform: isDragging 
-                    ? Matrix4.identity() 
-                    : (isTarget 
-                        ? (Matrix4.identity()..scale(1.05, 1.05, 1.0)) 
-                        : Matrix4.identity()),
-                decoration: isTarget
-                    ? BoxDecoration(
-                        border: Border.all(
-                          color: context.appPrimary,
-                          width: 3,
-                        ),
-                        borderRadius: BorderRadius.circular(
-                          AppConstants.cardBorderRadius,
-                        ),
-                      )
-                    : null,
-                child: MouseRegion(
-                  cursor: SystemMouseCursors.grab,
-                  child: child,
+            final feedbackWidget = Material(
+              elevation: 8,
+              borderRadius: BorderRadius.circular(AppConstants.cardBorderRadius),
+              child: Opacity(
+                opacity: 0.9,
+                child: SizedBox(
+                  width: sizedChild.width,
+                  height: sizedChild.height,
+                  child: sizedChild.child,
                 ),
               ),
             );
+            
+            final childWhenDraggingWidget = Opacity(
+              opacity: 0.3,
+              child: child,
+            );
+            
+            final decoratedChild = AnimatedContainer(
+              duration: const Duration(milliseconds: 200),
+              transform: isDragging 
+                  ? Matrix4.identity() 
+                  : (isTarget 
+                      ? (Matrix4.identity()..scale(1.05, 1.05, 1.0)) 
+                      : Matrix4.identity()),
+              decoration: isTarget
+                  ? BoxDecoration(
+                      border: Border.all(
+                        color: context.appPrimary,
+                        width: 3,
+                      ),
+                      borderRadius: BorderRadius.circular(
+                        AppConstants.cardBorderRadius,
+                      ),
+                    )
+                  : null,
+              child: child,
+            );
+            
+            // Use LongPressDraggable on touch platforms for better UX
+            // Use regular Draggable on web/desktop for click-to-drag
+            if (isTouchPlatform) {
+              return LongPressDraggable<int>(
+                data: index,
+                delay: const Duration(milliseconds: 200),
+                hapticFeedbackOnStart: true,
+                feedback: feedbackWidget,
+                childWhenDragging: childWhenDraggingWidget,
+                onDragStarted: () {
+                  setState(() {
+                    _draggedIndex = index;
+                  });
+                },
+                onDragEnd: (_) {
+                  setState(() {
+                    _draggedIndex = null;
+                    _targetIndex = null;
+                  });
+                },
+                child: decoratedChild,
+              );
+            } else {
+              return Draggable<int>(
+                data: index,
+                feedback: feedbackWidget,
+                childWhenDragging: childWhenDraggingWidget,
+                onDragStarted: () {
+                  setState(() {
+                    _draggedIndex = index;
+                  });
+                },
+                onDragEnd: (_) {
+                  setState(() {
+                    _draggedIndex = null;
+                    _targetIndex = null;
+                  });
+                },
+                child: MouseRegion(
+                  cursor: SystemMouseCursors.grab,
+                  child: decoratedChild,
+                ),
+              );
+            }
           },
         );
       }).toList(),

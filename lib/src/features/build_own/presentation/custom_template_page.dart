@@ -54,9 +54,15 @@ class _CustomTemplatePageState extends ConsumerState<CustomTemplatePage> {
   void _initializeEditState() {
     final template = ref.read(customTemplatesNotifierProvider.notifier).getTemplate(widget.templateId);
     if (template != null) {
+      // Initialize providers with template data
       ref.read(editTemplateNameProvider.notifier).state = template.name;
       ref.read(editTemplateSelectedIdsProvider.notifier).state = List.from(template.selectedItemIds);
       _nameController.text = template.name;
+      
+      // Also initialize original state for unsaved changes detection
+      // This ensures correct comparison even if data changes before entering edit mode
+      _originalName = template.name;
+      _originalSelectedIds = List.from(template.selectedItemIds);
     }
   }
 
