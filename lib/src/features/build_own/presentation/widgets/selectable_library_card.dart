@@ -444,8 +444,12 @@ class DraggableLibraryCard extends StatelessWidget {
 /// A reorderable wrap widget that allows drag-and-drop reordering of children.
 /// Wraps children in a flow layout and supports reordering via drag.
 /// Works on both mobile (long-press to drag) and web/desktop (click to drag).
+/// 
+/// **Important**: Children must be `SizedBox` widgets with explicit width and height
+/// so the drag feedback can maintain proper dimensions during drag operations.
 class ReorderableWrap extends StatefulWidget {
-  final List<Widget> children;
+  /// Children must be SizedBox widgets with explicit width/height for drag feedback.
+  final List<SizedBox> children;
   final double spacing;
   final double runSpacing;
   final void Function(int oldIndex, int newIndex) onReorder;
@@ -481,8 +485,7 @@ class _ReorderableWrapState extends State<ReorderableWrap> {
       runSpacing: widget.runSpacing,
       children: widget.children.asMap().entries.map((entry) {
         final index = entry.key;
-        final child = entry.value;
-        final sizedChild = child as SizedBox;
+        final sizedChild = entry.value;
         
         return DragTarget<int>(
           onWillAcceptWithDetails: (details) {
@@ -521,7 +524,7 @@ class _ReorderableWrapState extends State<ReorderableWrap> {
             
             final childWhenDraggingWidget = Opacity(
               opacity: 0.3,
-              child: child,
+              child: sizedChild,
             );
             
             final decoratedChild = AnimatedContainer(
@@ -542,7 +545,7 @@ class _ReorderableWrapState extends State<ReorderableWrap> {
                       ),
                     )
                   : null,
-              child: child,
+              child: sizedChild,
             );
             
             // Use LongPressDraggable on touch platforms for better UX
