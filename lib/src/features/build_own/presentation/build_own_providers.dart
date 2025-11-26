@@ -37,23 +37,34 @@ class CustomTemplatesNotifier extends _$CustomTemplatesNotifier {
   @override
   List<CustomTemplate> build() {
     // Initialize async - will update state when ready
-    _initializeAsync();
+    // Use Future.microtask to ensure ref is valid and catch any errors
+    Future.microtask(() => _initializeAsync());
     return [];
   }
 
   Future<void> _initializeAsync() async {
-    ref.read(templatesErrorProvider.notifier).state = null;
     try {
+      // Clear any previous error state
+      ref.read(templatesErrorProvider.notifier).state = null;
+      
       _storageService = await ref.read(templateStorageServiceProvider.future);
       final templates = _storageService!.loadTemplates();
       state = templates;
     } catch (e) {
-      // Set error state
-      ref.read(templatesErrorProvider.notifier).state = 
-          'Failed to load templates: ${e.toString()}';
+      // Set error state - catches ALL errors including ref access failures
+      try {
+        ref.read(templatesErrorProvider.notifier).state = 
+            'Failed to load templates: ${e.toString()}';
+      } catch (_) {
+        // If we can't even set error state, just log (provider may be disposed)
+      }
     } finally {
-      // Mark loading as complete
-      ref.read(templatesLoadingProvider.notifier).state = false;
+      // Mark loading as complete - always runs
+      try {
+        ref.read(templatesLoadingProvider.notifier).state = false;
+      } catch (_) {
+        // If we can't set loading state, provider may be disposed
+      }
     }
   }
 
