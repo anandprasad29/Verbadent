@@ -76,4 +76,84 @@ class AppLocalizationsEs extends AppLocalizations {
     );
     return '$_temp0';
   }
+
+  @override
+  String get templateNamePlaceholder => 'Nombre de la plantilla';
+
+  @override
+  String selectedCount(int count) {
+    return '$count seleccionados';
+  }
+
+  @override
+  String get createTemplate => 'Crear plantilla';
+
+  @override
+  String get editTemplate => 'Editar';
+
+  @override
+  String get deleteTemplate => 'Eliminar plantilla';
+
+  @override
+  String get deleteConfirmation =>
+      '¿Estás seguro de que quieres eliminar esta plantilla?';
+
+  @override
+  String get cancel => 'Cancelar';
+
+  @override
+  String get save => 'Guardar';
+
+  @override
+  String get delete => 'Eliminar';
+
+  @override
+  String get addImages => 'Agregar imágenes';
+
+  @override
+  String get currentImages => 'Imágenes actuales';
+
+  @override
+  String get tapToRemove => 'Toca para eliminar';
+
+  @override
+  String get noImagesSelected => 'Aún no hay imágenes seleccionadas';
+
+  @override
+  String get selectAtLeastOne => 'Selecciona al menos una imagen';
+
+  @override
+  String get enterTemplateName =>
+      'Por favor ingresa un nombre para la plantilla';
+
+  @override
+  String get unsavedChangesTitle => 'Cambios sin guardar';
+
+  @override
+  String get unsavedChangesMessage =>
+      'Tienes cambios sin guardar. ¿Estás seguro de que quieres descartarlos?';
+
+  @override
+  String get discard => 'Descartar';
+
+  @override
+  String get templateLimitReached => 'Límite de plantillas alcanzado';
+
+  @override
+  String templateLimitMessage(int count) {
+    return 'Puedes crear hasta $count plantillas. Por favor elimina una plantilla existente para crear una nueva.';
+  }
+
+  @override
+  String get loadingTemplates => 'Cargando plantillas...';
+
+  @override
+  String get dragToReorder => 'Arrastra para reordenar';
+
+  @override
+  String get emptyTemplatePrompt =>
+      'Toca las imágenes abajo para agregarlas a tu plantilla';
+
+  @override
+  String get duplicateNameError => 'Ya existe una plantilla con este nombre';
 }

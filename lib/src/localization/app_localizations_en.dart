@@ -76,4 +76,83 @@ class AppLocalizationsEn extends AppLocalizations {
     );
     return '$_temp0';
   }
+
+  @override
+  String get templateNamePlaceholder => 'Template Name';
+
+  @override
+  String selectedCount(int count) {
+    return '$count selected';
+  }
+
+  @override
+  String get createTemplate => 'Create Template';
+
+  @override
+  String get editTemplate => 'Edit';
+
+  @override
+  String get deleteTemplate => 'Delete Template';
+
+  @override
+  String get deleteConfirmation =>
+      'Are you sure you want to delete this template?';
+
+  @override
+  String get cancel => 'Cancel';
+
+  @override
+  String get save => 'Save';
+
+  @override
+  String get delete => 'Delete';
+
+  @override
+  String get addImages => 'Add Images';
+
+  @override
+  String get currentImages => 'Current Images';
+
+  @override
+  String get tapToRemove => 'Tap to remove';
+
+  @override
+  String get noImagesSelected => 'No images selected yet';
+
+  @override
+  String get selectAtLeastOne => 'Select at least one image';
+
+  @override
+  String get enterTemplateName => 'Please enter a template name';
+
+  @override
+  String get unsavedChangesTitle => 'Unsaved Changes';
+
+  @override
+  String get unsavedChangesMessage =>
+      'You have unsaved changes. Are you sure you want to discard them?';
+
+  @override
+  String get discard => 'Discard';
+
+  @override
+  String get templateLimitReached => 'Template limit reached';
+
+  @override
+  String templateLimitMessage(int count) {
+    return 'You can create up to $count templates. Please delete an existing template to create a new one.';
+  }
+
+  @override
+  String get loadingTemplates => 'Loading templates...';
+
+  @override
+  String get dragToReorder => 'Drag to reorder';
+
+  @override
+  String get emptyTemplatePrompt =>
+      'Tap images below to add them to your template';
+
+  @override
+  String get duplicateNameError => 'A template with this name already exists';
 }

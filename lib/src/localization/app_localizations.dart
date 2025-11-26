@@ -217,6 +217,150 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'{count, plural, =0{No items} =1{1 item} other{{count} items}}'**
   String searchResultCount(int count);
+
+  /// Placeholder text for template name input
+  ///
+  /// In en, this message translates to:
+  /// **'Template Name'**
+  String get templateNamePlaceholder;
+
+  /// Shows the number of selected items
+  ///
+  /// In en, this message translates to:
+  /// **'{count} selected'**
+  String selectedCount(int count);
+
+  /// Button text to create a new template
+  ///
+  /// In en, this message translates to:
+  /// **'Create Template'**
+  String get createTemplate;
+
+  /// Button text to edit a template
+  ///
+  /// In en, this message translates to:
+  /// **'Edit'**
+  String get editTemplate;
+
+  /// Button text to delete a template
+  ///
+  /// In en, this message translates to:
+  /// **'Delete Template'**
+  String get deleteTemplate;
+
+  /// Confirmation message for template deletion
+  ///
+  /// In en, this message translates to:
+  /// **'Are you sure you want to delete this template?'**
+  String get deleteConfirmation;
+
+  /// Cancel button text
+  ///
+  /// In en, this message translates to:
+  /// **'Cancel'**
+  String get cancel;
+
+  /// Save button text
+  ///
+  /// In en, this message translates to:
+  /// **'Save'**
+  String get save;
+
+  /// Delete button text
+  ///
+  /// In en, this message translates to:
+  /// **'Delete'**
+  String get delete;
+
+  /// Section header for adding images in edit mode
+  ///
+  /// In en, this message translates to:
+  /// **'Add Images'**
+  String get addImages;
+
+  /// Section header for current images in edit mode
+  ///
+  /// In en, this message translates to:
+  /// **'Current Images'**
+  String get currentImages;
+
+  /// Hint text for removing images
+  ///
+  /// In en, this message translates to:
+  /// **'Tap to remove'**
+  String get tapToRemove;
+
+  /// Message when no images are selected
+  ///
+  /// In en, this message translates to:
+  /// **'No images selected yet'**
+  String get noImagesSelected;
+
+  /// Validation message for template creation
+  ///
+  /// In en, this message translates to:
+  /// **'Select at least one image'**
+  String get selectAtLeastOne;
+
+  /// Validation message for template name
+  ///
+  /// In en, this message translates to:
+  /// **'Please enter a template name'**
+  String get enterTemplateName;
+
+  /// Title for unsaved changes dialog
+  ///
+  /// In en, this message translates to:
+  /// **'Unsaved Changes'**
+  String get unsavedChangesTitle;
+
+  /// Message for unsaved changes dialog
+  ///
+  /// In en, this message translates to:
+  /// **'You have unsaved changes. Are you sure you want to discard them?'**
+  String get unsavedChangesMessage;
+
+  /// Discard button text
+  ///
+  /// In en, this message translates to:
+  /// **'Discard'**
+  String get discard;
+
+  /// Title when max templates reached
+  ///
+  /// In en, this message translates to:
+  /// **'Template limit reached'**
+  String get templateLimitReached;
+
+  /// Message when max templates reached
+  ///
+  /// In en, this message translates to:
+  /// **'You can create up to {count} templates. Please delete an existing template to create a new one.'**
+  String templateLimitMessage(int count);
+
+  /// Loading state for templates
+  ///
+  /// In en, this message translates to:
+  /// **'Loading templates...'**
+  String get loadingTemplates;
+
+  /// Hint text for drag reorder
+  ///
+  /// In en, this message translates to:
+  /// **'Drag to reorder'**
+  String get dragToReorder;
+
+  /// Prompt when no images selected in build mode
+  ///
+  /// In en, this message translates to:
+  /// **'Tap images below to add them to your template'**
+  String get emptyTemplatePrompt;
+
+  /// Error when template name is duplicate
+  ///
+  /// In en, this message translates to:
+  /// **'A template with this name already exists'**
+  String get duplicateNameError;
 }
 
 class _AppLocalizationsDelegate
