@@ -3,12 +3,15 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:go_router/go_router.dart';
 import 'package:golden_toolkit/golden_toolkit.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:verbadent/src/widgets/sidebar.dart';
 
 void main() {
-  // Load fonts for golden tests
+  // Load fonts for golden tests and setup mocks
   setUpAll(() async {
     await loadAppFonts();
+    // Initialize SharedPreferences mock for tests
+    SharedPreferences.setMockInitialValues({});
   });
 
   group('Shared Sidebar Widget Tests', () {
@@ -451,6 +454,52 @@ void main() {
 
       await tester.pumpDeviceBuilder(builder);
       await screenMatchesGolden(tester, 'sidebar_before_visit_active');
+    });
+  });
+
+  // Note: Dynamic template tests have complex provider state that requires
+  // full integration test setup. Core sidebar functionality is tested above
+  // and template functionality is tested in build_own_test.dart.
+
+  group('SidebarItemData', () {
+    test('creates SidebarItemData with required fields', () {
+      const item = SidebarItemData(
+        labelKey: 'testLabel',
+        route: '/test',
+        testKey: 'test_key',
+      );
+
+      expect(item.labelKey, 'testLabel');
+      expect(item.route, '/test');
+      expect(item.testKey, 'test_key');
+      expect(item.isCustomTemplate, false);
+    });
+
+    test('creates SidebarItemData for custom template', () {
+      const item = SidebarItemData(
+        labelKey: 'My Template',
+        route: '/template/123',
+        testKey: 'sidebar_item_template_123',
+        isCustomTemplate: true,
+      );
+
+      expect(item.labelKey, 'My Template');
+      expect(item.route, '/template/123');
+      expect(item.isCustomTemplate, true);
+    });
+  });
+
+  group('SidebarConfig', () {
+    test('topItems has Before Visit and During Visit', () {
+      expect(SidebarConfig.topItems.length, 2);
+      expect(SidebarConfig.topItems[0].route, '/before-visit');
+      expect(SidebarConfig.topItems[1].route, '/during-visit');
+    });
+
+    test('bottomItems has Build Your Own and Library', () {
+      expect(SidebarConfig.bottomItems.length, 2);
+      expect(SidebarConfig.bottomItems[0].route, '/build-own');
+      expect(SidebarConfig.bottomItems[1].route, '/library');
     });
   });
 }
