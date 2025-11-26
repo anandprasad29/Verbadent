@@ -240,10 +240,35 @@ class _CustomTemplatePageState extends ConsumerState<CustomTemplatePage> {
 
   @override
   Widget build(BuildContext context) {
+    final isLoading = ref.watch(templatesLoadingProvider);
     final templates = ref.watch(customTemplatesNotifierProvider);
     final template = templates.where((t) => t.id == widget.templateId).firstOrNull;
     final isEditMode = ref.watch(templateEditModeProvider);
+    final l10n = AppLocalizations.of(context);
 
+    // Show loading state while templates are being loaded from storage
+    if (isLoading) {
+      return AppShell(
+        child: Center(
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              CircularProgressIndicator(color: context.appPrimary),
+              const SizedBox(height: 16),
+              Text(
+                l10n?.loadingTemplates ?? 'Loading templates...',
+                style: TextStyle(
+                  fontFamily: 'InstrumentSans',
+                  color: context.appTextSecondary,
+                ),
+              ),
+            ],
+          ),
+        ),
+      );
+    }
+
+    // Only show "not found" after loading is complete
     if (template == null) {
       return AppShell(
         child: Center(
