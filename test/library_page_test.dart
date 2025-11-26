@@ -4,6 +4,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:go_router/go_router.dart';
 import 'package:golden_toolkit/golden_toolkit.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:verbadent/src/features/library/data/library_data.dart';
 import 'package:verbadent/src/features/library/presentation/library_page.dart';
 import 'package:verbadent/src/features/library/presentation/library_search_provider.dart';
@@ -18,6 +19,8 @@ void main() {
 
   setUpAll(() async {
     await loadAppFonts();
+    // Initialize SharedPreferences mock for tests
+    SharedPreferences.setMockInitialValues({});
   });
 
   setUp(() {

@@ -6,11 +6,17 @@
 // tree, read text, and verify that the values of widget properties are correct.
 
 import 'package:flutter_test/flutter_test.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:verbadent/app.dart';
 
 void main() {
+  setUpAll(() {
+    // Initialize SharedPreferences mock for tests
+    SharedPreferences.setMockInitialValues({});
+  });
+
   testWidgets('App renders smoke test', (WidgetTester tester) async {
     // Build our app and trigger a frame.
     await tester.pumpWidget(

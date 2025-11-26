@@ -3,6 +3,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:go_router/go_router.dart';
 import 'package:golden_toolkit/golden_toolkit.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:verbadent/src/constants/app_constants.dart';
 import 'package:verbadent/src/theme/app_colors.dart';
 import 'package:verbadent/src/widgets/app_shell.dart';
@@ -11,6 +12,8 @@ import 'package:verbadent/src/widgets/sidebar.dart';
 void main() {
   setUpAll(() async {
     await loadAppFonts();
+    // Initialize SharedPreferences mock for tests
+    SharedPreferences.setMockInitialValues({});
   });
 
   GoRouter createTestRouter({String initialLocation = '/'}) {
