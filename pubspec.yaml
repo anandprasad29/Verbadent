@@ -18,6 +18,7 @@ dependencies:
   riverpod_annotation: ^2.3.5
   flutter_tts: ^4.0.2
   flutter_native_splash: ^2.4.7
+  shared_preferences: ^2.2.3
 
 dev_dependencies:
   flutter_test:
@@ -63,7 +64,7 @@ flutter_native_splash:
   ios: true
   
   # Web configuration  
-  web: false
+  web: true
   
   # Keep splash until explicitly removed
   fullscreen: true
