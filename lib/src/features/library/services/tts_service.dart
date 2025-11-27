@@ -17,6 +17,11 @@ class TtsService {
   FlutterTts? _flutterTts;
   String _currentLanguage = 'en-US';
 
+  /// Cached voices by gender for current language
+  Map<String, dynamic>? _femaleVoice;
+  Map<String, dynamic>? _maleVoice;
+  bool _voicesLoaded = false;
+
   /// Initialization completer to prevent race conditions.
   Completer<void>? _initCompleter;
 
@@ -117,10 +122,89 @@ class TtsService {
 
       // Don't await speak completion - it can block
       _flutterTts!.awaitSpeakCompletion(false);
+
+      // Load available voices for gender selection
+      await _loadVoicesForLanguage(_currentLanguage);
     } catch (e) {
       debugPrint('TTS configuration error: $e');
       _isAvailable = false;
     }
+  }
+
+  /// Load and cache voices by gender for the given language
+  Future<void> _loadVoicesForLanguage(String language) async {
+    if (_flutterTts == null) return;
+
+    try {
+      final voices = await _flutterTts!.getVoices;
+      if (voices == null) return;
+
+      final voiceList = List<Map<String, dynamic>>.from(
+        voices.map((v) => Map<String, dynamic>.from(v as Map)),
+      );
+
+      // Get the base language code (e.g., "en" from "en-US")
+      final langCode = language.split('-').first.toLowerCase();
+
+      // Filter voices for the current language
+      final langVoices = voiceList.where((v) {
+        final locale = (v['locale'] as String?)?.toLowerCase() ?? '';
+        return locale.startsWith(langCode);
+      }).toList();
+
+      // Find female and male voices
+      _femaleVoice = _findVoiceByGender(langVoices, VoiceType.female);
+      _maleVoice = _findVoiceByGender(langVoices, VoiceType.male);
+      _voicesLoaded = true;
+
+      debugPrint('TTS voices loaded - Female: ${_femaleVoice?['name']}, Male: ${_maleVoice?['name']}');
+    } catch (e) {
+      debugPrint('Failed to load TTS voices: $e');
+      _voicesLoaded = false;
+    }
+  }
+
+  /// Find a voice by gender from the voice list
+  /// iOS/macOS have a 'gender' field, Android has gender in voice name
+  Map<String, dynamic>? _findVoiceByGender(
+    List<Map<String, dynamic>> voices,
+    VoiceType targetGender,
+  ) {
+    final genderStr = targetGender == VoiceType.female ? 'female' : 'male';
+    final altGenderStr = targetGender == VoiceType.female ? 'woman' : 'man';
+
+    // First try: iOS/macOS style with explicit gender field
+    for (final voice in voices) {
+      final gender = (voice['gender'] as String?)?.toLowerCase();
+      if (gender == genderStr) {
+        return voice;
+      }
+    }
+
+    // Second try: Android style - check voice name for gender indicators
+    for (final voice in voices) {
+      final name = (voice['name'] as String?)?.toLowerCase() ?? '';
+      if (name.contains(genderStr) || name.contains(altGenderStr)) {
+        return voice;
+      }
+    }
+
+    // Third try: Use naming conventions (common female names vs male names)
+    // This is a fallback for platforms with unclear gender info
+    final femaleNames = ['samantha', 'karen', 'moira', 'tessa', 'fiona', 'victoria', 'allison'];
+    final maleNames = ['daniel', 'alex', 'tom', 'fred', 'ralph', 'albert', 'bruce'];
+    final targetNames = targetGender == VoiceType.female ? femaleNames : maleNames;
+
+    for (final voice in voices) {
+      final name = (voice['name'] as String?)?.toLowerCase() ?? '';
+      for (final targetName in targetNames) {
+        if (name.contains(targetName)) {
+          return voice;
+        }
+      }
+    }
+
+    return null;
   }
 
   /// Set up TTS event handlers (non-blocking)
@@ -169,13 +253,21 @@ class TtsService {
   /// Set the TTS language based on ContentLanguage.
   /// Non-blocking - fires and forgets if TTS not ready.
   void setLanguage(ContentLanguage language) {
-    _currentLanguage = language.ttsCode;
+    final newLanguage = language.ttsCode;
+    final languageChanged = _currentLanguage != newLanguage;
+    _currentLanguage = newLanguage;
 
     // If TTS is already initialized, update the language
     if (_flutterTts != null && _isAvailable) {
       _flutterTts!.setLanguage(_currentLanguage).catchError((e) {
         debugPrint('Failed to set TTS language: $e');
       });
+
+      // Reload voices for the new language
+      if (languageChanged) {
+        _voicesLoaded = false;
+        _loadVoicesForLanguage(_currentLanguage);
+      }
     }
   }
 
@@ -231,12 +323,32 @@ class TtsService {
       debugPrint('Failed to set TTS volume: $e');
     });
 
-    // Use pitch to simulate voice gender
-    // Female: higher pitch (1.2), Male: lower pitch (0.8)
-    final pitch = settings.voiceType == VoiceType.female ? 1.2 : 0.8;
-    _flutterTts!.setPitch(pitch).catchError((e) {
-      debugPrint('Failed to set TTS pitch: $e');
-    });
+    // Try to use actual voice for the selected gender
+    final targetVoice = settings.voiceType == VoiceType.female
+        ? _femaleVoice
+        : _maleVoice;
+
+    if (targetVoice != null && _voicesLoaded) {
+      // Use actual voice - reset pitch to neutral
+      _flutterTts!.setVoice({
+        'name': targetVoice['name'],
+        'locale': targetVoice['locale'],
+      }).catchError((e) {
+        debugPrint('Failed to set TTS voice: $e');
+      });
+      _flutterTts!.setPitch(1.0).catchError((e) {
+        debugPrint('Failed to set TTS pitch: $e');
+      });
+      debugPrint('TTS using actual voice: ${targetVoice['name']}');
+    } else {
+      // Fallback: Use pitch to simulate voice gender
+      // Female: higher pitch (1.2), Male: lower pitch (0.8)
+      final pitch = settings.voiceType == VoiceType.female ? 1.2 : 0.8;
+      _flutterTts!.setPitch(pitch).catchError((e) {
+        debugPrint('Failed to set TTS pitch: $e');
+      });
+      debugPrint('TTS using pitch fallback: $pitch');
+    }
   }
 
   /// Dispose of TTS resources.
