@@ -7,7 +7,7 @@ part of 'build_own_providers.dart';
 // **************************************************************************
 
 String _$customTemplatesNotifierHash() =>
-    r'c1095680f34f05dc6cf54c4e7d6c5dea441f8429';
+    r'0411f65d1507dd01e74cae4abb5914ccfa63b260';
 
 /// State notifier for managing the list of custom templates.
 /// Persists to local storage via TemplateStorageService.

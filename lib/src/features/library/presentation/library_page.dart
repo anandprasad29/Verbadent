@@ -9,6 +9,7 @@ import '../../../theme/app_colors.dart';
 import '../../../utils/responsive.dart';
 import '../../../widgets/app_shell.dart';
 import '../../../widgets/language_selector.dart';
+import '../data/library_data.dart';
 import '../services/tts_service.dart';
 import 'library_search_provider.dart';
 import 'widgets/library_card.dart';
@@ -25,6 +26,7 @@ class LibraryPage extends ConsumerStatefulWidget {
 
 class _LibraryPageState extends ConsumerState<LibraryPage> {
   late final TextEditingController _searchController;
+  bool _imagesPrecached = false;
 
   @override
   void initState() {
@@ -33,6 +35,24 @@ class _LibraryPageState extends ConsumerState<LibraryPage> {
     _searchController = TextEditingController(
       text: ref.read(librarySearchInputProvider),
     );
+  }
+
+  @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+    // Precache all library images on first load to eliminate decode jank during scroll
+    // Only do this once to avoid redundant precaching
+    if (!_imagesPrecached) {
+      _imagesPrecached = true;
+      _precacheImages();
+    }
+  }
+
+  /// Precache all library images for smoother scrolling performance
+  void _precacheImages() {
+    for (final item in LibraryData.sampleItems) {
+      precacheImage(AssetImage(item.imagePath), context);
+    }
   }
 
   @override
@@ -56,8 +76,10 @@ class _LibraryPageState extends ConsumerState<LibraryPage> {
     final speakingText = speakingTextAsync.valueOrNull;
 
     // Update TTS language when content language changes
-    ref.listen<ContentLanguage>(contentLanguageNotifierProvider,
-        (previous, next) {
+    ref.listen<ContentLanguage>(contentLanguageNotifierProvider, (
+      previous,
+      next,
+    ) {
       ttsService.setLanguage(next);
     });
 
@@ -151,7 +173,11 @@ class _LibraryPageState extends ConsumerState<LibraryPage> {
                   _buildSearchBar(context, l10n, searchInput),
                   const SizedBox(height: 8),
                   _buildResultCount(
-                      context, l10n, filteredItems.length, searchInput),
+                    context,
+                    l10n,
+                    filteredItems.length,
+                    searchInput,
+                  ),
                 ],
               ),
             ),
@@ -164,11 +190,7 @@ class _LibraryPageState extends ConsumerState<LibraryPage> {
                 child: Column(
                   mainAxisSize: MainAxisSize.min,
                   children: [
-                    Icon(
-                      Icons.search_off,
-                      size: 64,
-                      color: context.appNeutral,
-                    ),
+                    Icon(Icons.search_off, size: 64, color: context.appNeutral),
                     const SizedBox(height: 16),
                     Text(
                       l10n?.searchNoResults ?? 'No results found',
@@ -192,22 +214,19 @@ class _LibraryPageState extends ConsumerState<LibraryPage> {
                   crossAxisSpacing: spacing,
                   childAspectRatio: aspectRatio, // Responsive aspect ratio
                 ),
-                delegate: SliverChildBuilderDelegate(
-                  (context, index) {
-                    final item = filteredItems[index];
-                    final translatedCaption = ContentTranslations.getCaption(
-                      item.id,
-                      contentLanguage,
-                    );
-                    return LibraryCard(
-                      item: item,
-                      caption: translatedCaption,
-                      onTap: () => ttsService.speak(translatedCaption),
-                      isSpeaking: speakingText == translatedCaption,
-                    );
-                  },
-                  childCount: filteredItems.length,
-                ),
+                delegate: SliverChildBuilderDelegate((context, index) {
+                  final item = filteredItems[index];
+                  final translatedCaption = ContentTranslations.getCaption(
+                    item.id,
+                    contentLanguage,
+                  );
+                  return LibraryCard(
+                    item: item,
+                    caption: translatedCaption,
+                    onTap: () => ttsService.speak(translatedCaption),
+                    isSpeaking: speakingText == translatedCaption,
+                  );
+                }, childCount: filteredItems.length),
               ),
             ),
         ],
@@ -234,16 +253,10 @@ class _LibraryPageState extends ConsumerState<LibraryPage> {
           fontFamily: 'InstrumentSans',
           color: context.appNeutral,
         ),
-        prefixIcon: Icon(
-          Icons.search,
-          color: context.appCardBorder,
-        ),
+        prefixIcon: Icon(Icons.search, color: context.appCardBorder),
         suffixIcon: searchInput.isNotEmpty
             ? IconButton(
-                icon: Icon(
-                  Icons.clear,
-                  color: context.appNeutral,
-                ),
+                icon: Icon(Icons.clear, color: context.appNeutral),
                 onPressed: () {
                   searchNotifier.clearSearch();
                   _searchController.clear();

@@ -16,32 +16,58 @@ import '../data/before_visit_data.dart';
 /// Before Visit page displaying dental visit preparation content.
 /// Shows a story sequence with arrows and a tools grid below.
 /// Tapping any item triggers text-to-speech of the caption.
-class BeforeVisitPage extends ConsumerWidget {
+class BeforeVisitPage extends ConsumerStatefulWidget {
   const BeforeVisitPage({super.key});
 
   @override
-  Widget build(BuildContext context, WidgetRef ref) {
+  ConsumerState<BeforeVisitPage> createState() => _BeforeVisitPageState();
+}
+
+class _BeforeVisitPageState extends ConsumerState<BeforeVisitPage> {
+  bool _imagesPrecached = false;
+
+  @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+    // Precache all images on first load to eliminate decode jank during scroll
+    if (!_imagesPrecached) {
+      _imagesPrecached = true;
+      _precacheImages();
+    }
+  }
+
+  /// Precache all before visit images for smoother scrolling performance
+  void _precacheImages() {
+    // Precache story sequence images
+    for (final item in BeforeVisitData.storyItems) {
+      precacheImage(AssetImage(item.imagePath), context);
+    }
+    // Precache tools grid images
+    for (final item in BeforeVisitData.toolsItems) {
+      precacheImage(AssetImage(item.imagePath), context);
+    }
+  }
+
+  @override
+  Widget build(BuildContext context) {
     // Read TTS service (don't watch - only need for speak calls)
     final ttsService = ref.read(ttsServiceProvider);
     final contentLanguage = ref.watch(contentLanguageNotifierProvider);
-    
+
     // Watch speaking text stream for UI feedback
     final speakingTextAsync = ref.watch(ttsSpeakingTextStreamProvider);
     final speakingText = speakingTextAsync.valueOrNull;
 
     // Update TTS language when content language changes
-    ref.listen<ContentLanguage>(contentLanguageNotifierProvider,
-        (previous, next) {
+    ref.listen<ContentLanguage>(contentLanguageNotifierProvider, (
+      previous,
+      next,
+    ) {
       ttsService.setLanguage(next);
     });
 
     return AppShell(
-      child: _buildContent(
-        context,
-        ttsService,
-        contentLanguage,
-        speakingText,
-      ),
+      child: _buildContent(context, ttsService, contentLanguage, speakingText),
     );
   }
 
@@ -113,9 +139,7 @@ class BeforeVisitPage extends ConsumerWidget {
             ),
           ),
           // Spacer between sections
-          const SliverToBoxAdapter(
-            child: SizedBox(height: 32),
-          ),
+          const SliverToBoxAdapter(child: SizedBox(height: 32)),
           // Tools grid section
           SliverPadding(
             padding: padding,
@@ -126,28 +150,23 @@ class BeforeVisitPage extends ConsumerWidget {
                 crossAxisSpacing: spacing,
                 childAspectRatio: aspectRatio, // Responsive aspect ratio
               ),
-              delegate: SliverChildBuilderDelegate(
-                (context, index) {
-                  final item = BeforeVisitData.toolsItems[index];
-                  final translatedCaption = ContentTranslations.getCaption(
-                    item.id,
-                    contentLanguage,
-                  );
-                  return LibraryCard(
-                    item: item,
-                    caption: translatedCaption,
-                    onTap: () => ttsService.speak(translatedCaption),
-                    isSpeaking: speakingText == translatedCaption,
-                  );
-                },
-                childCount: BeforeVisitData.toolsItems.length,
-              ),
+              delegate: SliverChildBuilderDelegate((context, index) {
+                final item = BeforeVisitData.toolsItems[index];
+                final translatedCaption = ContentTranslations.getCaption(
+                  item.id,
+                  contentLanguage,
+                );
+                return LibraryCard(
+                  item: item,
+                  caption: translatedCaption,
+                  onTap: () => ttsService.speak(translatedCaption),
+                  isSpeaking: speakingText == translatedCaption,
+                );
+              }, childCount: BeforeVisitData.toolsItems.length),
             ),
           ),
           // Bottom padding
-          const SliverToBoxAdapter(
-            child: SizedBox(height: 24),
-          ),
+          const SliverToBoxAdapter(child: SizedBox(height: 24)),
         ],
       ),
     );

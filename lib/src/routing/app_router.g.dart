@@ -6,7 +6,7 @@ part of 'app_router.dart';
 // RiverpodGenerator
 // **************************************************************************
 
-String _$goRouterHash() => r'1c2d7f88686b8e4b938ddc9dc059a762e0703771';
+String _$goRouterHash() => r'40e5be9b4ae089ba183fd7cf441af62175d58793';
 
 /// GoRouter provider with keepAlive to prevent disposal during navigation.
 /// AutoDispose would cause router recreation and navigation issues.

@@ -7,6 +7,7 @@ import '../features/build_own/presentation/build_own_page.dart';
 import '../features/build_own/presentation/custom_template_page.dart';
 import '../features/dashboard/presentation/dashboard_page.dart';
 import '../features/library/presentation/library_page.dart';
+import '../features/settings/presentation/settings_page.dart';
 import 'routes.dart';
 
 part 'app_router.g.dart';
@@ -35,17 +36,11 @@ CustomTransitionPage<void> _buildPageWithTransition({
       final slideAnimation = Tween<Offset>(
         begin: const Offset(0.03, 0),
         end: Offset.zero,
-      ).animate(CurvedAnimation(
-        parent: animation,
-        curve: Curves.easeOutCubic,
-      ));
+      ).animate(CurvedAnimation(parent: animation, curve: Curves.easeOutCubic));
 
       return FadeTransition(
         opacity: fadeAnimation,
-        child: SlideTransition(
-          position: slideAnimation,
-          child: child,
-        ),
+        child: SlideTransition(position: slideAnimation, child: child),
       );
     },
   );
@@ -117,6 +112,15 @@ GoRouter goRouter(Ref ref) {
             child: CustomTemplatePage(templateId: templateId),
           );
         },
+      ),
+      GoRoute(
+        path: Routes.settings,
+        name: 'settings',
+        pageBuilder: (context, state) => _buildPageWithTransition(
+          context: context,
+          state: state,
+          child: const SettingsPage(),
+        ),
       ),
     ],
   );

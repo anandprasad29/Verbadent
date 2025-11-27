@@ -36,116 +36,131 @@ class SelectableLibraryCard extends StatelessWidget {
             // Square image container with selection state
             AspectRatio(
               aspectRatio: 1.0,
-              child: Stack(
-                children: [
-                  // Image container with animated border
-                  AnimatedContainer(
-                    duration: _animationDuration,
-                    curve: Curves.easeOutCubic,
-                    decoration: BoxDecoration(
-                      border: Border.all(
-                        color: isSelected
-                            ? context.appPrimary
-                            : context.appCardBorder,
-                        width: isSelected
-                            ? AppConstants.cardBorderWidth + 1
-                            : AppConstants.cardBorderWidth,
-                      ),
-                      borderRadius:
-                          BorderRadius.circular(AppConstants.cardBorderRadius),
-                    ),
-                    child: ClipRRect(
-                      borderRadius: BorderRadius.circular(
-                        AppConstants.cardBorderRadius -
-                            AppConstants.cardBorderWidth,
-                      ),
-                      child: Image.asset(
-                        item.imagePath,
-                        fit: BoxFit.cover,
-                        width: double.infinity,
-                        height: double.infinity,
-                        errorBuilder: (context, error, stackTrace) {
-                          return Container(
-                            color: context.appBackground,
-                            child: Icon(
-                              Icons.medical_services_outlined,
-                              size: 48,
-                              color: context.appCardBorder,
-                            ),
-                          );
-                        },
-                      ),
-                    ),
-                  ),
-                  // Animated selection overlay
-                  Positioned.fill(
-                    child: AnimatedOpacity(
-                      duration: _animationDuration,
-                      opacity: isSelected ? 1.0 : 0.0,
-                      child: Container(
+              child: LayoutBuilder(
+                builder: (context, constraints) {
+                  // Calculate optimal cache size based on display size and pixel ratio
+                  final displaySize = constraints.maxWidth;
+                  final pixelRatio = MediaQuery.devicePixelRatioOf(context);
+                  final cacheSize = (displaySize * pixelRatio).ceil();
+
+                  return Stack(
+                    children: [
+                      // Image container with animated border
+                      AnimatedContainer(
+                        duration: _animationDuration,
+                        curve: Curves.easeOutCubic,
                         decoration: BoxDecoration(
-                          color: context.appPrimary.withValues(alpha: 0.2),
+                          border: Border.all(
+                            color: isSelected
+                                ? context.appPrimary
+                                : context.appCardBorder,
+                            width: isSelected
+                                ? AppConstants.cardBorderWidth + 1
+                                : AppConstants.cardBorderWidth,
+                          ),
                           borderRadius: BorderRadius.circular(
                             AppConstants.cardBorderRadius,
                           ),
                         ),
-                      ),
-                    ),
-                  ),
-                  // Animated badge (checkmark or plus)
-                  Positioned(
-                    top: 8,
-                    right: 8,
-                    child: AnimatedSwitcher(
-                      duration: _animationDuration,
-                      transitionBuilder: (child, animation) {
-                        return ScaleTransition(
-                          scale: animation,
-                          child: child,
-                        );
-                      },
-                      child: isSelected
-                          ? Container(
-                              key: const ValueKey('selected'),
-                              padding: const EdgeInsets.all(4),
-                              decoration: BoxDecoration(
-                                color: context.appPrimary,
-                                shape: BoxShape.circle,
-                                boxShadow: [
-                                  BoxShadow(
-                                    color: Colors.black.withValues(alpha: 0.2),
-                                    blurRadius: 4,
-                                    offset: const Offset(0, 2),
-                                  ),
-                                ],
-                              ),
-                              child: const Icon(
-                                Icons.check,
-                                color: Colors.white,
-                                size: 16,
-                              ),
-                            )
-                          : Container(
-                              key: const ValueKey('unselected'),
-                              padding: const EdgeInsets.all(4),
-                              decoration: BoxDecoration(
-                                color: context.appCardBackground
-                                    .withValues(alpha: 0.8),
-                                shape: BoxShape.circle,
-                                border: Border.all(
+                        child: ClipRRect(
+                          borderRadius: BorderRadius.circular(
+                            AppConstants.cardBorderRadius -
+                                AppConstants.cardBorderWidth,
+                          ),
+                          child: Image.asset(
+                            item.imagePath,
+                            fit: BoxFit.cover,
+                            width: double.infinity,
+                            height: double.infinity,
+                            cacheWidth: cacheSize,
+                            cacheHeight: cacheSize,
+                            errorBuilder: (context, error, stackTrace) {
+                              return Container(
+                                color: context.appBackground,
+                                child: Icon(
+                                  Icons.medical_services_outlined,
+                                  size: 48,
                                   color: context.appCardBorder,
-                                  width: 1,
                                 ),
-                              ),
-                              child: Icon(
-                                Icons.add,
-                                color: context.appNeutral,
-                                size: 14,
+                              );
+                            },
+                          ),
+                        ),
+                      ),
+                      // Animated selection overlay
+                      Positioned.fill(
+                        child: AnimatedOpacity(
+                          duration: _animationDuration,
+                          opacity: isSelected ? 1.0 : 0.0,
+                          child: Container(
+                            decoration: BoxDecoration(
+                              color: context.appPrimary.withValues(alpha: 0.2),
+                              borderRadius: BorderRadius.circular(
+                                AppConstants.cardBorderRadius,
                               ),
                             ),
-                    ),
-                  ),
-                ],
+                          ),
+                        ),
+                      ),
+                      // Animated badge (checkmark or plus)
+                      Positioned(
+                        top: 8,
+                        right: 8,
+                        child: AnimatedSwitcher(
+                          duration: _animationDuration,
+                          transitionBuilder: (child, animation) {
+                            return ScaleTransition(
+                              scale: animation,
+                              child: child,
+                            );
+                          },
+                          child: isSelected
+                              ? Container(
+                                  key: const ValueKey('selected'),
+                                  padding: const EdgeInsets.all(4),
+                                  decoration: BoxDecoration(
+                                    color: context.appPrimary,
+                                    shape: BoxShape.circle,
+                                    boxShadow: [
+                                      BoxShadow(
+                                        color: Colors.black.withValues(
+                                          alpha: 0.2,
+                                        ),
+                                        blurRadius: 4,
+                                        offset: const Offset(0, 2),
+                                      ),
+                                    ],
+                                  ),
+                                  child: const Icon(
+                                    Icons.check,
+                                    color: Colors.white,
+                                    size: 16,
+                                  ),
+                                )
+                              : Container(
+                                  key: const ValueKey('unselected'),
+                                  padding: const EdgeInsets.all(4),
+                                  decoration: BoxDecoration(
+                                    color: context.appCardBackground.withValues(
+                                      alpha: 0.8,
+                                    ),
+                                    shape: BoxShape.circle,
+                                    border: Border.all(
+                                      color: context.appCardBorder,
+                                      width: 1,
+                                    ),
+                                  ),
+                                  child: Icon(
+                                    Icons.add,
+                                    color: context.appNeutral,
+                                    size: 14,
+                                  ),
+                                ),
+                        ),
+                      ),
+                    ],
+                  );
+                },
               ),
             ),
             const SizedBox(height: 8),
@@ -206,68 +221,79 @@ class RemovableLibraryCard extends StatelessWidget {
           children: [
             AspectRatio(
               aspectRatio: 1.0,
-              child: Stack(
-                children: [
-                  Container(
-                    decoration: BoxDecoration(
-                      border: Border.all(
-                        color: showRemoveOverlay
-                            ? context.appError
-                            : context.appCardBorder,
-                        width: AppConstants.cardBorderWidth,
-                      ),
-                      borderRadius:
-                          BorderRadius.circular(AppConstants.cardBorderRadius),
-                    ),
-                    child: ClipRRect(
-                      borderRadius: BorderRadius.circular(
-                        AppConstants.cardBorderRadius -
-                            AppConstants.cardBorderWidth,
-                      ),
-                      child: Image.asset(
-                        item.imagePath,
-                        fit: BoxFit.cover,
-                        width: double.infinity,
-                        height: double.infinity,
-                        errorBuilder: (context, error, stackTrace) {
-                          return Container(
-                            color: context.appBackground,
-                            child: Icon(
-                              Icons.medical_services_outlined,
-                              size: 48,
-                              color: context.appCardBorder,
-                            ),
-                          );
-                        },
-                      ),
-                    ),
-                  ),
-                  // Remove overlay
-                  if (showRemoveOverlay)
-                    Positioned(
-                      top: 8,
-                      right: 8,
-                      child: Container(
-                        padding: const EdgeInsets.all(4),
+              child: LayoutBuilder(
+                builder: (context, constraints) {
+                  final displaySize = constraints.maxWidth;
+                  final pixelRatio = MediaQuery.devicePixelRatioOf(context);
+                  final cacheSize = (displaySize * pixelRatio).ceil();
+
+                  return Stack(
+                    children: [
+                      Container(
                         decoration: BoxDecoration(
-                          color: context.appError,
-                          shape: BoxShape.circle,
-                          boxShadow: [
-                            BoxShadow(
-                              color: Colors.black.withValues(alpha: 0.2),
-                              blurRadius: 4,
-                              offset: const Offset(0, 2),
-                            ),
-                          ],
+                          border: Border.all(
+                            color: showRemoveOverlay
+                                ? context.appError
+                                : context.appCardBorder,
+                            width: AppConstants.cardBorderWidth,
+                          ),
+                          borderRadius: BorderRadius.circular(
+                            AppConstants.cardBorderRadius,
+                          ),
                         ),
-                        child: const Icon(
-                          Icons.close,
-                          color: Colors.white,
-                          size: 16,
+                        child: ClipRRect(
+                          borderRadius: BorderRadius.circular(
+                            AppConstants.cardBorderRadius -
+                                AppConstants.cardBorderWidth,
+                          ),
+                          child: Image.asset(
+                            item.imagePath,
+                            fit: BoxFit.cover,
+                            width: double.infinity,
+                            height: double.infinity,
+                            cacheWidth: cacheSize,
+                            cacheHeight: cacheSize,
+                            errorBuilder: (context, error, stackTrace) {
+                              return Container(
+                                color: context.appBackground,
+                                child: Icon(
+                                  Icons.medical_services_outlined,
+                                  size: 48,
+                                  color: context.appCardBorder,
+                                ),
+                              );
+                            },
+                          ),
                         ),
                       ),
-                    ),
-                ],
+                      // Remove overlay
+                      if (showRemoveOverlay)
+                        Positioned(
+                          top: 8,
+                          right: 8,
+                          child: Container(
+                            padding: const EdgeInsets.all(4),
+                            decoration: BoxDecoration(
+                              color: context.appError,
+                              shape: BoxShape.circle,
+                              boxShadow: [
+                                BoxShadow(
+                                  color: Colors.black.withValues(alpha: 0.2),
+                                  blurRadius: 4,
+                                  offset: const Offset(0, 2),
+                                ),
+                              ],
+                            ),
+                            child: const Icon(
+                              Icons.close,
+                              color: Colors.white,
+                              size: 16,
+                            ),
+                          ),
+                        ),
+                    ],
+                  );
+                },
               ),
             ),
             const SizedBox(height: 8),
@@ -314,115 +340,128 @@ class DraggableLibraryCard extends StatelessWidget {
       mainAxisSize: MainAxisSize.min,
       children: [
         Expanded(
-          child: Stack(
-            children: [
-              // Image container
-              Container(
-                decoration: BoxDecoration(
-                  border: Border.all(
-                    color: context.appPrimary,
-                    width: AppConstants.cardBorderWidth,
-                  ),
-                  borderRadius:
-                      BorderRadius.circular(AppConstants.cardBorderRadius),
-                ),
-                child: ClipRRect(
-                  borderRadius: BorderRadius.circular(
-                    AppConstants.cardBorderRadius -
-                        AppConstants.cardBorderWidth,
-                  ),
-                  child: Image.asset(
-                    item.imagePath,
-                    fit: BoxFit.cover,
-                    width: double.infinity,
-                    height: double.infinity,
-                    errorBuilder: (context, error, stackTrace) {
-                      return Container(
-                        color: context.appBackground,
-                        child: Icon(
-                          Icons.medical_services_outlined,
-                          size: 48,
-                          color: context.appCardBorder,
-                        ),
-                      );
-                    },
-                  ),
-                ),
-              ),
-              // Drag handle indicator at top left
-              Positioned(
-                top: 8,
-                left: 8,
-                child: Container(
-                  padding: const EdgeInsets.all(4),
-                  decoration: BoxDecoration(
-                    color: context.appCardBackground.withValues(alpha: 0.9),
-                    borderRadius: BorderRadius.circular(8),
-                    boxShadow: [
-                      BoxShadow(
-                        color: Colors.black.withValues(alpha: 0.1),
-                        blurRadius: 4,
-                        offset: const Offset(0, 2),
-                      ),
-                    ],
-                  ),
-                  child: Icon(
-                    Icons.drag_indicator,
-                    color: context.appNeutral,
-                    size: 18,
-                  ),
-                ),
-              ),
-              // Remove button at top right
-              Positioned(
-                top: 8,
-                right: 8,
-                child: GestureDetector(
-                  onTap: onRemove,
-                  child: Container(
-                    padding: const EdgeInsets.all(4),
+          child: LayoutBuilder(
+            builder: (context, constraints) {
+              final displaySize = constraints.maxWidth;
+              final pixelRatio = MediaQuery.devicePixelRatioOf(context);
+              final cacheSize = (displaySize * pixelRatio).ceil();
+
+              return Stack(
+                children: [
+                  // Image container
+                  Container(
                     decoration: BoxDecoration(
-                      color: context.appError,
-                      shape: BoxShape.circle,
-                      boxShadow: [
-                        BoxShadow(
-                          color: Colors.black.withValues(alpha: 0.2),
-                          blurRadius: 4,
-                          offset: const Offset(0, 2),
+                      border: Border.all(
+                        color: context.appPrimary,
+                        width: AppConstants.cardBorderWidth,
+                      ),
+                      borderRadius: BorderRadius.circular(
+                        AppConstants.cardBorderRadius,
+                      ),
+                    ),
+                    child: ClipRRect(
+                      borderRadius: BorderRadius.circular(
+                        AppConstants.cardBorderRadius -
+                            AppConstants.cardBorderWidth,
+                      ),
+                      child: Image.asset(
+                        item.imagePath,
+                        fit: BoxFit.cover,
+                        width: double.infinity,
+                        height: double.infinity,
+                        cacheWidth: cacheSize,
+                        cacheHeight: cacheSize,
+                        errorBuilder: (context, error, stackTrace) {
+                          return Container(
+                            color: context.appBackground,
+                            child: Icon(
+                              Icons.medical_services_outlined,
+                              size: 48,
+                              color: context.appCardBorder,
+                            ),
+                          );
+                        },
+                      ),
+                    ),
+                  ),
+                  // Drag handle indicator at top left
+                  Positioned(
+                    top: 8,
+                    left: 8,
+                    child: Container(
+                      padding: const EdgeInsets.all(4),
+                      decoration: BoxDecoration(
+                        color: context.appCardBackground.withValues(alpha: 0.9),
+                        borderRadius: BorderRadius.circular(8),
+                        boxShadow: [
+                          BoxShadow(
+                            color: Colors.black.withValues(alpha: 0.1),
+                            blurRadius: 4,
+                            offset: const Offset(0, 2),
+                          ),
+                        ],
+                      ),
+                      child: Icon(
+                        Icons.drag_indicator,
+                        color: context.appNeutral,
+                        size: 18,
+                      ),
+                    ),
+                  ),
+                  // Remove button at top right
+                  Positioned(
+                    top: 8,
+                    right: 8,
+                    child: GestureDetector(
+                      onTap: onRemove,
+                      child: Container(
+                        padding: const EdgeInsets.all(4),
+                        decoration: BoxDecoration(
+                          color: context.appError,
+                          shape: BoxShape.circle,
+                          boxShadow: [
+                            BoxShadow(
+                              color: Colors.black.withValues(alpha: 0.2),
+                              blurRadius: 4,
+                              offset: const Offset(0, 2),
+                            ),
+                          ],
                         ),
-                      ],
-                    ),
-                    child: const Icon(
-                      Icons.close,
-                      color: Colors.white,
-                      size: 16,
-                    ),
-                  ),
-                ),
-              ),
-              // Order number badge
-              Positioned(
-                bottom: 8,
-                left: 8,
-                child: Container(
-                  padding:
-                      const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
-                  decoration: BoxDecoration(
-                    color: context.appPrimary,
-                    borderRadius: BorderRadius.circular(12),
-                  ),
-                  child: Text(
-                    '${index + 1}',
-                    style: const TextStyle(
-                      fontFamily: 'InstrumentSans',
-                      fontWeight: FontWeight.bold,
-                      fontSize: 12,
-                      color: Colors.white,
+                        child: const Icon(
+                          Icons.close,
+                          color: Colors.white,
+                          size: 16,
+                        ),
+                      ),
                     ),
                   ),
-                ),
-              ),
-            ],
+                  // Order number badge
+                  Positioned(
+                    bottom: 8,
+                    left: 8,
+                    child: Container(
+                      padding: const EdgeInsets.symmetric(
+                        horizontal: 8,
+                        vertical: 4,
+                      ),
+                      decoration: BoxDecoration(
+                        color: context.appPrimary,
+                        borderRadius: BorderRadius.circular(12),
+                      ),
+                      child: Text(
+                        '${index + 1}',
+                        style: const TextStyle(
+                          fontFamily: 'InstrumentSans',
+                          fontWeight: FontWeight.bold,
+                          fontSize: 12,
+                          color: Colors.white,
+                        ),
+                      ),
+                    ),
+                  ),
+                ],
+              );
+            },
           ),
         ),
         const SizedBox(height: 8),
@@ -513,8 +552,9 @@ class _ReorderableWrapState extends State<ReorderableWrap> {
 
             final feedbackWidget = Material(
               elevation: 8,
-              borderRadius:
-                  BorderRadius.circular(AppConstants.cardBorderRadius),
+              borderRadius: BorderRadius.circular(
+                AppConstants.cardBorderRadius,
+              ),
               child: Opacity(
                 opacity: 0.9,
                 child: SizedBox(
@@ -535,14 +575,11 @@ class _ReorderableWrapState extends State<ReorderableWrap> {
               transform: isDragging
                   ? Matrix4.identity()
                   : (isTarget
-                      ? (Matrix4.identity()..scale(1.05))
-                      : Matrix4.identity()),
+                        ? (Matrix4.identity()..scale(1.05, 1.05, 1.0))
+                        : Matrix4.identity()),
               decoration: isTarget
                   ? BoxDecoration(
-                      border: Border.all(
-                        color: context.appPrimary,
-                        width: 3,
-                      ),
+                      border: Border.all(color: context.appPrimary, width: 3),
                       borderRadius: BorderRadius.circular(
                         AppConstants.cardBorderRadius,
                       ),
