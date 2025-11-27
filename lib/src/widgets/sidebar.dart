@@ -6,7 +6,6 @@ import '../features/build_own/presentation/build_own_providers.dart';
 import '../localization/app_localizations.dart';
 import '../routing/routes.dart';
 import '../theme/app_colors.dart';
-import 'theme_toggle.dart';
 
 /// Data class for sidebar navigation items.
 /// Uses a localization key instead of hardcoded label.
@@ -42,6 +41,8 @@ class SidebarItemData {
         return l10n?.navBuildOwn ?? 'Build your own';
       case 'navLibrary':
         return l10n?.navLibrary ?? 'Library';
+      case 'navSettings':
+        return l10n?.navSettings ?? 'Settings';
       default:
         return labelKey;
     }
@@ -75,6 +76,11 @@ class SidebarConfig {
       labelKey: 'navLibrary',
       route: Routes.library,
       testKey: 'sidebar_item_library',
+    ),
+    SidebarItemData(
+      labelKey: 'navSettings',
+      route: Routes.settings,
+      testKey: 'sidebar_item_settings',
     ),
   ];
 
@@ -189,13 +195,8 @@ class Sidebar extends ConsumerWidget {
               ),
             ),
           ),
-          // Theme toggle at the bottom (always visible)
-          const Padding(
-            padding: EdgeInsets.only(bottom: 24, top: 16),
-            child: Center(
-              child: ThemeToggle(),
-            ),
-          ),
+          // Bottom padding
+          const SizedBox(height: 24),
         ],
       ),
     );

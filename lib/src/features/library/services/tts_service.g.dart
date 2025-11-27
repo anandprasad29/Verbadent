@@ -88,5 +88,42 @@ final ttsSpeakingTextProvider = AutoDisposeProvider<String?>.internal(
 @Deprecated('Will be removed in 3.0. Use Ref instead')
 // ignore: unused_element
 typedef TtsSpeakingTextRef = AutoDisposeProviderRef<String?>;
+String _$ttsSettingsHash() => r'489c99b7400e7a04052f8db4cf8d7e1d44ff2153';
+
+/// Convenience provider for TTS settings
+///
+/// Copied from [ttsSettings].
+@ProviderFor(ttsSettings)
+final ttsSettingsProvider = Provider<TtsSettings>.internal(
+  ttsSettings,
+  name: r'ttsSettingsProvider',
+  debugGetCreateSourceHash:
+      const bool.fromEnvironment('dart.vm.product') ? null : _$ttsSettingsHash,
+  dependencies: null,
+  allTransitiveDependencies: null,
+);
+
+@Deprecated('Will be removed in 3.0. Use Ref instead')
+// ignore: unused_element
+typedef TtsSettingsRef = ProviderRef<TtsSettings>;
+String _$ttsSettingsNotifierHash() =>
+    r'3cffff7b77fe11be2fa958373e6ddb506a8f1a32';
+
+/// Notifier for TTS settings that automatically applies changes to the TTS service.
+///
+/// Copied from [TtsSettingsNotifier].
+@ProviderFor(TtsSettingsNotifier)
+final ttsSettingsNotifierProvider =
+    NotifierProvider<TtsSettingsNotifier, TtsSettings>.internal(
+  TtsSettingsNotifier.new,
+  name: r'ttsSettingsNotifierProvider',
+  debugGetCreateSourceHash: const bool.fromEnvironment('dart.vm.product')
+      ? null
+      : _$ttsSettingsNotifierHash,
+  dependencies: null,
+  allTransitiveDependencies: null,
+);
+
+typedef _$TtsSettingsNotifier = Notifier<TtsSettings>;
 // ignore_for_file: type=lint
 // ignore_for_file: subtype_of_sealed_class, invalid_use_of_internal_member, invalid_use_of_visible_for_testing_member, deprecated_member_use_from_same_package

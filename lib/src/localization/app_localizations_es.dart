@@ -156,4 +156,67 @@ class AppLocalizationsEs extends AppLocalizations {
 
   @override
   String get duplicateNameError => 'Ya existe una plantilla con este nombre';
+
+  @override
+  String get navSettings => 'Ajustes';
+
+  @override
+  String get settingsTitle => 'Ajustes';
+
+  @override
+  String get settingsAppearance => 'Apariencia';
+
+  @override
+  String get settingsSpeech => 'Voz';
+
+  @override
+  String get settingsTheme => 'Tema';
+
+  @override
+  String get settingsThemeLight => 'Claro';
+
+  @override
+  String get settingsThemeDark => 'Oscuro';
+
+  @override
+  String get settingsThemeSystem => 'Sistema';
+
+  @override
+  String get settingsSpeechRate => 'Velocidad de voz';
+
+  @override
+  String get settingsSpeechRateSlow => 'Lento';
+
+  @override
+  String get settingsSpeechRateNormal => 'Normal';
+
+  @override
+  String get settingsSpeechRateFast => 'Rápido';
+
+  @override
+  String get settingsSpeechRateVeryFast => 'Muy rápido';
+
+  @override
+  String get settingsPitch => 'Tono';
+
+  @override
+  String get settingsPitchLow => 'Bajo';
+
+  @override
+  String get settingsPitchNormal => 'Normal';
+
+  @override
+  String get settingsPitchHigh => 'Alto';
+
+  @override
+  String get settingsPitchVeryHigh => 'Muy alto';
+
+  @override
+  String get settingsTestSpeech => 'Probar voz';
+
+  @override
+  String get settingsTestSpeechHint => 'Toca para escuchar una muestra';
+
+  @override
+  String get settingsTestSpeechSample => '¡Hola! Esta es una prueba.';
 }

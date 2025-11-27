@@ -211,6 +211,22 @@ class TtsService {
     _speakingTextController.add(null);
   }
 
+  /// Update TTS settings (speech rate, pitch, volume).
+  /// Non-blocking - fires and forgets if TTS not ready.
+  void updateSettings(TtsSettings settings) {
+    if (_flutterTts == null || !_isAvailable) return;
+
+    _flutterTts!.setSpeechRate(settings.speechRate).catchError((e) {
+      debugPrint('Failed to set TTS speech rate: $e');
+    });
+    _flutterTts!.setPitch(settings.pitch).catchError((e) {
+      debugPrint('Failed to set TTS pitch: $e');
+    });
+    _flutterTts!.setVolume(settings.volume).catchError((e) {
+      debugPrint('Failed to set TTS volume: $e');
+    });
+  }
+
   /// Dispose of TTS resources.
   void dispose() {
     if (_flutterTts != null) {
@@ -258,4 +274,64 @@ Stream<String?> ttsSpeakingTextStream(Ref ref) {
 String? ttsSpeakingText(Ref ref) {
   final streamAsync = ref.watch(ttsSpeakingTextStreamProvider);
   return streamAsync.valueOrNull;
+}
+
+/// TTS settings data class
+class TtsSettings {
+  final double speechRate;
+  final double pitch;
+  final double volume;
+
+  const TtsSettings({
+    this.speechRate = 0.5,
+    this.pitch = 1.0,
+    this.volume = 1.0,
+  });
+
+  TtsSettings copyWith({
+    double? speechRate,
+    double? pitch,
+    double? volume,
+  }) {
+    return TtsSettings(
+      speechRate: speechRate ?? this.speechRate,
+      pitch: pitch ?? this.pitch,
+      volume: volume ?? this.volume,
+    );
+  }
+}
+
+/// Notifier for TTS settings that automatically applies changes to the TTS service.
+@Riverpod(keepAlive: true)
+class TtsSettingsNotifier extends _$TtsSettingsNotifier {
+  @override
+  TtsSettings build() {
+    return const TtsSettings();
+  }
+
+  void setSpeechRate(double rate) {
+    state = state.copyWith(speechRate: rate);
+    _applyToTtsService();
+  }
+
+  void setPitch(double pitch) {
+    state = state.copyWith(pitch: pitch);
+    _applyToTtsService();
+  }
+
+  void setVolume(double volume) {
+    state = state.copyWith(volume: volume);
+    _applyToTtsService();
+  }
+
+  void _applyToTtsService() {
+    final ttsService = ref.read(ttsServiceProvider);
+    ttsService.updateSettings(state);
+  }
+}
+
+/// Convenience provider for TTS settings
+@Riverpod(keepAlive: true)
+TtsSettings ttsSettings(Ref ref) {
+  return ref.watch(ttsSettingsNotifierProvider);
 }

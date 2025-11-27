@@ -43,6 +43,27 @@
   "loadingTemplates": "Cargando plantillas...",
   "dragToReorder": "Arrastra para reordenar",
   "emptyTemplatePrompt": "Toca las imágenes abajo para agregarlas a tu plantilla",
-  "duplicateNameError": "Ya existe una plantilla con este nombre"
+  "duplicateNameError": "Ya existe una plantilla con este nombre",
+  "navSettings": "Ajustes",
+  "settingsTitle": "Ajustes",
+  "settingsAppearance": "Apariencia",
+  "settingsSpeech": "Voz",
+  "settingsTheme": "Tema",
+  "settingsThemeLight": "Claro",
+  "settingsThemeDark": "Oscuro",
+  "settingsThemeSystem": "Sistema",
+  "settingsSpeechRate": "Velocidad de voz",
+  "settingsSpeechRateSlow": "Lento",
+  "settingsSpeechRateNormal": "Normal",
+  "settingsSpeechRateFast": "Rápido",
+  "settingsSpeechRateVeryFast": "Muy rápido",
+  "settingsPitch": "Tono",
+  "settingsPitchLow": "Bajo",
+  "settingsPitchNormal": "Normal",
+  "settingsPitchHigh": "Alto",
+  "settingsPitchVeryHigh": "Muy alto",
+  "settingsTestSpeech": "Probar voz",
+  "settingsTestSpeechHint": "Toca para escuchar una muestra",
+  "settingsTestSpeechSample": "¡Hola! Esta es una prueba."
 }
 
