@@ -55,7 +55,8 @@ class CustomTemplate {
 
   /// Creates from JSON string
   factory CustomTemplate.fromJsonString(String jsonString) {
-    return CustomTemplate.fromJson(jsonDecode(jsonString) as Map<String, dynamic>);
+    return CustomTemplate.fromJson(
+        jsonDecode(jsonString) as Map<String, dynamic>);
   }
 
   @override
@@ -70,7 +71,10 @@ class CustomTemplate {
 
   @override
   int get hashCode =>
-      id.hashCode ^ name.hashCode ^ selectedItemIds.hashCode ^ createdAt.hashCode;
+      id.hashCode ^
+      name.hashCode ^
+      selectedItemIds.hashCode ^
+      createdAt.hashCode;
 
   /// Helper for list equality
   static bool _listEquals<T>(List<T> a, List<T> b) {
@@ -85,5 +89,3 @@ class CustomTemplate {
   String toString() =>
       'CustomTemplate(id: $id, name: $name, items: ${selectedItemIds.length})';
 }
-
-

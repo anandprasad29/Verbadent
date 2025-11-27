@@ -129,7 +129,8 @@ class SelectableLibraryCard extends StatelessWidget {
                               key: const ValueKey('unselected'),
                               padding: const EdgeInsets.all(4),
                               decoration: BoxDecoration(
-                                color: context.appCardBackground.withValues(alpha: 0.8),
+                                color: context.appCardBackground
+                                    .withValues(alpha: 0.8),
                                 shape: BoxShape.circle,
                                 border: Border.all(
                                   color: context.appCardBorder,
@@ -404,7 +405,8 @@ class DraggableLibraryCard extends StatelessWidget {
                 bottom: 8,
                 left: 8,
                 child: Container(
-                  padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+                  padding:
+                      const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
                   decoration: BoxDecoration(
                     color: context.appPrimary,
                     borderRadius: BorderRadius.circular(12),
@@ -444,7 +446,7 @@ class DraggableLibraryCard extends StatelessWidget {
 /// A reorderable wrap widget that allows drag-and-drop reordering of children.
 /// Wraps children in a flow layout and supports reordering via drag.
 /// Works on both mobile (long-press to drag) and web/desktop (click to drag).
-/// 
+///
 /// **Important**: Children must be `SizedBox` widgets with explicit width and height
 /// so the drag feedback can maintain proper dimensions during drag operations.
 class ReorderableWrap extends StatefulWidget {
@@ -479,14 +481,14 @@ class _ReorderableWrapState extends State<ReorderableWrap> {
   @override
   Widget build(BuildContext context) {
     final isTouchPlatform = _isTouchPlatform(context);
-    
+
     return Wrap(
       spacing: widget.spacing,
       runSpacing: widget.runSpacing,
       children: widget.children.asMap().entries.map((entry) {
         final index = entry.key;
         final sizedChild = entry.value;
-        
+
         return DragTarget<int>(
           onWillAcceptWithDetails: (details) {
             setState(() {
@@ -508,10 +510,11 @@ class _ReorderableWrapState extends State<ReorderableWrap> {
           builder: (context, candidateData, rejectedData) {
             final isTarget = _targetIndex == index && _draggedIndex != index;
             final isDragging = _draggedIndex == index;
-            
+
             final feedbackWidget = Material(
               elevation: 8,
-              borderRadius: BorderRadius.circular(AppConstants.cardBorderRadius),
+              borderRadius:
+                  BorderRadius.circular(AppConstants.cardBorderRadius),
               child: Opacity(
                 opacity: 0.9,
                 child: SizedBox(
@@ -521,18 +524,18 @@ class _ReorderableWrapState extends State<ReorderableWrap> {
                 ),
               ),
             );
-            
+
             final childWhenDraggingWidget = Opacity(
               opacity: 0.3,
               child: sizedChild,
             );
-            
+
             final decoratedChild = AnimatedContainer(
               duration: const Duration(milliseconds: 200),
-              transform: isDragging 
-                  ? Matrix4.identity() 
-                  : (isTarget 
-                      ? (Matrix4.identity()..scale(1.05, 1.05, 1.0)) 
+              transform: isDragging
+                  ? Matrix4.identity()
+                  : (isTarget
+                      ? (Matrix4.identity()..scale(1.05))
                       : Matrix4.identity()),
               decoration: isTarget
                   ? BoxDecoration(
@@ -547,7 +550,7 @@ class _ReorderableWrapState extends State<ReorderableWrap> {
                   : null,
               child: sizedChild,
             );
-            
+
             // Use LongPressDraggable on touch platforms for better UX
             // Use regular Draggable on web/desktop for click-to-drag
             if (isTouchPlatform) {
@@ -598,4 +601,3 @@ class _ReorderableWrapState extends State<ReorderableWrap> {
     );
   }
 }
-
