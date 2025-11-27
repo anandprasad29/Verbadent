@@ -157,7 +157,9 @@ class TtsService {
       _maleVoice = _findVoiceByGender(langVoices, VoiceType.male);
       _voicesLoaded = true;
 
-      debugPrint('TTS voices loaded - Female: ${_femaleVoice?['name']}, Male: ${_maleVoice?['name']}');
+      debugPrint(
+        'TTS voices loaded - Female: ${_femaleVoice?['name']}, Male: ${_maleVoice?['name']}',
+      );
     } catch (e) {
       debugPrint('Failed to load TTS voices: $e');
       _voicesLoaded = false;
@@ -191,9 +193,27 @@ class TtsService {
 
     // Third try: Use naming conventions (common female names vs male names)
     // This is a fallback for platforms with unclear gender info
-    final femaleNames = ['samantha', 'karen', 'moira', 'tessa', 'fiona', 'victoria', 'allison'];
-    final maleNames = ['daniel', 'alex', 'tom', 'fred', 'ralph', 'albert', 'bruce'];
-    final targetNames = targetGender == VoiceType.female ? femaleNames : maleNames;
+    final femaleNames = [
+      'samantha',
+      'karen',
+      'moira',
+      'tessa',
+      'fiona',
+      'victoria',
+      'allison',
+    ];
+    final maleNames = [
+      'daniel',
+      'alex',
+      'tom',
+      'fred',
+      'ralph',
+      'albert',
+      'bruce',
+    ];
+    final targetNames = targetGender == VoiceType.female
+        ? femaleNames
+        : maleNames;
 
     for (final voice in voices) {
       final name = (voice['name'] as String?)?.toLowerCase() ?? '';
@@ -330,12 +350,14 @@ class TtsService {
 
     if (targetVoice != null && _voicesLoaded) {
       // Use actual voice - reset pitch to neutral
-      _flutterTts!.setVoice({
-        'name': targetVoice['name'],
-        'locale': targetVoice['locale'],
-      }).catchError((e) {
-        debugPrint('Failed to set TTS voice: $e');
-      });
+      _flutterTts!
+          .setVoice({
+            'name': targetVoice['name'],
+            'locale': targetVoice['locale'],
+          })
+          .catchError((e) {
+            debugPrint('Failed to set TTS voice: $e');
+          });
       _flutterTts!.setPitch(1.0).catchError((e) {
         debugPrint('Failed to set TTS pitch: $e');
       });
