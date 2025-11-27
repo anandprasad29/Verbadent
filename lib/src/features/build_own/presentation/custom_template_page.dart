@@ -35,7 +35,7 @@ class CustomTemplatePage extends ConsumerStatefulWidget {
 class _CustomTemplatePageState extends ConsumerState<CustomTemplatePage> {
   late TextEditingController _nameController;
   late TextEditingController _searchController;
-  
+
   // Track original state to detect unsaved changes
   String _originalName = '';
   List<String> _originalSelectedIds = [];
@@ -52,13 +52,16 @@ class _CustomTemplatePageState extends ConsumerState<CustomTemplatePage> {
   }
 
   void _initializeEditState() {
-    final template = ref.read(customTemplatesNotifierProvider.notifier).getTemplate(widget.templateId);
+    final template = ref
+        .read(customTemplatesNotifierProvider.notifier)
+        .getTemplate(widget.templateId);
     if (template != null) {
       // Initialize providers with template data
       ref.read(editTemplateNameProvider.notifier).state = template.name;
-      ref.read(editTemplateSelectedIdsProvider.notifier).state = List.from(template.selectedItemIds);
+      ref.read(editTemplateSelectedIdsProvider.notifier).state =
+          List.from(template.selectedItemIds);
       _nameController.text = template.name;
-      
+
       // Also initialize original state for unsaved changes detection
       // This ensures correct comparison even if data changes before entering edit mode
       _originalName = template.name;
@@ -74,14 +77,17 @@ class _CustomTemplatePageState extends ConsumerState<CustomTemplatePage> {
   }
 
   void _enterEditMode() {
-    final template = ref.read(customTemplatesNotifierProvider.notifier).getTemplate(widget.templateId);
+    final template = ref
+        .read(customTemplatesNotifierProvider.notifier)
+        .getTemplate(widget.templateId);
     if (template != null) {
       // Store original state for unsaved changes detection
       _originalName = template.name;
       _originalSelectedIds = List.from(template.selectedItemIds);
-      
+
       ref.read(editTemplateNameProvider.notifier).state = template.name;
-      ref.read(editTemplateSelectedIdsProvider.notifier).state = List.from(template.selectedItemIds);
+      ref.read(editTemplateSelectedIdsProvider.notifier).state =
+          List.from(template.selectedItemIds);
       _nameController.text = template.name;
       ref.read(templateEditModeProvider.notifier).state = true;
     }
@@ -90,7 +96,7 @@ class _CustomTemplatePageState extends ConsumerState<CustomTemplatePage> {
   bool _hasUnsavedChanges() {
     final currentName = ref.read(editTemplateNameProvider);
     final currentIds = ref.read(editTemplateSelectedIdsProvider);
-    
+
     if (currentName != _originalName) return true;
     if (currentIds.length != _originalSelectedIds.length) return true;
     for (int i = 0; i < currentIds.length; i++) {
@@ -115,7 +121,8 @@ class _CustomTemplatePageState extends ConsumerState<CustomTemplatePage> {
             ),
           ),
           content: Text(
-            l10n?.unsavedChangesMessage ?? 'You have unsaved changes. Are you sure you want to discard them?',
+            l10n?.unsavedChangesMessage ??
+                'You have unsaved changes. Are you sure you want to discard them?',
             style: TextStyle(
               fontFamily: 'InstrumentSans',
               color: context.appTextSecondary,
@@ -139,10 +146,10 @@ class _CustomTemplatePageState extends ConsumerState<CustomTemplatePage> {
           ],
         ),
       );
-      
+
       if (shouldDiscard != true) return;
     }
-    
+
     ref.read(templateEditModeProvider.notifier).state = false;
     ref.read(editTemplateSearchNotifierProvider.notifier).clearSearch();
     _searchController.clear();
@@ -154,14 +161,18 @@ class _CustomTemplatePageState extends ConsumerState<CustomTemplatePage> {
 
     if (name.isEmpty || selectedIds.isEmpty) return;
 
-    final template = ref.read(customTemplatesNotifierProvider.notifier).getTemplate(widget.templateId);
+    final template = ref
+        .read(customTemplatesNotifierProvider.notifier)
+        .getTemplate(widget.templateId);
     if (template != null) {
       final updatedTemplate = template.copyWith(
         name: name,
         selectedItemIds: selectedIds,
       );
-      final error = await ref.read(customTemplatesNotifierProvider.notifier).updateTemplate(updatedTemplate);
-      
+      final error = await ref
+          .read(customTemplatesNotifierProvider.notifier)
+          .updateTemplate(updatedTemplate);
+
       if (mounted) {
         if (error == null) {
           // Skip unsaved check since we just saved
@@ -201,7 +212,8 @@ class _CustomTemplatePageState extends ConsumerState<CustomTemplatePage> {
           ),
         ),
         content: Text(
-          l10n?.deleteConfirmation ?? 'Are you sure you want to delete this template?',
+          l10n?.deleteConfirmation ??
+              'Are you sure you want to delete this template?',
           style: TextStyle(
             fontFamily: 'InstrumentSans',
             color: context.appTextSecondary,
@@ -227,7 +239,9 @@ class _CustomTemplatePageState extends ConsumerState<CustomTemplatePage> {
     );
 
     if (confirmed == true && mounted) {
-      final error = await ref.read(customTemplatesNotifierProvider.notifier).deleteTemplate(widget.templateId);
+      final error = await ref
+          .read(customTemplatesNotifierProvider.notifier)
+          .deleteTemplate(widget.templateId);
       if (mounted) {
         if (error == null) {
           context.go(Routes.buildOwn);
@@ -242,7 +256,8 @@ class _CustomTemplatePageState extends ConsumerState<CustomTemplatePage> {
   Widget build(BuildContext context) {
     final isLoading = ref.watch(templatesLoadingProvider);
     final templates = ref.watch(customTemplatesNotifierProvider);
-    final template = templates.where((t) => t.id == widget.templateId).firstOrNull;
+    final template =
+        templates.where((t) => t.id == widget.templateId).firstOrNull;
     final isEditMode = ref.watch(templateEditModeProvider);
     final l10n = AppLocalizations.of(context);
 
@@ -297,7 +312,8 @@ class _CustomTemplatePageState extends ConsumerState<CustomTemplatePage> {
     final speakingText = speakingTextAsync.valueOrNull;
 
     // Update TTS language when content language changes
-    ref.listen<ContentLanguage>(contentLanguageNotifierProvider, (previous, next) {
+    ref.listen<ContentLanguage>(contentLanguageNotifierProvider,
+        (previous, next) {
       ttsService.setLanguage(next);
     });
 
@@ -708,10 +724,11 @@ class _CustomTemplatePageState extends ConsumerState<CustomTemplatePage> {
     double aspectRatio,
   ) {
     // Calculate item size based on available width
-    final availableWidth = MediaQuery.of(context).size.width - 
-        Responsive.getContentPadding(context).horizontal - 
+    final availableWidth = MediaQuery.of(context).size.width -
+        Responsive.getContentPadding(context).horizontal -
         (Responsive.shouldShowPageHeader(context) ? 250 : 0);
-    final itemWidth = (availableWidth - (spacing * (columnCount - 1))) / columnCount;
+    final itemWidth =
+        (availableWidth - (spacing * (columnCount - 1))) / columnCount;
     final itemHeight = itemWidth / aspectRatio;
 
     return ReorderableWrap(
@@ -750,7 +767,8 @@ class _CustomTemplatePageState extends ConsumerState<CustomTemplatePage> {
     AppLocalizations? l10n,
     String searchInput,
   ) {
-    final searchNotifier = ref.read(editTemplateSearchNotifierProvider.notifier);
+    final searchNotifier =
+        ref.read(editTemplateSearchNotifierProvider.notifier);
 
     return TextField(
       controller: _searchController,
@@ -807,7 +825,10 @@ class _CustomTemplatePageState extends ConsumerState<CustomTemplatePage> {
 
   void _addItem(String itemId) {
     final currentIds = ref.read(editTemplateSelectedIdsProvider);
-    ref.read(editTemplateSelectedIdsProvider.notifier).state = [...currentIds, itemId];
+    ref.read(editTemplateSelectedIdsProvider.notifier).state = [
+      ...currentIds,
+      itemId
+    ];
   }
 
   void _removeItem(String itemId) {
@@ -816,4 +837,3 @@ class _CustomTemplatePageState extends ConsumerState<CustomTemplatePage> {
         currentIds.where((id) => id != itemId).toList();
   }
 }
-

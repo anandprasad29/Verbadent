@@ -86,3 +86,4 @@ class CustomTemplate {
       'CustomTemplate(id: $id, name: $name, items: ${selectedItemIds.length})';
 }
 
+

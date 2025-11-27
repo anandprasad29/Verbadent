@@ -46,14 +46,14 @@ class CustomTemplatesNotifier extends _$CustomTemplatesNotifier {
     try {
       // Clear any previous error state
       ref.read(templatesErrorProvider.notifier).state = null;
-      
+
       _storageService = await ref.read(templateStorageServiceProvider.future);
       final templates = _storageService!.loadTemplates();
       state = templates;
     } catch (e) {
       // Set error state - catches ALL errors including ref access failures
       try {
-        ref.read(templatesErrorProvider.notifier).state = 
+        ref.read(templatesErrorProvider.notifier).state =
             'Failed to load templates: ${e.toString()}';
       } catch (_) {
         // If we can't even set error state, just log (provider may be disposed)
@@ -74,20 +74,19 @@ class CustomTemplatesNotifier extends _$CustomTemplatesNotifier {
   /// Checks if a template name already exists (case-insensitive)
   bool isNameDuplicate(String name, {String? excludeId}) {
     final lowerName = name.trim().toLowerCase();
-    return state.any((t) => 
-      t.name.toLowerCase() == lowerName && 
-      (excludeId == null || t.id != excludeId)
-    );
+    return state.any((t) =>
+        t.name.toLowerCase() == lowerName &&
+        (excludeId == null || t.id != excludeId));
   }
 
   /// Adds a new template. Returns error message or null on success.
   Future<String?> addTemplate(CustomTemplate template) async {
     // Check limit
     if (isAtLimit) return 'Template limit reached';
-    
+
     // Check for duplicate name
     if (isNameDuplicate(template.name)) return 'Duplicate template name';
-    
+
     try {
       _storageService ??= await ref.read(templateStorageServiceProvider.future);
       final success = await _storageService!.addTemplate(template);
@@ -107,7 +106,7 @@ class CustomTemplatesNotifier extends _$CustomTemplatesNotifier {
     if (isNameDuplicate(template.name, excludeId: template.id)) {
       return 'Duplicate template name';
     }
-    
+
     try {
       _storageService ??= await ref.read(templateStorageServiceProvider.future);
       final success = await _storageService!.updateTemplate(template);
@@ -153,7 +152,8 @@ final templateLimitReachedProvider = Provider<bool>((ref) {
 });
 
 /// Provider that checks if a name is duplicate
-final isTemplateNameDuplicateProvider = Provider.family<bool, String>((ref, name) {
+final isTemplateNameDuplicateProvider =
+    Provider.family<bool, String>((ref, name) {
   final templates = ref.watch(customTemplatesNotifierProvider);
   final lowerName = name.trim().toLowerCase();
   return templates.any((t) => t.name.toLowerCase() == lowerName);
@@ -257,7 +257,8 @@ final templateEditModeProvider = StateProvider<bool>((ref) => false);
 final editTemplateNameProvider = StateProvider<String>((ref) => '');
 
 /// Provider for selected item IDs during template editing
-final editTemplateSelectedIdsProvider = StateProvider<List<String>>((ref) => []);
+final editTemplateSelectedIdsProvider =
+    StateProvider<List<String>>((ref) => []);
 
 /// Provider for search input in edit mode
 final editTemplateSearchInputProvider = StateProvider<String>((ref) => '');
@@ -330,4 +331,3 @@ List<DentalItem> getItemsFromIds(List<String> ids) {
       .map((id) => itemMap[id]!)
       .toList();
 }
-
