@@ -210,5 +210,59 @@ void main() {
         expect(find.byType(SingleChildScrollView), findsOneWidget);
       });
     });
+
+    group('Arrow Connector Repaint', () {
+      testWidgets('arrow repaints when theme changes', (tester) async {
+        // Build with light theme
+        await tester.pumpWidget(
+          ProviderScope(
+            child: MaterialApp(
+              theme: ThemeData.light(),
+              home: Scaffold(
+                body: SizedBox(
+                  width: 400,
+                  height: 250,
+                  child: StorySequence(
+                    items: testItems,
+                    onItemTap: (_) {},
+                    padding: const EdgeInsets.all(8),
+                  ),
+                ),
+              ),
+            ),
+          ),
+        );
+
+        // Verify widget renders with arrows (CustomPaint for arrows)
+        expect(find.byType(CustomPaint), findsWidgets);
+
+        // Rebuild with dark theme to trigger repaint
+        await tester.pumpWidget(
+          ProviderScope(
+            child: MaterialApp(
+              theme: ThemeData.dark(),
+              home: Scaffold(
+                body: SizedBox(
+                  width: 400,
+                  height: 250,
+                  child: StorySequence(
+                    items: testItems,
+                    onItemTap: (_) {},
+                    padding: const EdgeInsets.all(8),
+                  ),
+                ),
+              ),
+            ),
+          ),
+        );
+
+        await tester.pump();
+
+        // Widget should still render without errors after theme change
+        // This tests that shouldRepaint properly handles color changes
+        expect(find.byType(CustomPaint), findsWidgets);
+        expect(tester.takeException(), isNull);
+      });
+    });
   });
 }

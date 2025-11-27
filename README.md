@@ -1,23 +1,34 @@
 # Verbadent CareQuest
 
-Flutter application for Verbadent CareQuest with support for iPad, Android tablets, and web browsers.
+Flutter application for Verbadent CareQuest deployed on **iOS and Android** across **mobile phones and tablets**.
 
-## Platform Support
+## Deployment Platforms
 
-✅ **iOS (iPhone & iPad)**
+| Platform | Device Types | Status |
+|----------|--------------|--------|
+| iOS | iPhone, iPad | ✅ **Deployed** |
+| Android | Phone, Tablet | ✅ **Deployed** |
+
+## Platform Support Details
+
+### ✅ iOS (iPhone & iPad)
 - Universal app supporting both iPhone and iPad
 - All orientations supported (portrait and landscape)
-- Optimized for iPad screen sizes
+- Optimized for iPad screen sizes with responsive layouts
+- Native iOS look and feel with platform-specific adaptations
 
-✅ **Android (Phone & Tablet)**
+### ✅ Android (Phone & Tablet)
 - Supports all screen sizes (small, normal, large, xlarge)
-- Tablet-optimized layouts
+- Supports all screen densities (mdpi, hdpi, xhdpi, xxhdpi, xxxhdpi)
+- Tablet-optimized layouts with responsive grids
 - All orientations supported
+- Material Design integration
 
-✅ **Web Browser**
+### Web Browser (Development/Testing)
 - Responsive design for desktop and tablet browsers
 - PWA support with manifest configuration
 - Touch and mouse input support
+- **Note**: Web is used for development and testing purposes
 
 ## Features
 

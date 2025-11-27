@@ -1,3 +1,5 @@
+import 'dart:math' as math;
+
 import 'package:flutter/material.dart';
 import '../../theme/app_colors.dart';
 
@@ -7,11 +9,7 @@ class SpeakingIndicator extends StatefulWidget {
   final double size;
   final Color? color;
 
-  const SpeakingIndicator({
-    super.key,
-    this.size = 24,
-    this.color,
-  });
+  const SpeakingIndicator({super.key, this.size = 24, this.color});
 
   @override
   State<SpeakingIndicator> createState() => _SpeakingIndicatorState();
@@ -72,29 +70,8 @@ class _SpeakingIndicatorState extends State<SpeakingIndicator>
 
   double _calculateHeight(double progress) {
     // Use a sine wave for smooth animation
-    return (1 + (progress * 3.14159 * 2).sin()) / 2;
+    return (1 + math.sin(progress * math.pi * 2)) / 2;
   }
-}
-
-/// Extension for sin function
-extension on double {
-  double sin() => _sin(this);
-}
-
-double _sin(double radians) {
-  // Simple sin approximation for animation
-  // Using dart:math would be cleaner but this keeps it self-contained
-  double x = radians % (2 * 3.14159);
-  if (x > 3.14159) x -= 2 * 3.14159;
-
-  // Taylor series approximation
-  double result = x;
-  double term = x;
-  for (int i = 1; i <= 5; i++) {
-    term *= -x * x / ((2 * i) * (2 * i + 1));
-    result += term;
-  }
-  return result;
 }
 
 /// A badge overlay that shows when an item is speaking.
