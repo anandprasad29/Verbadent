@@ -292,15 +292,31 @@ class TtsService {
   }
 
   /// Speak the given text.
-  /// Initializes TTS lazily on first call.
-  /// Non-blocking - returns immediately while speech plays.
+  /// Non-blocking - skips if TTS is still initializing to prevent UI freezes.
+  /// Returns immediately while speech plays.
   Future<void> speak(String text) async {
-    // Initialize lazily on first speak
-    await _ensureInitialized();
+    // If initialization is in progress, skip this speak request
+    // This prevents queuing up multiple speaks during slow TTS init
+    if (_initCompleter != null && !_initCompleter!.isCompleted) {
+      debugPrint('TTS still initializing - skipping speak');
+      return;
+    }
+
+    // If not initialized yet, start initialization but don't block
+    if (!_initAttempted) {
+      warmUp(); // Fire and forget
+      debugPrint('TTS not ready - skipping speak, warming up');
+      return;
+    }
 
     if (!_isAvailable || _flutterTts == null) {
       debugPrint('TTS not available - skipping speak');
       return;
+    }
+
+    // Stop any current speech before starting new one
+    if (_isSpeaking) {
+      await _flutterTts!.stop();
     }
 
     _currentText = text;
