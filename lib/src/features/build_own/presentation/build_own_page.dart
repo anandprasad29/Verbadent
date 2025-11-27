@@ -121,7 +121,7 @@ class _BuildOwnPageState extends ConsumerState<BuildOwnPage> {
           ),
         ),
         content: Text(
-          l10n?.templateLimitMessage(maxTemplateCount) ?? 
+          l10n?.templateLimitMessage(maxTemplateCount) ??
               'You can create up to $maxTemplateCount templates. Please delete an existing template to create a new one.',
           style: TextStyle(
             fontFamily: 'InstrumentSans',
@@ -145,7 +145,8 @@ class _BuildOwnPageState extends ConsumerState<BuildOwnPage> {
     ScaffoldMessenger.of(context).showSnackBar(
       SnackBar(
         content: Text(
-          l10n?.duplicateNameError ?? 'A template with this name already exists',
+          l10n?.duplicateNameError ??
+              'A template with this name already exists',
           style: const TextStyle(fontFamily: 'InstrumentSans'),
         ),
         backgroundColor: context.appError,
@@ -265,7 +266,8 @@ class _BuildOwnPageState extends ConsumerState<BuildOwnPage> {
                 children: [
                   _buildSearchBar(context, l10n, searchInput),
                   const SizedBox(height: 8),
-                  _buildResultInfo(context, l10n, filteredItems.length, searchInput, selectionCount),
+                  _buildResultInfo(context, l10n, filteredItems.length,
+                      searchInput, selectionCount),
                 ],
               ),
             ),
@@ -460,7 +462,8 @@ class _BuildOwnPageState extends ConsumerState<BuildOwnPage> {
               ),
               const SizedBox(width: 6),
               Text(
-                l10n?.emptyTemplatePrompt ?? 'Tap images below to add them to your template',
+                l10n?.emptyTemplatePrompt ??
+                    'Tap images below to add them to your template',
                 style: TextStyle(
                   fontFamily: 'InstrumentSans',
                   fontSize: 14,
@@ -547,4 +550,3 @@ class _BuildOwnPageState extends ConsumerState<BuildOwnPage> {
     ref.read(buildOwnSelectedIdsProvider.notifier).state = newSelection;
   }
 }
-

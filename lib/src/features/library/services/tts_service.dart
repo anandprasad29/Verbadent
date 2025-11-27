@@ -148,6 +148,16 @@ class TtsService {
     });
   }
 
+  /// Pre-warm the TTS engine without speaking.
+  /// Call this early (e.g., when a TTS-enabled page loads) to eliminate
+  /// first-speak delay. This runs initialization in the background.
+  void warmUp() {
+    // Fire and forget - don't block the caller
+    _ensureInitialized().catchError((e) {
+      debugPrint('TTS warmUp error: $e');
+    });
+  }
+
   /// Set the TTS language based on ContentLanguage.
   /// Non-blocking - fires and forgets if TTS not ready.
   void setLanguage(ContentLanguage language) {

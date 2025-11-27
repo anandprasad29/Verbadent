@@ -125,7 +125,11 @@ void main() {
       final container = ProviderContainer();
       addTearDown(container.dispose);
 
-      container.read(buildOwnSelectedIdsProvider.notifier).state = {'a', 'b', 'c'};
+      container.read(buildOwnSelectedIdsProvider.notifier).state = {
+        'a',
+        'b',
+        'c'
+      };
 
       expect(container.read(buildOwnSelectionCountProvider), 3);
     });
@@ -151,7 +155,10 @@ void main() {
       caption: 'Test Item',
     );
 
-    Widget buildCard({required bool isSelected, VoidCallback? onTap, String caption = 'Test'}) {
+    Widget buildCard(
+        {required bool isSelected,
+        VoidCallback? onTap,
+        String caption = 'Test'}) {
       return MaterialApp(
         theme: ThemeData.light(),
         home: Scaffold(
@@ -172,7 +179,8 @@ void main() {
     }
 
     testWidgets('renders caption text', (tester) async {
-      await tester.pumpWidget(buildCard(isSelected: false, caption: 'Test Caption'));
+      await tester
+          .pumpWidget(buildCard(isSelected: false, caption: 'Test Caption'));
       expect(find.text('Test Caption'), findsOneWidget);
     });
 
@@ -190,14 +198,16 @@ void main() {
 
     testWidgets('calls onTap when tapped', (tester) async {
       bool tapped = false;
-      await tester.pumpWidget(buildCard(isSelected: false, onTap: () => tapped = true));
+      await tester
+          .pumpWidget(buildCard(isSelected: false, onTap: () => tapped = true));
       await tester.tap(find.byType(SelectableLibraryCard));
       await tester.pumpAndSettle();
       expect(tapped, true);
     });
 
     testWidgets('has correct accessibility label', (tester) async {
-      await tester.pumpWidget(buildCard(isSelected: true, caption: 'Dental Chair'));
+      await tester
+          .pumpWidget(buildCard(isSelected: true, caption: 'Dental Chair'));
       final semantics = tester.getSemantics(find.byType(SelectableLibraryCard));
       expect(semantics.label, contains('Dental Chair'));
       expect(semantics.label, contains('selected'));
@@ -334,12 +344,14 @@ void main() {
       );
     }
 
-    testWidgets('shows close icon when showRemoveOverlay is true', (tester) async {
+    testWidgets('shows close icon when showRemoveOverlay is true',
+        (tester) async {
       await tester.pumpWidget(buildCard(showRemoveOverlay: true));
       expect(find.byIcon(Icons.close), findsOneWidget);
     });
 
-    testWidgets('hides close icon when showRemoveOverlay is false', (tester) async {
+    testWidgets('hides close icon when showRemoveOverlay is false',
+        (tester) async {
       await tester.pumpWidget(buildCard(showRemoveOverlay: false));
       expect(find.byIcon(Icons.close), findsNothing);
     });
@@ -355,9 +367,21 @@ void main() {
               runSpacing: 8,
               onReorder: (oldIndex, newIndex) {},
               children: [
-                SizedBox(key: const ValueKey('1'), width: 50, height: 50, child: const Text('A')),
-                SizedBox(key: const ValueKey('2'), width: 50, height: 50, child: const Text('B')),
-                SizedBox(key: const ValueKey('3'), width: 50, height: 50, child: const Text('C')),
+                SizedBox(
+                    key: const ValueKey('1'),
+                    width: 50,
+                    height: 50,
+                    child: const Text('A')),
+                SizedBox(
+                    key: const ValueKey('2'),
+                    width: 50,
+                    height: 50,
+                    child: const Text('B')),
+                SizedBox(
+                    key: const ValueKey('3'),
+                    width: 50,
+                    height: 50,
+                    child: const Text('C')),
               ],
             ),
           ),
@@ -470,7 +494,7 @@ void main() {
       // Set invalid JSON in storage
       await prefs.setString('custom_templates', 'invalid json');
       final service = TemplateStorageService(prefs);
-      
+
       // The implementation catches exceptions and returns empty list
       // This is graceful error handling
       final templates = service.loadTemplates();
@@ -497,7 +521,8 @@ void main() {
       expect(maxTemplateCount, 10);
     });
 
-    test('buildOwnSelectedIdsProvider starts empty which means not at limit', () {
+    test('buildOwnSelectedIdsProvider starts empty which means not at limit',
+        () {
       // Test that we start with no selections
       final container = ProviderContainer();
       addTearDown(container.dispose);
@@ -528,7 +553,10 @@ void main() {
       final container = ProviderContainer();
       addTearDown(container.dispose);
 
-      container.read(editTemplateSelectedIdsProvider.notifier).state = ['a', 'b'];
+      container.read(editTemplateSelectedIdsProvider.notifier).state = [
+        'a',
+        'b'
+      ];
       expect(container.read(editTemplateSelectedIdsProvider), ['a', 'b']);
     });
 
@@ -591,7 +619,8 @@ void main() {
       expect(items.length, LibraryData.sampleItems.length);
     });
 
-    test('filteredEditTemplateItemsProvider returns all items when no search', () {
+    test('filteredEditTemplateItemsProvider returns all items when no search',
+        () {
       final container = ProviderContainer();
       addTearDown(container.dispose);
 
@@ -606,12 +635,13 @@ void main() {
       // Set search query
       container.read(buildOwnSearchQueryProvider.notifier).state = 'chair';
       final items = container.read(filteredBuildOwnItemsProvider);
-      
+
       // Should filter to items matching "chair"
-      expect(items.every((item) => 
-        item.caption.toLowerCase().contains('chair') ||
-        item.id.toLowerCase().contains('chair')
-      ), true);
+      expect(
+          items.every((item) =>
+              item.caption.toLowerCase().contains('chair') ||
+              item.id.toLowerCase().contains('chair')),
+          true);
     });
   });
 
@@ -635,14 +665,15 @@ void main() {
       addTearDown(container.dispose);
 
       final notifier = container.read(buildOwnSelectedIdsProvider.notifier);
-      
+
       // Add item
       notifier.state = {...notifier.state, 'item1'};
       expect(container.read(buildOwnSelectedIdsProvider), contains('item1'));
-      
+
       // Remove item
       notifier.state = notifier.state.where((id) => id != 'item1').toSet();
-      expect(container.read(buildOwnSelectedIdsProvider), isNot(contains('item1')));
+      expect(container.read(buildOwnSelectedIdsProvider),
+          isNot(contains('item1')));
     });
   });
 
@@ -651,7 +682,7 @@ void main() {
       // Use actual IDs from LibraryData.sampleItems
       final ids = ['dentist-chair', 'dental-mirror', 'suction'];
       final items = getItemsFromIds(ids);
-      
+
       expect(items.length, 3);
       expect(items[0].id, 'dentist-chair');
       expect(items[1].id, 'dental-mirror');
@@ -661,7 +692,7 @@ void main() {
     test('getItemsFromIds skips unknown ids', () {
       final ids = ['dentist-chair', 'unknown-item', 'dental-mirror'];
       final items = getItemsFromIds(ids);
-      
+
       expect(items.length, 2);
       expect(items.any((item) => item.id == 'unknown-item'), false);
     });
@@ -671,11 +702,12 @@ void main() {
       expect(items, isEmpty);
     });
 
-    test('getItemsFromIds returns all library items when all IDs are valid', () {
+    test('getItemsFromIds returns all library items when all IDs are valid',
+        () {
       // Get all IDs from LibraryData
       final allIds = LibraryData.sampleItems.map((item) => item.id).toList();
       final items = getItemsFromIds(allIds);
-      
+
       expect(items.length, LibraryData.sampleItems.length);
     });
   });
@@ -726,4 +758,3 @@ void main() {
     });
   });
 }
-
