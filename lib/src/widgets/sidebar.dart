@@ -119,12 +119,14 @@ class Sidebar extends ConsumerWidget {
 
     // Build dynamic sidebar items from custom templates
     final customTemplateItems = customTemplates
-        .map((template) => SidebarItemData(
-              labelKey: template.name,
-              route: Routes.customTemplatePath(template.id),
-              testKey: 'sidebar_item_template_${template.id}',
-              isCustomTemplate: true,
-            ))
+        .map(
+          (template) => SidebarItemData(
+            labelKey: template.name,
+            route: Routes.customTemplatePath(template.id),
+            testKey: 'sidebar_item_template_${template.id}',
+            isCustomTemplate: true,
+          ),
+        )
         .toList();
 
     return Container(
@@ -140,12 +142,10 @@ class Sidebar extends ConsumerWidget {
                 crossAxisAlignment: CrossAxisAlignment.stretch,
                 children: [
                   // Top static items (Before Visit, During Visit)
-                  ...SidebarConfig.topItems.map((item) => _buildSidebarItem(
-                        context,
-                        item,
-                        l10n,
-                        currentRoute,
-                      )),
+                  ...SidebarConfig.topItems.map(
+                    (item) =>
+                        _buildSidebarItem(context, item, l10n, currentRoute),
+                  ),
                   // Loading indicator for custom templates
                   if (isLoading)
                     Padding(
@@ -178,19 +178,15 @@ class Sidebar extends ConsumerWidget {
                     ),
                   // Dynamic custom template items
                   if (!isLoading)
-                    ...customTemplateItems.map((item) => _buildSidebarItem(
-                          context,
-                          item,
-                          l10n,
-                          currentRoute,
-                        )),
+                    ...customTemplateItems.map(
+                      (item) =>
+                          _buildSidebarItem(context, item, l10n, currentRoute),
+                    ),
                   // Bottom static items (Build Your Own, Library)
-                  ...SidebarConfig.bottomItems.map((item) => _buildSidebarItem(
-                        context,
-                        item,
-                        l10n,
-                        currentRoute,
-                      )),
+                  ...SidebarConfig.bottomItems.map(
+                    (item) =>
+                        _buildSidebarItem(context, item, l10n, currentRoute),
+                  ),
                 ],
               ),
             ),
@@ -256,8 +252,9 @@ class SidebarItem extends StatelessWidget {
           color: isActive
               ? context.appSidebarItemActive
               : context.appSidebarItemBackground,
-          border:
-              isActive ? Border.all(color: context.appPrimary, width: 2) : null,
+          border: isActive
+              ? Border.all(color: context.appPrimary, width: 2)
+              : null,
         ),
         child: Center(
           child: Row(
@@ -272,8 +269,8 @@ class SidebarItem extends StatelessWidget {
                   color: isActive
                       ? context.appPrimary
                       : (isDark
-                          ? AppColors.sidebarItemTextDark
-                          : AppColors.sidebarItemText),
+                            ? AppColors.sidebarItemTextDark
+                            : AppColors.sidebarItemText),
                 ),
                 const SizedBox(width: 8),
               ],
@@ -287,8 +284,8 @@ class SidebarItem extends StatelessWidget {
                     color: isActive
                         ? context.appPrimary
                         : (isDark
-                            ? AppColors.sidebarItemTextDark
-                            : AppColors.sidebarItemText),
+                              ? AppColors.sidebarItemTextDark
+                              : AppColors.sidebarItemText),
                   ),
                   overflow: TextOverflow.ellipsis,
                   maxLines: 1,

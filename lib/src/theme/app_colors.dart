@@ -35,6 +35,7 @@ class AppColors {
   // Neutral colors
   static const Color neutral = Color(0xFFD9D9D9); // Light gray
   static const Color divider = Color(0xFFE0E0E0); // Divider gray
+  static const Color textSubtle = Color(0xFF6B7280); // Subtle text (gray-500)
 
   // ============================================
   // DARK THEME COLORS
@@ -72,6 +73,7 @@ class AppColors {
   // Neutral colors
   static const Color neutralDark = Color(0xFF3A3A46); // Dark gray
   static const Color dividerDark = Color(0xFF2A2A36); // Dark divider
+  static const Color textSubtleDark = Color(0xFF9CA3AF); // Subtle text dark (gray-400)
 
   // ============================================
   // SEMANTIC COLORS (same for both themes)
@@ -131,6 +133,8 @@ extension AppColorsExtension on BuildContext {
       isDarkMode ? AppColors.neutralDark : AppColors.neutral;
   Color get appDivider =>
       isDarkMode ? AppColors.dividerDark : AppColors.divider;
+  Color get appTextSubtle =>
+      isDarkMode ? AppColors.textSubtleDark : AppColors.textSubtle;
   Color get appSkeletonBase =>
       isDarkMode ? AppColors.skeletonBaseDark : AppColors.skeletonBase;
   Color get appSkeletonHighlight => isDarkMode

@@ -17,6 +17,3 @@ class Routes {
   // Private constructor to prevent instantiation
   Routes._();
 }
-
-
-

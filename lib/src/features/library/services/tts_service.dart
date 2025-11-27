@@ -10,7 +10,7 @@ part 'tts_service.g.dart';
 /// Service for text-to-speech functionality.
 /// Used to speak library item captions when tapped.
 /// Exposes speaking state for UI feedback.
-/// 
+///
 /// TTS initialization is completely deferred to first speak() call
 /// to prevent blocking the main thread on Android.
 class TtsService {
@@ -87,25 +87,33 @@ class TtsService {
 
     try {
       // Use a short timeout for each operation
-      await _flutterTts!.setLanguage(_currentLanguage).timeout(
-        const Duration(seconds: 2),
-        onTimeout: () => debugPrint('TTS setLanguage timed out'),
-      );
-      
-      await _flutterTts!.setSpeechRate(0.5).timeout(
-        const Duration(seconds: 1),
-        onTimeout: () => debugPrint('TTS setSpeechRate timed out'),
-      );
-      
-      await _flutterTts!.setVolume(1.0).timeout(
-        const Duration(seconds: 1),
-        onTimeout: () => debugPrint('TTS setVolume timed out'),
-      );
-      
-      await _flutterTts!.setPitch(1.0).timeout(
-        const Duration(seconds: 1),
-        onTimeout: () => debugPrint('TTS setPitch timed out'),
-      );
+      await _flutterTts!
+          .setLanguage(_currentLanguage)
+          .timeout(
+            const Duration(seconds: 2),
+            onTimeout: () => debugPrint('TTS setLanguage timed out'),
+          );
+
+      await _flutterTts!
+          .setSpeechRate(0.5)
+          .timeout(
+            const Duration(seconds: 1),
+            onTimeout: () => debugPrint('TTS setSpeechRate timed out'),
+          );
+
+      await _flutterTts!
+          .setVolume(1.0)
+          .timeout(
+            const Duration(seconds: 1),
+            onTimeout: () => debugPrint('TTS setVolume timed out'),
+          );
+
+      await _flutterTts!
+          .setPitch(1.0)
+          .timeout(
+            const Duration(seconds: 1),
+            onTimeout: () => debugPrint('TTS setPitch timed out'),
+          );
 
       // Don't await speak completion - it can block
       _flutterTts!.awaitSpeakCompletion(false);
@@ -162,7 +170,7 @@ class TtsService {
   /// Non-blocking - fires and forgets if TTS not ready.
   void setLanguage(ContentLanguage language) {
     _currentLanguage = language.ttsCode;
-    
+
     // If TTS is already initialized, update the language
     if (_flutterTts != null && _isAvailable) {
       _flutterTts!.setLanguage(_currentLanguage).catchError((e) {
@@ -177,15 +185,15 @@ class TtsService {
   Future<void> speak(String text) async {
     // Initialize lazily on first speak
     await _ensureInitialized();
-    
+
     if (!_isAvailable || _flutterTts == null) {
       debugPrint('TTS not available - skipping speak');
       return;
     }
-    
+
     _currentText = text;
     _speakingTextController.add(text);
-    
+
     // Fire and forget - don't await speak
     _flutterTts!.speak(text).catchError((e) {
       debugPrint('TTS speak error: $e');
@@ -211,7 +219,7 @@ class TtsService {
     _speakingTextController.add(null);
   }
 
-  /// Update TTS settings (speech rate, pitch, volume).
+  /// Update TTS settings (speech rate, voice type, volume).
   /// Non-blocking - fires and forgets if TTS not ready.
   void updateSettings(TtsSettings settings) {
     if (_flutterTts == null || !_isAvailable) return;
@@ -219,11 +227,15 @@ class TtsService {
     _flutterTts!.setSpeechRate(settings.speechRate).catchError((e) {
       debugPrint('Failed to set TTS speech rate: $e');
     });
-    _flutterTts!.setPitch(settings.pitch).catchError((e) {
-      debugPrint('Failed to set TTS pitch: $e');
-    });
     _flutterTts!.setVolume(settings.volume).catchError((e) {
       debugPrint('Failed to set TTS volume: $e');
+    });
+
+    // Use pitch to simulate voice gender
+    // Female: higher pitch (1.2), Male: lower pitch (0.8)
+    final pitch = settings.voiceType == VoiceType.female ? 1.2 : 0.8;
+    _flutterTts!.setPitch(pitch).catchError((e) {
+      debugPrint('Failed to set TTS pitch: $e');
     });
   }
 
@@ -276,27 +288,42 @@ String? ttsSpeakingText(Ref ref) {
   return streamAsync.valueOrNull;
 }
 
+/// Voice type enum for simplified voice selection
+enum VoiceType {
+  female,
+  male;
+
+  String get label {
+    switch (this) {
+      case VoiceType.female:
+        return 'Female';
+      case VoiceType.male:
+        return 'Male';
+    }
+  }
+}
+
 /// TTS settings data class
 class TtsSettings {
   final double speechRate;
-  final double pitch;
   final double volume;
+  final VoiceType voiceType;
 
   const TtsSettings({
     this.speechRate = 0.5,
-    this.pitch = 1.0,
     this.volume = 1.0,
+    this.voiceType = VoiceType.female,
   });
 
   TtsSettings copyWith({
     double? speechRate,
-    double? pitch,
     double? volume,
+    VoiceType? voiceType,
   }) {
     return TtsSettings(
       speechRate: speechRate ?? this.speechRate,
-      pitch: pitch ?? this.pitch,
       volume: volume ?? this.volume,
+      voiceType: voiceType ?? this.voiceType,
     );
   }
 }
@@ -314,8 +341,8 @@ class TtsSettingsNotifier extends _$TtsSettingsNotifier {
     _applyToTtsService();
   }
 
-  void setPitch(double pitch) {
-    state = state.copyWith(pitch: pitch);
+  void setVoiceType(VoiceType voiceType) {
+    state = state.copyWith(voiceType: voiceType);
     _applyToTtsService();
   }
 

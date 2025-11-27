@@ -246,25 +246,17 @@
   "@settingsSpeechRateVeryFast": {
     "description": "Very fast speech rate"
   },
-  "settingsPitch": "Pitch",
-  "@settingsPitch": {
-    "description": "Pitch setting label"
+  "settingsVoice": "Voice",
+  "@settingsVoice": {
+    "description": "Voice setting label"
   },
-  "settingsPitchLow": "Low",
-  "@settingsPitchLow": {
-    "description": "Low pitch"
+  "settingsVoiceFemale": "Female",
+  "@settingsVoiceFemale": {
+    "description": "Female voice option"
   },
-  "settingsPitchNormal": "Normal",
-  "@settingsPitchNormal": {
-    "description": "Normal pitch"
-  },
-  "settingsPitchHigh": "High",
-  "@settingsPitchHigh": {
-    "description": "High pitch"
-  },
-  "settingsPitchVeryHigh": "Very High",
-  "@settingsPitchVeryHigh": {
-    "description": "Very high pitch"
+  "settingsVoiceMale": "Male",
+  "@settingsVoiceMale": {
+    "description": "Male voice option"
   },
   "settingsTestSpeech": "Test Speech",
   "@settingsTestSpeech": {

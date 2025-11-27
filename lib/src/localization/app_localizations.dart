@@ -440,35 +440,23 @@ abstract class AppLocalizations {
   /// **'Very Fast'**
   String get settingsSpeechRateVeryFast;
 
-  /// Pitch setting label
+  /// Voice setting label
   ///
   /// In en, this message translates to:
-  /// **'Pitch'**
-  String get settingsPitch;
+  /// **'Voice'**
+  String get settingsVoice;
 
-  /// Low pitch
+  /// Female voice option
   ///
   /// In en, this message translates to:
-  /// **'Low'**
-  String get settingsPitchLow;
+  /// **'Female'**
+  String get settingsVoiceFemale;
 
-  /// Normal pitch
+  /// Male voice option
   ///
   /// In en, this message translates to:
-  /// **'Normal'**
-  String get settingsPitchNormal;
-
-  /// High pitch
-  ///
-  /// In en, this message translates to:
-  /// **'High'**
-  String get settingsPitchHigh;
-
-  /// Very high pitch
-  ///
-  /// In en, this message translates to:
-  /// **'Very High'**
-  String get settingsPitchVeryHigh;
+  /// **'Male'**
+  String get settingsVoiceMale;
 
   /// Test speech button label
   ///

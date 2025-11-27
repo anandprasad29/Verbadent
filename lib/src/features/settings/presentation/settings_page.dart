@@ -62,11 +62,17 @@ class SettingsPage extends ConsumerWidget {
               padding: padding.copyWith(top: showHeader ? 16 : 24),
               sliver: SliverList(
                 delegate: SliverChildListDelegate([
-                  _buildSectionHeader(context, l10n?.settingsAppearance ?? 'Appearance'),
+                  _buildSectionHeader(
+                    context,
+                    l10n?.settingsAppearance ?? 'Appearance',
+                  ),
                   const SizedBox(height: 12),
                   _ThemeSettingsCard(),
                   const SizedBox(height: 24),
-                  _buildSectionHeader(context, l10n?.settingsSpeech ?? 'Speech'),
+                  _buildSectionHeader(
+                    context,
+                    l10n?.settingsSpeech ?? 'Speech',
+                  ),
                   const SizedBox(height: 12),
                   _TtsSettingsCard(),
                   const SizedBox(height: 48),
@@ -199,6 +205,21 @@ class _TtsSettingsCardState extends ConsumerState<_TtsSettingsCard> {
       ),
       child: Column(
         children: [
+          // Voice type selector
+          _SettingsTile(
+            icon: Icons.record_voice_over,
+            title: l10n?.settingsVoice ?? 'Voice',
+            subtitle: _getVoiceTypeLabel(ttsSettings.voiceType, l10n),
+            trailing: _VoiceTypeSelector(
+              currentType: ttsSettings.voiceType,
+              onChanged: (type) {
+                ref
+                    .read(ttsSettingsNotifierProvider.notifier)
+                    .setVoiceType(type);
+              },
+            ),
+          ),
+          Divider(height: 1, color: context.appCardBorder),
           // Speech rate slider
           _SettingsTile(
             icon: Icons.speed,
@@ -214,28 +235,9 @@ class _TtsSettingsCardState extends ConsumerState<_TtsSettingsCard> {
                 activeColor: context.appPrimary,
                 inactiveColor: context.appCardBorder,
                 onChanged: (value) {
-                  ref.read(ttsSettingsNotifierProvider.notifier).setSpeechRate(value);
-                },
-              ),
-            ),
-          ),
-          Divider(height: 1, color: context.appCardBorder),
-          // Pitch slider
-          _SettingsTile(
-            icon: Icons.tune,
-            title: l10n?.settingsPitch ?? 'Pitch',
-            subtitle: _getPitchLabel(ttsSettings.pitch, l10n),
-            trailing: SizedBox(
-              width: 150,
-              child: Slider(
-                value: ttsSettings.pitch,
-                min: 0.5,
-                max: 1.5,
-                divisions: 4,
-                activeColor: context.appPrimary,
-                inactiveColor: context.appCardBorder,
-                onChanged: (value) {
-                  ref.read(ttsSettingsNotifierProvider.notifier).setPitch(value);
+                  ref
+                      .read(ttsSettingsNotifierProvider.notifier)
+                      .setSpeechRate(value);
                 },
               ),
             ),
@@ -249,9 +251,12 @@ class _TtsSettingsCardState extends ConsumerState<_TtsSettingsCard> {
             trailing: IconButton(
               icon: Icon(Icons.play_arrow, color: context.appPrimary),
               onPressed: () {
-                ref.read(ttsServiceProvider).speak(
-                  l10n?.settingsTestSpeechSample ?? 'Hello! This is a test.',
-                );
+                ref
+                    .read(ttsServiceProvider)
+                    .speak(
+                      l10n?.settingsTestSpeechSample ??
+                          'Hello! This is a test.',
+                    );
               },
             ),
           ),
@@ -260,18 +265,79 @@ class _TtsSettingsCardState extends ConsumerState<_TtsSettingsCard> {
     );
   }
 
+  String _getVoiceTypeLabel(VoiceType type, AppLocalizations? l10n) {
+    switch (type) {
+      case VoiceType.female:
+        return l10n?.settingsVoiceFemale ?? 'Female';
+      case VoiceType.male:
+        return l10n?.settingsVoiceMale ?? 'Male';
+    }
+  }
+
   String _getSpeechRateLabel(double rate, AppLocalizations? l10n) {
     if (rate <= 0.25) return l10n?.settingsSpeechRateSlow ?? 'Slow';
     if (rate <= 0.5) return l10n?.settingsSpeechRateNormal ?? 'Normal';
     if (rate <= 0.75) return l10n?.settingsSpeechRateFast ?? 'Fast';
     return l10n?.settingsSpeechRateVeryFast ?? 'Very Fast';
   }
+}
 
-  String _getPitchLabel(double pitch, AppLocalizations? l10n) {
-    if (pitch <= 0.75) return l10n?.settingsPitchLow ?? 'Low';
-    if (pitch <= 1.0) return l10n?.settingsPitchNormal ?? 'Normal';
-    if (pitch <= 1.25) return l10n?.settingsPitchHigh ?? 'High';
-    return l10n?.settingsPitchVeryHigh ?? 'Very High';
+/// Voice type selector widget
+class _VoiceTypeSelector extends StatelessWidget {
+  final VoiceType currentType;
+  final ValueChanged<VoiceType> onChanged;
+
+  const _VoiceTypeSelector({
+    required this.currentType,
+    required this.onChanged,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      decoration: BoxDecoration(
+        color: context.appBackground,
+        borderRadius: BorderRadius.circular(8),
+        border: Border.all(color: context.appCardBorder),
+      ),
+      child: Row(
+        mainAxisSize: MainAxisSize.min,
+        children: VoiceType.values.map((type) {
+          final isSelected = type == currentType;
+          return GestureDetector(
+            onTap: () => onChanged(type),
+            child: AnimatedContainer(
+              duration: const Duration(milliseconds: 200),
+              padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+              decoration: BoxDecoration(
+                color: isSelected ? context.appPrimary : Colors.transparent,
+                borderRadius: BorderRadius.circular(6),
+              ),
+              child: Row(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  Icon(
+                    type == VoiceType.female ? Icons.woman : Icons.man,
+                    size: 18,
+                    color: isSelected ? Colors.white : context.appTextSubtle,
+                  ),
+                  const SizedBox(width: 4),
+                  Text(
+                    type == VoiceType.female ? 'F' : 'M',
+                    style: TextStyle(
+                      fontFamily: 'InstrumentSans',
+                      fontWeight: FontWeight.bold,
+                      fontSize: 13,
+                      color: isSelected ? Colors.white : context.appTextSubtle,
+                    ),
+                  ),
+                ],
+              ),
+            ),
+          );
+        }).toList(),
+      ),
+    );
   }
 }
 
@@ -323,7 +389,7 @@ class _SettingsTile extends StatelessWidget {
                   style: TextStyle(
                     fontFamily: 'InstrumentSans',
                     fontSize: 13,
-                    color: context.appNeutral,
+                    color: context.appTextSubtle,
                   ),
                 ),
               ],
@@ -335,3 +401,4 @@ class _SettingsTile extends StatelessWidget {
     );
   }
 }
+

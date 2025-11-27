@@ -196,19 +196,13 @@ class AppLocalizationsEn extends AppLocalizations {
   String get settingsSpeechRateVeryFast => 'Very Fast';
 
   @override
-  String get settingsPitch => 'Pitch';
+  String get settingsVoice => 'Voice';
 
   @override
-  String get settingsPitchLow => 'Low';
+  String get settingsVoiceFemale => 'Female';
 
   @override
-  String get settingsPitchNormal => 'Normal';
-
-  @override
-  String get settingsPitchHigh => 'High';
-
-  @override
-  String get settingsPitchVeryHigh => 'Very High';
+  String get settingsVoiceMale => 'Male';
 
   @override
   String get settingsTestSpeech => 'Test Speech';
