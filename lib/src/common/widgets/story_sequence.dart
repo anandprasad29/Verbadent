@@ -94,9 +94,10 @@ class StorySequence extends StatelessWidget {
           ? ContentTranslations.getCaption(items[i].id, contentLanguage!)
           : items[i].caption;
 
-      // Add the story item
+      // Add the story item with key for efficient updates
       widgets.add(
         _StoryItem(
+          key: ValueKey('story_${items[i].id}'),
           item: items[i],
           caption: caption,
           size: itemSize,
@@ -108,6 +109,7 @@ class StorySequence extends StatelessWidget {
       if (i < items.length - 1) {
         widgets.add(
           _ArrowConnector(
+            key: ValueKey('arrow_$i'),
             width: arrowWidth,
             horizontalPadding: arrowPadding,
             imageSize: itemSize,
@@ -129,6 +131,7 @@ class _StoryItem extends StatelessWidget {
   final VoidCallback? onTap;
 
   const _StoryItem({
+    super.key,
     required this.item,
     required this.caption,
     required this.size,
@@ -218,6 +221,7 @@ class _ArrowConnector extends StatelessWidget {
   final double imageSize;
 
   const _ArrowConnector({
+    super.key,
     required this.width,
     required this.horizontalPadding,
     required this.imageSize,

@@ -23,10 +23,7 @@ import 'widgets/selectable_library_card.dart';
 class CustomTemplatePage extends ConsumerStatefulWidget {
   final String templateId;
 
-  const CustomTemplatePage({
-    super.key,
-    required this.templateId,
-  });
+  const CustomTemplatePage({super.key, required this.templateId});
 
   @override
   ConsumerState<CustomTemplatePage> createState() => _CustomTemplatePageState();
@@ -58,8 +55,9 @@ class _CustomTemplatePageState extends ConsumerState<CustomTemplatePage> {
     if (template != null) {
       // Initialize providers with template data
       ref.read(editTemplateNameProvider.notifier).state = template.name;
-      ref.read(editTemplateSelectedIdsProvider.notifier).state =
-          List.from(template.selectedItemIds);
+      ref.read(editTemplateSelectedIdsProvider.notifier).state = List.from(
+        template.selectedItemIds,
+      );
       _nameController.text = template.name;
 
       // Also initialize original state for unsaved changes detection
@@ -86,8 +84,9 @@ class _CustomTemplatePageState extends ConsumerState<CustomTemplatePage> {
       _originalSelectedIds = List.from(template.selectedItemIds);
 
       ref.read(editTemplateNameProvider.notifier).state = template.name;
-      ref.read(editTemplateSelectedIdsProvider.notifier).state =
-          List.from(template.selectedItemIds);
+      ref.read(editTemplateSelectedIdsProvider.notifier).state = List.from(
+        template.selectedItemIds,
+      );
       _nameController.text = template.name;
       ref.read(templateEditModeProvider.notifier).state = true;
     }
@@ -256,8 +255,9 @@ class _CustomTemplatePageState extends ConsumerState<CustomTemplatePage> {
   Widget build(BuildContext context) {
     final isLoading = ref.watch(templatesLoadingProvider);
     final templates = ref.watch(customTemplatesNotifierProvider);
-    final template =
-        templates.where((t) => t.id == widget.templateId).firstOrNull;
+    final template = templates
+        .where((t) => t.id == widget.templateId)
+        .firstOrNull;
     final isEditMode = ref.watch(templateEditModeProvider);
     final l10n = AppLocalizations.of(context);
 
@@ -312,19 +312,16 @@ class _CustomTemplatePageState extends ConsumerState<CustomTemplatePage> {
     final speakingText = speakingTextAsync.valueOrNull;
 
     // Update TTS language when content language changes
-    ref.listen<ContentLanguage>(contentLanguageNotifierProvider,
-        (previous, next) {
+    ref.listen<ContentLanguage>(contentLanguageNotifierProvider, (
+      previous,
+      next,
+    ) {
       ttsService.setLanguage(next);
     });
 
-    final columnCount = Responsive.getGridColumnCount(context);
-    final spacing = Responsive.getGridSpacing(context);
-    final padding = Responsive.getContentPadding(context);
-    final aspectRatio = Responsive.getGridAspectRatio(context);
+    // Single MediaQuery call for all layout values (performance optimization)
+    final layout = Responsive.getGridLayout(context);
     final l10n = AppLocalizations.of(context);
-
-    final showHeader = Responsive.shouldShowPageHeader(context);
-    final headerScale = Responsive.getHeaderExpandedScale(context);
 
     final items = getItemsFromIds(template.selectedItemIds);
 
@@ -333,7 +330,7 @@ class _CustomTemplatePageState extends ConsumerState<CustomTemplatePage> {
       child: CustomScrollView(
         slivers: [
           // Header with template name (desktop only)
-          if (showHeader)
+          if (layout.showHeader)
             SliverAppBar(
               expandedHeight: AppConstants.headerExpandedHeight,
               pinned: true,
@@ -367,16 +364,16 @@ class _CustomTemplatePageState extends ConsumerState<CustomTemplatePage> {
                     ),
                   ),
                 ),
-                expandedTitleScale: headerScale,
+                expandedTitleScale: layout.headerScale,
               ),
             ),
           // Mobile header with edit button
-          if (!showHeader)
+          if (!layout.showHeader)
             SliverToBoxAdapter(
               child: Padding(
                 padding: EdgeInsets.only(
-                  left: padding.left,
-                  right: padding.right,
+                  left: layout.padding.left,
+                  right: layout.padding.right,
                   top: 16,
                   bottom: 8,
                 ),
@@ -403,13 +400,13 @@ class _CustomTemplatePageState extends ConsumerState<CustomTemplatePage> {
             ),
           // Grid of template images
           SliverPadding(
-            padding: padding.copyWith(top: showHeader ? 16 : 8),
+            padding: layout.padding.copyWith(top: layout.showHeader ? 16 : 8),
             sliver: SliverGrid(
               gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-                crossAxisCount: columnCount,
-                mainAxisSpacing: spacing,
-                crossAxisSpacing: spacing,
-                childAspectRatio: aspectRatio,
+                crossAxisCount: layout.columnCount,
+                mainAxisSpacing: layout.spacing,
+                crossAxisSpacing: layout.spacing,
+                childAspectRatio: layout.aspectRatio,
               ),
               delegate: SliverChildBuilderDelegate(
                 (context, index) {
@@ -419,6 +416,7 @@ class _CustomTemplatePageState extends ConsumerState<CustomTemplatePage> {
                     contentLanguage,
                   );
                   return LibraryCard(
+                    key: ValueKey(item.id),
                     item: item,
                     caption: translatedCaption,
                     onTap: () => ttsService.speak(translatedCaption),
@@ -426,13 +424,14 @@ class _CustomTemplatePageState extends ConsumerState<CustomTemplatePage> {
                   );
                 },
                 childCount: items.length,
+                // Optimize memory for template grids
+                addAutomaticKeepAlives: false,
+                addRepaintBoundaries: true,
               ),
             ),
           ),
           // Bottom padding
-          const SliverToBoxAdapter(
-            child: SizedBox(height: 24),
-          ),
+          const SliverToBoxAdapter(child: SizedBox(height: 24)),
         ],
       ),
     );
@@ -445,10 +444,8 @@ class _CustomTemplatePageState extends ConsumerState<CustomTemplatePage> {
     final searchInput = ref.watch(editTemplateSearchInputProvider);
     final availableItems = ref.watch(filteredEditTemplateItemsProvider);
 
-    final columnCount = Responsive.getGridColumnCount(context);
-    final spacing = Responsive.getGridSpacing(context);
-    final padding = Responsive.getContentPadding(context);
-    final aspectRatio = Responsive.getGridAspectRatio(context);
+    // Single MediaQuery call for all layout values (performance optimization)
+    final layout = Responsive.getGridLayout(context);
     final l10n = AppLocalizations.of(context);
 
     // Sync controller
@@ -514,7 +511,7 @@ class _CustomTemplatePageState extends ConsumerState<CustomTemplatePage> {
           SliverToBoxAdapter(
             child: Padding(
               padding: EdgeInsets.symmetric(
-                horizontal: padding.left,
+                horizontal: layout.padding.left,
                 vertical: 16,
               ),
               child: TextField(
@@ -542,10 +539,7 @@ class _CustomTemplatePageState extends ConsumerState<CustomTemplatePage> {
                     ),
                   ),
                   focusedBorder: UnderlineInputBorder(
-                    borderSide: BorderSide(
-                      color: context.appPrimary,
-                      width: 2,
-                    ),
+                    borderSide: BorderSide(color: context.appPrimary, width: 2),
                   ),
                 ),
               ),
@@ -554,7 +548,7 @@ class _CustomTemplatePageState extends ConsumerState<CustomTemplatePage> {
           // Current images section header
           SliverToBoxAdapter(
             child: Padding(
-              padding: EdgeInsets.symmetric(horizontal: padding.left),
+              padding: EdgeInsets.symmetric(horizontal: layout.padding.left),
               child: Row(
                 children: [
                   Text(
@@ -593,7 +587,7 @@ class _CustomTemplatePageState extends ConsumerState<CustomTemplatePage> {
           if (selectedItems.isEmpty)
             SliverToBoxAdapter(
               child: Padding(
-                padding: EdgeInsets.symmetric(horizontal: padding.left),
+                padding: EdgeInsets.symmetric(horizontal: layout.padding.left),
                 child: Container(
                   padding: const EdgeInsets.all(24),
                   decoration: BoxDecoration(
@@ -615,15 +609,13 @@ class _CustomTemplatePageState extends ConsumerState<CustomTemplatePage> {
           else
             SliverToBoxAdapter(
               child: Padding(
-                padding: EdgeInsets.symmetric(horizontal: padding.left),
+                padding: EdgeInsets.symmetric(horizontal: layout.padding.left),
                 child: _buildReorderableGrid(
                   context,
                   selectedItems,
                   selectedIds,
                   contentLanguage,
-                  columnCount,
-                  spacing,
-                  aspectRatio,
+                  layout,
                 ),
               ),
             ),
@@ -631,8 +623,8 @@ class _CustomTemplatePageState extends ConsumerState<CustomTemplatePage> {
           SliverToBoxAdapter(
             child: Padding(
               padding: EdgeInsets.only(
-                left: padding.left,
-                right: padding.right,
+                left: layout.padding.left,
+                right: layout.padding.right,
                 top: 32,
                 bottom: 12,
               ),
@@ -650,7 +642,7 @@ class _CustomTemplatePageState extends ConsumerState<CustomTemplatePage> {
           // Search bar for adding images
           SliverToBoxAdapter(
             child: Padding(
-              padding: EdgeInsets.symmetric(horizontal: padding.left),
+              padding: EdgeInsets.symmetric(horizontal: layout.padding.left),
               child: _buildSearchBar(context, l10n, searchInput),
             ),
           ),
@@ -659,7 +651,7 @@ class _CustomTemplatePageState extends ConsumerState<CustomTemplatePage> {
           if (availableItems.isEmpty)
             SliverToBoxAdapter(
               child: Padding(
-                padding: EdgeInsets.symmetric(horizontal: padding.left),
+                padding: EdgeInsets.symmetric(horizontal: layout.padding.left),
                 child: Container(
                   padding: const EdgeInsets.all(24),
                   decoration: BoxDecoration(
@@ -682,13 +674,13 @@ class _CustomTemplatePageState extends ConsumerState<CustomTemplatePage> {
             )
           else
             SliverPadding(
-              padding: padding.copyWith(top: 0, bottom: 24),
+              padding: layout.padding.copyWith(top: 0, bottom: 24),
               sliver: SliverGrid(
                 gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-                  crossAxisCount: columnCount,
-                  mainAxisSpacing: spacing,
-                  crossAxisSpacing: spacing,
-                  childAspectRatio: aspectRatio,
+                  crossAxisCount: layout.columnCount,
+                  mainAxisSpacing: layout.spacing,
+                  crossAxisSpacing: layout.spacing,
+                  childAspectRatio: layout.aspectRatio,
                 ),
                 delegate: SliverChildBuilderDelegate(
                   (context, index) {
@@ -698,6 +690,7 @@ class _CustomTemplatePageState extends ConsumerState<CustomTemplatePage> {
                       contentLanguage,
                     );
                     return SelectableLibraryCard(
+                      key: ValueKey(item.id),
                       item: item,
                       caption: translatedCaption,
                       isSelected: false,
@@ -705,6 +698,9 @@ class _CustomTemplatePageState extends ConsumerState<CustomTemplatePage> {
                     );
                   },
                   childCount: availableItems.length,
+                  // Optimize memory for edit mode grids
+                  addAutomaticKeepAlives: false,
+                  addRepaintBoundaries: true,
                 ),
               ),
             ),
@@ -719,21 +715,20 @@ class _CustomTemplatePageState extends ConsumerState<CustomTemplatePage> {
     List<dynamic> selectedItems,
     List<String> selectedIds,
     ContentLanguage contentLanguage,
-    int columnCount,
-    double spacing,
-    double aspectRatio,
+    GridLayout layout,
   ) {
-    // Calculate item size based on available width
-    final availableWidth = MediaQuery.of(context).size.width -
-        Responsive.getContentPadding(context).horizontal -
-        (Responsive.shouldShowPageHeader(context) ? 250 : 0);
+    // Calculate item size based on available width (using cached layout values)
+    final screenWidth = MediaQuery.sizeOf(context).width;
+    final availableWidth =
+        screenWidth - layout.padding.horizontal - (layout.showHeader ? 250 : 0);
     final itemWidth =
-        (availableWidth - (spacing * (columnCount - 1))) / columnCount;
-    final itemHeight = itemWidth / aspectRatio;
+        (availableWidth - (layout.spacing * (layout.columnCount - 1))) /
+        layout.columnCount;
+    final itemHeight = itemWidth / layout.aspectRatio;
 
     return ReorderableWrap(
-      spacing: spacing,
-      runSpacing: spacing,
+      spacing: layout.spacing,
+      runSpacing: layout.spacing,
       onReorder: (oldIndex, newIndex) {
         final newIds = List<String>.from(selectedIds);
         final item = newIds.removeAt(oldIndex);
@@ -767,8 +762,9 @@ class _CustomTemplatePageState extends ConsumerState<CustomTemplatePage> {
     AppLocalizations? l10n,
     String searchInput,
   ) {
-    final searchNotifier =
-        ref.read(editTemplateSearchNotifierProvider.notifier);
+    final searchNotifier = ref.read(
+      editTemplateSearchNotifierProvider.notifier,
+    );
 
     return TextField(
       controller: _searchController,
@@ -781,16 +777,10 @@ class _CustomTemplatePageState extends ConsumerState<CustomTemplatePage> {
           fontFamily: 'InstrumentSans',
           color: context.appNeutral,
         ),
-        prefixIcon: Icon(
-          Icons.search,
-          color: context.appCardBorder,
-        ),
+        prefixIcon: Icon(Icons.search, color: context.appCardBorder),
         suffixIcon: searchInput.isNotEmpty
             ? IconButton(
-                icon: Icon(
-                  Icons.clear,
-                  color: context.appNeutral,
-                ),
+                icon: Icon(Icons.clear, color: context.appNeutral),
                 onPressed: () {
                   searchNotifier.clearSearch();
                   _searchController.clear();
@@ -827,13 +817,14 @@ class _CustomTemplatePageState extends ConsumerState<CustomTemplatePage> {
     final currentIds = ref.read(editTemplateSelectedIdsProvider);
     ref.read(editTemplateSelectedIdsProvider.notifier).state = [
       ...currentIds,
-      itemId
+      itemId,
     ];
   }
 
   void _removeItem(String itemId) {
     final currentIds = ref.read(editTemplateSelectedIdsProvider);
-    ref.read(editTemplateSelectedIdsProvider.notifier).state =
-        currentIds.where((id) => id != itemId).toList();
+    ref.read(editTemplateSelectedIdsProvider.notifier).state = currentIds
+        .where((id) => id != itemId)
+        .toList();
   }
 }

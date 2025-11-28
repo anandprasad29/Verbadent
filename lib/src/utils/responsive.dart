@@ -1,6 +1,28 @@
 import 'package:flutter/material.dart';
 import '../constants/app_constants.dart';
 
+/// Cached grid layout values to avoid repeated MediaQuery lookups.
+/// Use [Responsive.getGridLayout] to create this efficiently.
+class GridLayout {
+  final int columnCount;
+  final double spacing;
+  final EdgeInsets padding;
+  final double aspectRatio;
+  final bool showHeader;
+  final double headerScale;
+  final double pixelRatio;
+
+  const GridLayout({
+    required this.columnCount,
+    required this.spacing,
+    required this.padding,
+    required this.aspectRatio,
+    required this.showHeader,
+    required this.headerScale,
+    required this.pixelRatio,
+  });
+}
+
 /// Responsive breakpoints and utilities
 class Responsive {
   // Breakpoints
@@ -36,7 +58,8 @@ class Responsive {
   }
 
   /// Get responsive width based on screen size
-  static double getResponsiveWidth(BuildContext context, {
+  static double getResponsiveWidth(
+    BuildContext context, {
     double? mobile,
     double? tablet,
     double? desktop,
@@ -52,7 +75,8 @@ class Responsive {
   }
 
   /// Get responsive padding based on screen size
-  static EdgeInsets getResponsivePadding(BuildContext context, {
+  static EdgeInsets getResponsivePadding(
+    BuildContext context, {
     EdgeInsets? mobile,
     EdgeInsets? tablet,
     EdgeInsets? desktop,
@@ -68,7 +92,8 @@ class Responsive {
   }
 
   /// Get responsive font size based on screen size
-  static double getResponsiveFontSize(BuildContext context, {
+  static double getResponsiveFontSize(
+    BuildContext context, {
     double? mobile,
     double? tablet,
     double? desktop,
@@ -169,5 +194,73 @@ class Responsive {
     return contentWidth >= 1000
         ? AppConstants.headerExpandedScaleLarge
         : AppConstants.headerExpandedScaleSmall;
+  }
+
+  // ============================================
+  // Performance Optimized Helpers
+  // ============================================
+
+  /// Gets all grid layout values in a single call, reducing MediaQuery lookups.
+  /// Use this in build methods for optimal performance.
+  ///
+  /// Example:
+  /// ```dart
+  /// final layout = Responsive.getGridLayout(context);
+  /// // Use layout.columnCount, layout.spacing, etc.
+  /// ```
+  static GridLayout getGridLayout(BuildContext context) {
+    // Single MediaQuery call to get all needed data
+    final mediaQuery = MediaQuery.of(context);
+    final screenWidth = mediaQuery.size.width;
+    final pixelRatio = mediaQuery.devicePixelRatio;
+
+    // Calculate content width (accounting for sidebar)
+    final contentWidth = screenWidth >= AppConstants.sidebarBreakpoint
+        ? screenWidth - AppConstants.sidebarWidth
+        : screenWidth;
+
+    // Determine size category once
+    final isDesktop = contentWidth >= desktopBreakpoint;
+    final isTablet = contentWidth >= mobileBreakpoint && !isDesktop;
+
+    // Get all values based on size category
+    final columnCount = isDesktop
+        ? AppConstants.gridColumnsDesktop
+        : isTablet
+        ? AppConstants.gridColumnsTablet
+        : AppConstants.gridColumnsMobile;
+
+    final spacing = isDesktop
+        ? AppConstants.gridSpacingDesktop
+        : isTablet
+        ? AppConstants.gridSpacingTablet
+        : AppConstants.gridSpacingMobile;
+
+    final padding = isDesktop
+        ? AppConstants.contentPaddingDesktop
+        : isTablet
+        ? AppConstants.contentPaddingTablet
+        : AppConstants.contentPaddingMobile;
+
+    final aspectRatio = isDesktop
+        ? 0.75
+        : isTablet
+        ? 0.70
+        : 0.65;
+
+    final showHeader = screenWidth >= AppConstants.sidebarBreakpoint;
+    final headerScale = contentWidth >= 1000
+        ? AppConstants.headerExpandedScaleLarge
+        : AppConstants.headerExpandedScaleSmall;
+
+    return GridLayout(
+      columnCount: columnCount,
+      spacing: spacing,
+      padding: padding,
+      aspectRatio: aspectRatio,
+      showHeader: showHeader,
+      headerScale: headerScale,
+      pixelRatio: pixelRatio,
+    );
   }
 }

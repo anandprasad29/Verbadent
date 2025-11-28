@@ -50,7 +50,9 @@ class LibraryCard extends StatelessWidget {
                   // This reduces memory usage by ~70-90% for oversized source images
                   final displaySize = constraints.maxWidth;
                   final pixelRatio = MediaQuery.devicePixelRatioOf(context);
-                  final cacheSize = (displaySize * pixelRatio).ceil();
+                  // Ensure cacheSize is at least 1 (required by Image.asset) or null if constraints are 0
+                  final calculatedSize = (displaySize * pixelRatio).ceil();
+                  final cacheSize = calculatedSize > 0 ? calculatedSize : null;
 
                   return Stack(
                     children: [

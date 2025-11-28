@@ -2,12 +2,21 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
-import '../features/before_visit/presentation/before_visit_page.dart';
-import '../features/build_own/presentation/build_own_page.dart';
-import '../features/build_own/presentation/custom_template_page.dart';
+
+// Eagerly loaded pages (critical path)
 import '../features/dashboard/presentation/dashboard_page.dart';
 import '../features/library/presentation/library_page.dart';
-import '../features/settings/presentation/settings_page.dart';
+
+// Deferred loading for non-critical pages (reduces initial bundle size)
+import '../features/before_visit/presentation/before_visit_page.dart'
+    deferred as before_visit;
+import '../features/build_own/presentation/build_own_page.dart'
+    deferred as build_own;
+import '../features/build_own/presentation/custom_template_page.dart'
+    deferred as custom_template;
+import '../features/settings/presentation/settings_page.dart'
+    deferred as settings;
+
 import 'routes.dart';
 
 part 'app_router.g.dart';
@@ -46,6 +55,30 @@ CustomTransitionPage<void> _buildPageWithTransition({
   );
 }
 
+/// Builds a page with deferred loading support
+/// Shows a loading indicator while the deferred library loads
+CustomTransitionPage<void> _buildDeferredPage({
+  required BuildContext context,
+  required GoRouterState state,
+  required Future<void> loadLibrary,
+  required Widget Function() buildPage,
+}) {
+  return _buildPageWithTransition(
+    context: context,
+    state: state,
+    child: FutureBuilder(
+      future: loadLibrary,
+      builder: (context, snapshot) {
+        if (snapshot.connectionState == ConnectionState.done) {
+          return buildPage();
+        }
+        // Show loading indicator while deferred library loads
+        return const Scaffold(body: Center(child: CircularProgressIndicator()));
+      },
+    ),
+  );
+}
+
 /// GoRouter provider with keepAlive to prevent disposal during navigation.
 /// AutoDispose would cause router recreation and navigation issues.
 @Riverpod(keepAlive: true)
@@ -72,13 +105,15 @@ GoRouter goRouter(Ref ref) {
           child: const LibraryPage(),
         ),
       ),
+      // Deferred loaded routes (reduces initial bundle size)
       GoRoute(
         path: Routes.beforeVisit,
         name: 'beforeVisit',
-        pageBuilder: (context, state) => _buildPageWithTransition(
+        pageBuilder: (context, state) => _buildDeferredPage(
           context: context,
           state: state,
-          child: const BeforeVisitPage(),
+          loadLibrary: before_visit.loadLibrary(),
+          buildPage: () => before_visit.BeforeVisitPage(),
         ),
       ),
       // Placeholder routes for future pages
@@ -94,10 +129,11 @@ GoRouter goRouter(Ref ref) {
       GoRoute(
         path: Routes.buildOwn,
         name: 'buildOwn',
-        pageBuilder: (context, state) => _buildPageWithTransition(
+        pageBuilder: (context, state) => _buildDeferredPage(
           context: context,
           state: state,
-          child: const BuildOwnPage(),
+          loadLibrary: build_own.loadLibrary(),
+          buildPage: () => build_own.BuildOwnPage(),
         ),
       ),
       // Dynamic route for custom templates
@@ -106,20 +142,23 @@ GoRouter goRouter(Ref ref) {
         name: 'customTemplate',
         pageBuilder: (context, state) {
           final templateId = state.pathParameters['id']!;
-          return _buildPageWithTransition(
+          return _buildDeferredPage(
             context: context,
             state: state,
-            child: CustomTemplatePage(templateId: templateId),
+            loadLibrary: custom_template.loadLibrary(),
+            buildPage: () =>
+                custom_template.CustomTemplatePage(templateId: templateId),
           );
         },
       ),
       GoRoute(
         path: Routes.settings,
         name: 'settings',
-        pageBuilder: (context, state) => _buildPageWithTransition(
+        pageBuilder: (context, state) => _buildDeferredPage(
           context: context,
           state: state,
-          child: const SettingsPage(),
+          loadLibrary: settings.loadLibrary(),
+          buildPage: () => settings.SettingsPage(),
         ),
       ),
     ],

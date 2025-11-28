@@ -1,3 +1,5 @@
+import 'dart:math' as math;
+
 import 'package:flutter/material.dart';
 import '../../theme/app_colors.dart';
 
@@ -7,11 +9,7 @@ class SpeakingIndicator extends StatefulWidget {
   final double size;
   final Color? color;
 
-  const SpeakingIndicator({
-    super.key,
-    this.size = 24,
-    this.color,
-  });
+  const SpeakingIndicator({super.key, this.size = 24, this.color});
 
   @override
   State<SpeakingIndicator> createState() => _SpeakingIndicatorState();
@@ -20,6 +18,9 @@ class SpeakingIndicator extends StatefulWidget {
 class _SpeakingIndicatorState extends State<SpeakingIndicator>
     with SingleTickerProviderStateMixin {
   late AnimationController _controller;
+
+  // Pre-calculate bar delays for performance
+  static const List<double> _barDelays = [0.0, 0.2, 0.4];
 
   @override
   void initState() {
@@ -39,62 +40,45 @@ class _SpeakingIndicatorState extends State<SpeakingIndicator>
   @override
   Widget build(BuildContext context) {
     final indicatorColor = widget.color ?? context.appSpeakingIndicator;
+    final barWidth = widget.size * 0.15;
+    final borderRadius = BorderRadius.circular(widget.size * 0.1);
 
-    return SizedBox(
-      width: widget.size,
-      height: widget.size,
-      child: Row(
-        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-        crossAxisAlignment: CrossAxisAlignment.center,
-        children: List.generate(3, (index) {
-          return AnimatedBuilder(
-            animation: _controller,
-            builder: (context, child) {
-              // Stagger the animations for each bar
-              final delay = index * 0.2;
-              final progress = (_controller.value + delay) % 1.0;
-              final height = 0.3 + (0.7 * _calculateHeight(progress));
+    return RepaintBoundary(
+      child: SizedBox(
+        width: widget.size,
+        height: widget.size,
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+          crossAxisAlignment: CrossAxisAlignment.center,
+          children: List.generate(3, (index) {
+            return AnimatedBuilder(
+              animation: _controller,
+              builder: (context, child) {
+                // Stagger the animations for each bar
+                final progress = (_controller.value + _barDelays[index]) % 1.0;
+                final height = 0.3 + (0.7 * _calculateHeight(progress));
 
-              return Container(
-                width: widget.size * 0.15,
-                height: widget.size * height,
-                decoration: BoxDecoration(
-                  color: indicatorColor,
-                  borderRadius: BorderRadius.circular(widget.size * 0.1),
-                ),
-              );
-            },
-          );
-        }),
+                return Container(
+                  width: barWidth,
+                  height: widget.size * height,
+                  decoration: BoxDecoration(
+                    color: indicatorColor,
+                    borderRadius: borderRadius,
+                  ),
+                );
+              },
+            );
+          }),
+        ),
       ),
     );
   }
 
+  /// Calculate height using native math.sin for optimal performance.
+  /// Returns a value between 0 and 1 based on sine wave.
   double _calculateHeight(double progress) {
-    // Use a sine wave for smooth animation
-    return (1 + (progress * 3.14159 * 2).sin()) / 2;
+    return (1 + math.sin(progress * math.pi * 2)) / 2;
   }
-}
-
-/// Extension for sin function
-extension on double {
-  double sin() => _sin(this);
-}
-
-double _sin(double radians) {
-  // Simple sin approximation for animation
-  // Using dart:math would be cleaner but this keeps it self-contained
-  double x = radians % (2 * 3.14159);
-  if (x > 3.14159) x -= 2 * 3.14159;
-
-  // Taylor series approximation
-  double result = x;
-  double term = x;
-  for (int i = 1; i <= 5; i++) {
-    term *= -x * x / ((2 * i) * (2 * i + 1));
-    result += term;
-  }
-  return result;
 }
 
 /// A badge overlay that shows when an item is speaking.

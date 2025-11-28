@@ -19,16 +19,17 @@ void main() {
 
   testWidgets('App renders smoke test', (WidgetTester tester) async {
     // Build our app and trigger a frame.
-    await tester.pumpWidget(
-      const ProviderScope(
-        child: VerbadentApp(),
-      ),
-    );
+    await tester.pumpWidget(const ProviderScope(child: VerbadentApp()));
 
-    // Wait for the router to navigate
-    await tester.pumpAndSettle();
+    // Wait for the router to navigate and any splash screen/TTS timers to complete
+    // The TTS service has a 3-second configuration timeout, so we need to wait longer
+    await tester.pump(const Duration(seconds: 4));
+    await tester.pumpAndSettle(const Duration(seconds: 1));
 
     // Verify that the dashboard title is present
     expect(find.text('VERBADENT'), findsOneWidget);
+
+    // Pump additional frames to ensure all pending timers complete
+    await tester.pump(const Duration(seconds: 2));
   });
 }

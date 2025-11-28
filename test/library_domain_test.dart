@@ -110,7 +110,7 @@ void main() {
     test('all items have valid image paths', () {
       for (final item in LibraryData.sampleItems) {
         expect(item.imagePath, startsWith('assets/images/library/'));
-        expect(item.imagePath, endsWith('.png'));
+        expect(item.imagePath, endsWith('.webp'));
       }
     });
 
@@ -166,8 +166,9 @@ void main() {
     });
 
     test('all image file names are unique', () {
-      final paths =
-          LibraryData.sampleItems.map((item) => item.imagePath).toList();
+      final paths = LibraryData.sampleItems
+          .map((item) => item.imagePath)
+          .toList();
       final uniquePaths = paths.toSet();
       expect(uniquePaths.length, equals(paths.length));
     });

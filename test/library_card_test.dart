@@ -14,19 +14,19 @@ void main() {
 
   const testItem = LibraryItem(
     id: 'test-1',
-    imagePath: 'assets/images/library/dentist_chair.png',
+    imagePath: 'assets/images/library/dentist_chair.webp',
     caption: "This is the dentist's chair",
   );
 
   const shortCaptionItem = LibraryItem(
     id: 'test-2',
-    imagePath: 'assets/images/library/dental_mirror.png',
+    imagePath: 'assets/images/library/dental_mirror.webp',
     caption: 'Mirror',
   );
 
   const longCaptionItem = LibraryItem(
     id: 'test-3',
-    imagePath: 'assets/images/library/bright_light.png',
+    imagePath: 'assets/images/library/bright_light.webp',
     caption: 'The bright light helps the dentist see inside your mouth clearly',
   );
 
@@ -39,9 +39,7 @@ void main() {
               child: SizedBox(
                 width: 200,
                 height: 280,
-                child: LibraryCard(
-                  item: testItem,
-                ),
+                child: LibraryCard(item: testItem),
               ),
             ),
           ),
@@ -62,10 +60,7 @@ void main() {
       expect(container.decoration, isA<BoxDecoration>());
       final decoration = container.decoration as BoxDecoration;
       expect(decoration.border, isNotNull);
-      expect(
-        decoration.border?.top.color,
-        equals(AppColors.cardBorder),
-      );
+      expect(decoration.border?.top.color, equals(AppColors.cardBorder));
     });
 
     testWidgets('renders image with rounded corners', (tester) async {
@@ -76,9 +71,7 @@ void main() {
               child: SizedBox(
                 width: 200,
                 height: 280,
-                child: LibraryCard(
-                  item: testItem,
-                ),
+                child: LibraryCard(item: testItem),
               ),
             ),
           ),
@@ -109,9 +102,7 @@ void main() {
               child: SizedBox(
                 width: 200,
                 height: 280,
-                child: LibraryCard(
-                  item: testItem,
-                ),
+                child: LibraryCard(item: testItem),
               ),
             ),
           ),
@@ -170,9 +161,7 @@ void main() {
               child: SizedBox(
                 width: 200,
                 height: 280,
-                child: LibraryCard(
-                  item: testItem,
-                ),
+                child: LibraryCard(item: testItem),
               ),
             ),
           ),
@@ -192,9 +181,7 @@ void main() {
               child: SizedBox(
                 width: 200,
                 height: 280,
-                child: LibraryCard(
-                  item: testItem,
-                ),
+                child: LibraryCard(item: testItem),
               ),
             ),
           ),
@@ -300,8 +287,9 @@ void main() {
       expect(aspectRatio.aspectRatio, equals(1.0));
     });
 
-    testWidgets('shows placeholder icon when image fails to load',
-        (tester) async {
+    testWidgets('shows placeholder icon when image fails to load', (
+      tester,
+    ) async {
       const brokenItem = LibraryItem(
         id: 'broken',
         imagePath: 'assets/images/library/nonexistent.png',
@@ -329,8 +317,9 @@ void main() {
       expect(find.byIcon(Icons.medical_services_outlined), findsOneWidget);
     });
 
-    testWidgets('caption truncates with ellipsis for very long text',
-        (tester) async {
+    testWidgets('caption truncates with ellipsis for very long text', (
+      tester,
+    ) async {
       await tester.pumpWidget(
         MaterialApp(
           home: Scaffold(
@@ -376,10 +365,7 @@ void main() {
               child: SizedBox(
                 width: 200,
                 height: 280,
-                child: LibraryCard(
-                  item: testItem,
-                  onTap: null,
-                ),
+                child: LibraryCard(item: testItem, onTap: null),
               ),
             ),
           ),
@@ -395,9 +381,9 @@ void main() {
   group('LibraryCard Golden Tests', () {
     testGoldens('renders standard card correctly', (tester) async {
       final builder = DeviceBuilder()
-        ..overrideDevicesForAllScenarios(devices: [
-          const Device(name: 'card', size: Size(200, 280)),
-        ])
+        ..overrideDevicesForAllScenarios(
+          devices: [const Device(name: 'card', size: Size(200, 280))],
+        )
         ..addScenario(
           widget: MaterialApp(
             home: Scaffold(
@@ -419,9 +405,9 @@ void main() {
 
     testGoldens('renders card with short caption', (tester) async {
       final builder = DeviceBuilder()
-        ..overrideDevicesForAllScenarios(devices: [
-          const Device(name: 'card', size: Size(200, 280)),
-        ])
+        ..overrideDevicesForAllScenarios(
+          devices: [const Device(name: 'card', size: Size(200, 280))],
+        )
         ..addScenario(
           widget: MaterialApp(
             home: Scaffold(
@@ -443,9 +429,9 @@ void main() {
 
     testGoldens('renders card with long caption', (tester) async {
       final builder = DeviceBuilder()
-        ..overrideDevicesForAllScenarios(devices: [
-          const Device(name: 'card', size: Size(200, 280)),
-        ])
+        ..overrideDevicesForAllScenarios(
+          devices: [const Device(name: 'card', size: Size(200, 280))],
+        )
         ..addScenario(
           widget: MaterialApp(
             home: Scaffold(
@@ -467,9 +453,9 @@ void main() {
 
     testGoldens('renders small card correctly', (tester) async {
       final builder = DeviceBuilder()
-        ..overrideDevicesForAllScenarios(devices: [
-          const Device(name: 'small_card', size: Size(120, 180)),
-        ])
+        ..overrideDevicesForAllScenarios(
+          devices: [const Device(name: 'small_card', size: Size(120, 180))],
+        )
         ..addScenario(
           widget: MaterialApp(
             home: Scaffold(
