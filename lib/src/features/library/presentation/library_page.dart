@@ -112,22 +112,16 @@ class _LibraryPageState extends ConsumerState<LibraryPage> {
     List<DentalItem> filteredItems,
     String searchInput,
   ) {
-    final columnCount = Responsive.getGridColumnCount(context);
-    final spacing = Responsive.getGridSpacing(context);
-    final padding = Responsive.getContentPadding(context);
-    final aspectRatio = Responsive.getGridAspectRatio(context);
+    // Single MediaQuery call for all layout values (performance optimization)
+    final layout = Responsive.getGridLayout(context);
     final l10n = AppLocalizations.of(context);
-
-    // Only show page header on desktop (mobile has AppBar from AppShell)
-    final showHeader = Responsive.shouldShowPageHeader(context);
-    final headerScale = Responsive.getHeaderExpandedScale(context);
 
     return Container(
       color: context.appBackground,
       child: CustomScrollView(
         slivers: [
           // Collapsible header with "Library" title (desktop only)
-          if (showHeader)
+          if (layout.showHeader)
             SliverAppBar(
               expandedHeight: AppConstants.headerExpandedHeight,
               pinned: true,
@@ -155,16 +149,16 @@ class _LibraryPageState extends ConsumerState<LibraryPage> {
                     ),
                   ),
                 ),
-                expandedTitleScale: headerScale,
+                expandedTitleScale: layout.headerScale,
               ),
             ),
           // Search bar
           SliverToBoxAdapter(
             child: Padding(
               padding: EdgeInsets.only(
-                left: padding.left,
-                right: padding.right,
-                top: showHeader ? 16 : 24,
+                left: layout.padding.left,
+                right: layout.padding.right,
+                top: layout.showHeader ? 16 : 24,
                 bottom: 16,
               ),
               child: Column(
@@ -206,27 +200,36 @@ class _LibraryPageState extends ConsumerState<LibraryPage> {
             )
           else
             SliverPadding(
-              padding: padding.copyWith(top: 0),
+              padding: layout.padding.copyWith(top: 0),
               sliver: SliverGrid(
                 gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-                  crossAxisCount: columnCount,
-                  mainAxisSpacing: spacing,
-                  crossAxisSpacing: spacing,
-                  childAspectRatio: aspectRatio, // Responsive aspect ratio
+                  crossAxisCount: layout.columnCount,
+                  mainAxisSpacing: layout.spacing,
+                  crossAxisSpacing: layout.spacing,
+                  childAspectRatio:
+                      layout.aspectRatio, // Responsive aspect ratio
                 ),
-                delegate: SliverChildBuilderDelegate((context, index) {
-                  final item = filteredItems[index];
-                  final translatedCaption = ContentTranslations.getCaption(
-                    item.id,
-                    contentLanguage,
-                  );
-                  return LibraryCard(
-                    item: item,
-                    caption: translatedCaption,
-                    onTap: () => ttsService.speak(translatedCaption),
-                    isSpeaking: speakingText == translatedCaption,
-                  );
-                }, childCount: filteredItems.length),
+                delegate: SliverChildBuilderDelegate(
+                  (context, index) {
+                    final item = filteredItems[index];
+                    final translatedCaption = ContentTranslations.getCaption(
+                      item.id,
+                      contentLanguage,
+                    );
+                    return LibraryCard(
+                      key: ValueKey(item.id),
+                      item: item,
+                      caption: translatedCaption,
+                      onTap: () => ttsService.speak(translatedCaption),
+                      isSpeaking: speakingText == translatedCaption,
+                    );
+                  },
+                  childCount: filteredItems.length,
+                  // Disable automatic keep-alives to reduce memory on large lists
+                  addAutomaticKeepAlives: false,
+                  // Keep repaint boundaries for scroll performance
+                  addRepaintBoundaries: true,
+                ),
               ),
             ),
         ],

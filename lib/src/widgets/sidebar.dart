@@ -103,8 +103,13 @@ class Sidebar extends ConsumerWidget {
     // Get localization
     final l10n = AppLocalizations.of(context);
 
-    // Watch custom templates for dynamic items
-    final customTemplates = ref.watch(customTemplatesNotifierProvider);
+    // Watch only what's needed for the sidebar display (selective watching)
+    // This avoids rebuilding when unrelated template properties change
+    final customTemplates = ref.watch(
+      customTemplatesNotifierProvider.select(
+        (templates) => templates.map((t) => (id: t.id, name: t.name)).toList(),
+      ),
+    );
     final isLoading = ref.watch(templatesLoadingProvider);
     final error = ref.watch(templatesErrorProvider);
 
@@ -118,6 +123,7 @@ class Sidebar extends ConsumerWidget {
     }
 
     // Build dynamic sidebar items from custom templates
+    // (customTemplates is now a list of records with just id and name)
     final customTemplateItems = customTemplates
         .map(
           (template) => SidebarItemData(

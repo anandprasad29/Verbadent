@@ -26,9 +26,7 @@ void main() {
           GoRoute(
             path: '/',
             name: 'home',
-            builder: (context, state) => const Scaffold(
-              body: Sidebar(),
-            ),
+            builder: (context, state) => const Scaffold(body: Sidebar()),
           ),
           GoRoute(
             path: '/library',
@@ -62,33 +60,34 @@ void main() {
               return const Scaffold(body: Text('Build Own Page'));
             },
           ),
+          GoRoute(
+            path: '/settings',
+            name: 'settings',
+            builder: (context, state) {
+              navigatedTo = '/settings';
+              return const Scaffold(body: Text('Settings Page'));
+            },
+          ),
         ],
       );
     });
 
-    testWidgets('renders all 4 sidebar items', (tester) async {
+    testWidgets('renders all 5 sidebar items', (tester) async {
       await tester.pumpWidget(
-        ProviderScope(
-          child: MaterialApp.router(
-            routerConfig: testRouter,
-          ),
-        ),
+        ProviderScope(child: MaterialApp.router(routerConfig: testRouter)),
       );
 
-      // Verify all 4 sidebar items are present
+      // Verify all 5 sidebar items are present
       expect(find.text('Before the visit'), findsOneWidget);
       expect(find.text('During the visit'), findsOneWidget);
       expect(find.text('Build your own'), findsOneWidget);
       expect(find.text('Library'), findsOneWidget);
+      expect(find.text('Settings'), findsOneWidget);
     });
 
     testWidgets('Library button navigates to /library route', (tester) async {
       await tester.pumpWidget(
-        ProviderScope(
-          child: MaterialApp.router(
-            routerConfig: testRouter,
-          ),
-        ),
+        ProviderScope(child: MaterialApp.router(routerConfig: testRouter)),
       );
 
       // Tap the Library button
@@ -101,11 +100,7 @@ void main() {
 
     testWidgets('Before the visit button navigates correctly', (tester) async {
       await tester.pumpWidget(
-        ProviderScope(
-          child: MaterialApp.router(
-            routerConfig: testRouter,
-          ),
-        ),
+        ProviderScope(child: MaterialApp.router(routerConfig: testRouter)),
       );
 
       // Tap the Before the visit button
@@ -118,11 +113,7 @@ void main() {
 
     testWidgets('sidebar has correct background color', (tester) async {
       await tester.pumpWidget(
-        ProviderScope(
-          child: MaterialApp.router(
-            routerConfig: testRouter,
-          ),
-        ),
+        ProviderScope(child: MaterialApp.router(routerConfig: testRouter)),
       );
 
       // Find the sidebar container
@@ -132,10 +123,7 @@ void main() {
       // Find the container with the background color
       final container = tester.widget<Container>(
         find
-            .descendant(
-              of: sidebarFinder,
-              matching: find.byType(Container),
-            )
+            .descendant(of: sidebarFinder, matching: find.byType(Container))
             .first,
       );
 
@@ -145,25 +133,17 @@ void main() {
 
     testWidgets('sidebar items have neutral background color', (tester) async {
       await tester.pumpWidget(
-        ProviderScope(
-          child: MaterialApp.router(
-            routerConfig: testRouter,
-          ),
-        ),
+        ProviderScope(child: MaterialApp.router(routerConfig: testRouter)),
       );
 
-      // Find SidebarItem widgets
+      // Find SidebarItem widgets (2 top + 3 bottom = 5 total)
       final sidebarItemFinder = find.byType(SidebarItem);
-      expect(sidebarItemFinder, findsNWidgets(4));
+      expect(sidebarItemFinder, findsNWidgets(5));
     });
 
     testWidgets('sidebar items use KumarOne font', (tester) async {
       await tester.pumpWidget(
-        ProviderScope(
-          child: MaterialApp.router(
-            routerConfig: testRouter,
-          ),
-        ),
+        ProviderScope(child: MaterialApp.router(routerConfig: testRouter)),
       );
 
       // Find the Library text
@@ -176,29 +156,26 @@ void main() {
 
     testWidgets('sidebar items have correct keys for testing', (tester) async {
       await tester.pumpWidget(
-        ProviderScope(
-          child: MaterialApp.router(
-            routerConfig: testRouter,
-          ),
-        ),
+        ProviderScope(child: MaterialApp.router(routerConfig: testRouter)),
       );
 
       // Verify test keys are present
       expect(
-          find.byKey(const Key('sidebar_item_before_visit')), findsOneWidget);
+        find.byKey(const Key('sidebar_item_before_visit')),
+        findsOneWidget,
+      );
       expect(
-          find.byKey(const Key('sidebar_item_during_visit')), findsOneWidget);
+        find.byKey(const Key('sidebar_item_during_visit')),
+        findsOneWidget,
+      );
       expect(find.byKey(const Key('sidebar_item_build_own')), findsOneWidget);
       expect(find.byKey(const Key('sidebar_item_library')), findsOneWidget);
+      expect(find.byKey(const Key('sidebar_item_settings')), findsOneWidget);
     });
 
     testWidgets('During the visit button navigates correctly', (tester) async {
       await tester.pumpWidget(
-        ProviderScope(
-          child: MaterialApp.router(
-            routerConfig: testRouter,
-          ),
-        ),
+        ProviderScope(child: MaterialApp.router(routerConfig: testRouter)),
       );
 
       await tester.tap(find.text('During the visit'));
@@ -209,11 +186,7 @@ void main() {
 
     testWidgets('Build your own button navigates correctly', (tester) async {
       await tester.pumpWidget(
-        ProviderScope(
-          child: MaterialApp.router(
-            routerConfig: testRouter,
-          ),
-        ),
+        ProviderScope(child: MaterialApp.router(routerConfig: testRouter)),
       );
 
       await tester.tap(find.text('Build your own'));
@@ -224,19 +197,15 @@ void main() {
 
     testWidgets('sidebar item height matches constant', (tester) async {
       await tester.pumpWidget(
-        ProviderScope(
-          child: MaterialApp.router(
-            routerConfig: testRouter,
-          ),
-        ),
+        ProviderScope(child: MaterialApp.router(routerConfig: testRouter)),
       );
 
-      // Find SidebarItem containers
+      // Find SidebarItem containers (2 top + 3 bottom = 5 total)
       final sidebarItems = tester.widgetList<SidebarItem>(
         find.byType(SidebarItem),
       );
 
-      expect(sidebarItems.length, equals(4));
+      expect(sidebarItems.length, equals(5));
     });
   });
 
@@ -258,9 +227,7 @@ void main() {
       );
 
       await tester.pumpWidget(
-        ProviderScope(
-          child: MaterialApp.router(routerConfig: activeRouter),
-        ),
+        ProviderScope(child: MaterialApp.router(routerConfig: activeRouter)),
       );
 
       // Library item should have active styling
@@ -292,19 +259,14 @@ void main() {
       );
 
       await tester.pumpWidget(
-        ProviderScope(
-          child: MaterialApp.router(routerConfig: activeRouter),
-        ),
+        ProviderScope(child: MaterialApp.router(routerConfig: activeRouter)),
       );
 
       // Find the active SidebarItem's container
       final libraryItemFinder = find.byKey(const Key('sidebar_item_library'));
       final container = tester.widget<Container>(
         find
-            .descendant(
-              of: libraryItemFinder,
-              matching: find.byType(Container),
-            )
+            .descendant(of: libraryItemFinder, matching: find.byType(Container))
             .first,
       );
 
@@ -329,18 +291,13 @@ void main() {
       );
 
       await tester.pumpWidget(
-        ProviderScope(
-          child: MaterialApp.router(routerConfig: activeRouter),
-        ),
+        ProviderScope(child: MaterialApp.router(routerConfig: activeRouter)),
       );
 
       final libraryItemFinder = find.byKey(const Key('sidebar_item_library'));
       final container = tester.widget<Container>(
         find
-            .descendant(
-              of: libraryItemFinder,
-              matching: find.byType(Container),
-            )
+            .descendant(of: libraryItemFinder, matching: find.byType(Container))
             .first,
       );
 
@@ -352,9 +309,9 @@ void main() {
   group('Sidebar Golden Tests', () {
     testGoldens('renders sidebar correctly', (tester) async {
       final builder = DeviceBuilder()
-        ..overrideDevicesForAllScenarios(devices: [
-          const Device(name: 'sidebar', size: Size(250, 600)),
-        ])
+        ..overrideDevicesForAllScenarios(
+          devices: [const Device(name: 'sidebar', size: Size(250, 600))],
+        )
         ..addScenario(
           widget: ProviderScope(
             child: MaterialApp.router(
@@ -366,15 +323,25 @@ void main() {
                     builder: (_, __) => const Scaffold(body: Sidebar()),
                   ),
                   GoRoute(
-                      path: '/library', builder: (_, __) => const SizedBox()),
+                    path: '/library',
+                    builder: (_, __) => const SizedBox(),
+                  ),
                   GoRoute(
-                      path: '/before-visit',
-                      builder: (_, __) => const SizedBox()),
+                    path: '/before-visit',
+                    builder: (_, __) => const SizedBox(),
+                  ),
                   GoRoute(
-                      path: '/during-visit',
-                      builder: (_, __) => const SizedBox()),
+                    path: '/during-visit',
+                    builder: (_, __) => const SizedBox(),
+                  ),
                   GoRoute(
-                      path: '/build-own', builder: (_, __) => const SizedBox()),
+                    path: '/build-own',
+                    builder: (_, __) => const SizedBox(),
+                  ),
+                  GoRoute(
+                    path: '/settings',
+                    builder: (_, __) => const SizedBox(),
+                  ),
                 ],
               ),
             ),
@@ -388,9 +355,9 @@ void main() {
 
     testGoldens('renders sidebar with active Library item', (tester) async {
       final builder = DeviceBuilder()
-        ..overrideDevicesForAllScenarios(devices: [
-          const Device(name: 'sidebar', size: Size(250, 600)),
-        ])
+        ..overrideDevicesForAllScenarios(
+          devices: [const Device(name: 'sidebar', size: Size(250, 600))],
+        )
         ..addScenario(
           widget: ProviderScope(
             child: MaterialApp.router(
@@ -403,13 +370,21 @@ void main() {
                   ),
                   GoRoute(path: '/', builder: (_, __) => const SizedBox()),
                   GoRoute(
-                      path: '/before-visit',
-                      builder: (_, __) => const SizedBox()),
+                    path: '/before-visit',
+                    builder: (_, __) => const SizedBox(),
+                  ),
                   GoRoute(
-                      path: '/during-visit',
-                      builder: (_, __) => const SizedBox()),
+                    path: '/during-visit',
+                    builder: (_, __) => const SizedBox(),
+                  ),
                   GoRoute(
-                      path: '/build-own', builder: (_, __) => const SizedBox()),
+                    path: '/build-own',
+                    builder: (_, __) => const SizedBox(),
+                  ),
+                  GoRoute(
+                    path: '/settings',
+                    builder: (_, __) => const SizedBox(),
+                  ),
                 ],
               ),
             ),
@@ -421,12 +396,13 @@ void main() {
       await screenMatchesGolden(tester, 'sidebar_library_active');
     });
 
-    testGoldens('renders sidebar with active Before Visit item',
-        (tester) async {
+    testGoldens('renders sidebar with active Before Visit item', (
+      tester,
+    ) async {
       final builder = DeviceBuilder()
-        ..overrideDevicesForAllScenarios(devices: [
-          const Device(name: 'sidebar', size: Size(250, 600)),
-        ])
+        ..overrideDevicesForAllScenarios(
+          devices: [const Device(name: 'sidebar', size: Size(250, 600))],
+        )
         ..addScenario(
           widget: ProviderScope(
             child: MaterialApp.router(
@@ -439,12 +415,21 @@ void main() {
                   ),
                   GoRoute(path: '/', builder: (_, __) => const SizedBox()),
                   GoRoute(
-                      path: '/library', builder: (_, __) => const SizedBox()),
+                    path: '/library',
+                    builder: (_, __) => const SizedBox(),
+                  ),
                   GoRoute(
-                      path: '/during-visit',
-                      builder: (_, __) => const SizedBox()),
+                    path: '/during-visit',
+                    builder: (_, __) => const SizedBox(),
+                  ),
                   GoRoute(
-                      path: '/build-own', builder: (_, __) => const SizedBox()),
+                    path: '/build-own',
+                    builder: (_, __) => const SizedBox(),
+                  ),
+                  GoRoute(
+                    path: '/settings',
+                    builder: (_, __) => const SizedBox(),
+                  ),
                 ],
               ),
             ),
@@ -496,10 +481,11 @@ void main() {
       expect(SidebarConfig.topItems[1].route, '/during-visit');
     });
 
-    test('bottomItems has Build Your Own and Library', () {
-      expect(SidebarConfig.bottomItems.length, 2);
+    test('bottomItems has Build Your Own, Library, and Settings', () {
+      expect(SidebarConfig.bottomItems.length, 3);
       expect(SidebarConfig.bottomItems[0].route, '/build-own');
       expect(SidebarConfig.bottomItems[1].route, '/library');
+      expect(SidebarConfig.bottomItems[2].route, '/settings');
     });
   });
 }

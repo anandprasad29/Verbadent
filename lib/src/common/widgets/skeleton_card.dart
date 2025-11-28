@@ -4,6 +4,7 @@ import '../../theme/app_colors.dart';
 
 /// A skeleton loading placeholder for library cards.
 /// Shows a shimmering animation while content is loading.
+/// Uses TickerMode to automatically pause animation when not visible.
 class SkeletonCard extends StatefulWidget {
   const SkeletonCard({super.key});
 
@@ -15,6 +16,9 @@ class _SkeletonCardState extends State<SkeletonCard>
     with SingleTickerProviderStateMixin {
   late AnimationController _controller;
   late Animation<double> _shimmerAnimation;
+
+  // Cache gradient stops to avoid repeated allocations
+  static const _gradientStops = [0.0, 0.5, 1.0];
 
   @override
   void initState() {
@@ -38,77 +42,105 @@ class _SkeletonCardState extends State<SkeletonCard>
   @override
   Widget build(BuildContext context) {
     final isDark = Theme.of(context).brightness == Brightness.dark;
-    final baseColor =
-        isDark ? AppColors.skeletonBaseDark : AppColors.skeletonBase;
-    final highlightColor =
-        isDark ? AppColors.skeletonHighlightDark : AppColors.skeletonHighlight;
+    final baseColor = isDark
+        ? AppColors.skeletonBaseDark
+        : AppColors.skeletonBase;
+    final highlightColor = isDark
+        ? AppColors.skeletonHighlightDark
+        : AppColors.skeletonHighlight;
+    final colors = [baseColor, highlightColor, baseColor];
 
-    return AnimatedBuilder(
-      animation: _shimmerAnimation,
-      builder: (context, child) {
-        return Column(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            // Square image placeholder
-            AspectRatio(
-              aspectRatio: 1.0,
-              child: Container(
-                decoration: BoxDecoration(
-                  borderRadius:
-                      BorderRadius.circular(AppConstants.cardBorderRadius),
-                  gradient: LinearGradient(
-                    begin: Alignment(_shimmerAnimation.value - 1, 0),
-                    end: Alignment(_shimmerAnimation.value, 0),
-                    colors: [
-                      baseColor,
-                      highlightColor,
-                      baseColor,
-                    ],
-                    stops: const [0.0, 0.5, 1.0],
-                  ),
-                ),
-              ),
-            ),
-            const SizedBox(height: 12),
-            // Caption placeholder - two lines
-            Container(
-              height: 14,
-              width: double.infinity,
-              decoration: BoxDecoration(
-                borderRadius: BorderRadius.circular(4),
-                gradient: LinearGradient(
-                  begin: Alignment(_shimmerAnimation.value - 1, 0),
-                  end: Alignment(_shimmerAnimation.value, 0),
-                  colors: [
-                    baseColor,
-                    highlightColor,
-                    baseColor,
-                  ],
-                  stops: const [0.0, 0.5, 1.0],
-                ),
-              ),
-            ),
-            const SizedBox(height: 6),
-            Container(
-              height: 14,
-              width: 80,
-              decoration: BoxDecoration(
-                borderRadius: BorderRadius.circular(4),
-                gradient: LinearGradient(
-                  begin: Alignment(_shimmerAnimation.value - 1, 0),
-                  end: Alignment(_shimmerAnimation.value, 0),
-                  colors: [
-                    baseColor,
-                    highlightColor,
-                    baseColor,
-                  ],
-                  stops: const [0.0, 0.5, 1.0],
-                ),
-              ),
-            ),
-          ],
-        );
-      },
+    // RepaintBoundary isolates this animation from causing unnecessary repaints
+    return RepaintBoundary(
+      child: AnimatedBuilder(
+        animation: _shimmerAnimation,
+        // Pre-build static children to avoid rebuilding them every frame
+        child: const _SkeletonLayout(),
+        builder: (context, child) {
+          final shimmerValue = _shimmerAnimation.value;
+          final gradient = LinearGradient(
+            begin: Alignment(shimmerValue - 1, 0),
+            end: Alignment(shimmerValue, 0),
+            colors: colors,
+            stops: _gradientStops,
+          );
+
+          return _ShimmerGradientProvider(gradient: gradient, child: child!);
+        },
+      ),
+    );
+  }
+}
+
+/// Inherited widget to pass gradient down without rebuilding the tree
+class _ShimmerGradientProvider extends InheritedWidget {
+  final LinearGradient gradient;
+
+  const _ShimmerGradientProvider({
+    required this.gradient,
+    required super.child,
+  });
+
+  static LinearGradient of(BuildContext context) {
+    return context
+        .dependOnInheritedWidgetOfExactType<_ShimmerGradientProvider>()!
+        .gradient;
+  }
+
+  @override
+  bool updateShouldNotify(_ShimmerGradientProvider oldWidget) {
+    return gradient != oldWidget.gradient;
+  }
+}
+
+/// Static layout for skeleton card - built once, uses InheritedWidget for gradient
+class _SkeletonLayout extends StatelessWidget {
+  const _SkeletonLayout();
+
+  // Cache border radius values
+  static final _cardBorderRadius = BorderRadius.circular(
+    AppConstants.cardBorderRadius,
+  );
+  static final _captionBorderRadius = BorderRadius.circular(4);
+
+  @override
+  Widget build(BuildContext context) {
+    return Column(
+      mainAxisSize: MainAxisSize.min,
+      children: [
+        // Square image placeholder
+        AspectRatio(
+          aspectRatio: 1.0,
+          child: _ShimmerBox(borderRadius: _cardBorderRadius),
+        ),
+        const SizedBox(height: 12),
+        // Caption placeholder - two lines
+        _ShimmerBox(
+          borderRadius: _captionBorderRadius,
+          height: 14,
+          width: double.infinity,
+        ),
+        const SizedBox(height: 6),
+        _ShimmerBox(borderRadius: _captionBorderRadius, height: 14, width: 80),
+      ],
+    );
+  }
+}
+
+/// Individual shimmer box that reads gradient from InheritedWidget
+class _ShimmerBox extends StatelessWidget {
+  final BorderRadius borderRadius;
+  final double? height;
+  final double? width;
+
+  const _ShimmerBox({required this.borderRadius, this.height, this.width});
+
+  @override
+  Widget build(BuildContext context) {
+    final gradient = _ShimmerGradientProvider.of(context);
+    return DecoratedBox(
+      decoration: BoxDecoration(borderRadius: borderRadius, gradient: gradient),
+      child: SizedBox(height: height, width: width),
     );
   }
 }

@@ -41,7 +41,9 @@ class SelectableLibraryCard extends StatelessWidget {
                   // Calculate optimal cache size based on display size and pixel ratio
                   final displaySize = constraints.maxWidth;
                   final pixelRatio = MediaQuery.devicePixelRatioOf(context);
-                  final cacheSize = (displaySize * pixelRatio).ceil();
+                  // Ensure cacheSize is at least 1 (required by Image.asset) or null if constraints are 0
+                  final calculatedSize = (displaySize * pixelRatio).ceil();
+                  final cacheSize = calculatedSize > 0 ? calculatedSize : null;
 
                   return Stack(
                     children: [
@@ -225,7 +227,9 @@ class RemovableLibraryCard extends StatelessWidget {
                 builder: (context, constraints) {
                   final displaySize = constraints.maxWidth;
                   final pixelRatio = MediaQuery.devicePixelRatioOf(context);
-                  final cacheSize = (displaySize * pixelRatio).ceil();
+                  // Ensure cacheSize is at least 1 (required by Image.asset) or null if constraints are 0
+                  final calculatedSize = (displaySize * pixelRatio).ceil();
+                  final cacheSize = calculatedSize > 0 ? calculatedSize : null;
 
                   return Stack(
                     children: [
@@ -344,7 +348,9 @@ class DraggableLibraryCard extends StatelessWidget {
             builder: (context, constraints) {
               final displaySize = constraints.maxWidth;
               final pixelRatio = MediaQuery.devicePixelRatioOf(context);
-              final cacheSize = (displaySize * pixelRatio).ceil();
+              // Ensure cacheSize is at least 1 (required by Image.asset) or null if constraints are 0
+              final calculatedSize = (displaySize * pixelRatio).ceil();
+              final cacheSize = calculatedSize > 0 ? calculatedSize : null;
 
               return Stack(
                 children: [

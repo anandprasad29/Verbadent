@@ -19,6 +19,9 @@ class _SpeakingIndicatorState extends State<SpeakingIndicator>
     with SingleTickerProviderStateMixin {
   late AnimationController _controller;
 
+  // Pre-calculate bar delays for performance
+  static const List<double> _barDelays = [0.0, 0.2, 0.4];
+
   @override
   void initState() {
     super.initState();
@@ -37,39 +40,43 @@ class _SpeakingIndicatorState extends State<SpeakingIndicator>
   @override
   Widget build(BuildContext context) {
     final indicatorColor = widget.color ?? context.appSpeakingIndicator;
+    final barWidth = widget.size * 0.15;
+    final borderRadius = BorderRadius.circular(widget.size * 0.1);
 
-    return SizedBox(
-      width: widget.size,
-      height: widget.size,
-      child: Row(
-        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-        crossAxisAlignment: CrossAxisAlignment.center,
-        children: List.generate(3, (index) {
-          return AnimatedBuilder(
-            animation: _controller,
-            builder: (context, child) {
-              // Stagger the animations for each bar
-              final delay = index * 0.2;
-              final progress = (_controller.value + delay) % 1.0;
-              final height = 0.3 + (0.7 * _calculateHeight(progress));
+    return RepaintBoundary(
+      child: SizedBox(
+        width: widget.size,
+        height: widget.size,
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+          crossAxisAlignment: CrossAxisAlignment.center,
+          children: List.generate(3, (index) {
+            return AnimatedBuilder(
+              animation: _controller,
+              builder: (context, child) {
+                // Stagger the animations for each bar
+                final progress = (_controller.value + _barDelays[index]) % 1.0;
+                final height = 0.3 + (0.7 * _calculateHeight(progress));
 
-              return Container(
-                width: widget.size * 0.15,
-                height: widget.size * height,
-                decoration: BoxDecoration(
-                  color: indicatorColor,
-                  borderRadius: BorderRadius.circular(widget.size * 0.1),
-                ),
-              );
-            },
-          );
-        }),
+                return Container(
+                  width: barWidth,
+                  height: widget.size * height,
+                  decoration: BoxDecoration(
+                    color: indicatorColor,
+                    borderRadius: borderRadius,
+                  ),
+                );
+              },
+            );
+          }),
+        ),
       ),
     );
   }
 
+  /// Calculate height using native math.sin for optimal performance.
+  /// Returns a value between 0 and 1 based on sine wave.
   double _calculateHeight(double progress) {
-    // Use a sine wave for smooth animation
     return (1 + math.sin(progress * math.pi * 2)) / 2;
   }
 }

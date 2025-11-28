@@ -77,22 +77,16 @@ class _BeforeVisitPageState extends ConsumerState<BeforeVisitPage> {
     ContentLanguage contentLanguage,
     String? speakingText,
   ) {
-    final columnCount = Responsive.getGridColumnCount(context);
-    final spacing = Responsive.getGridSpacing(context);
-    final padding = Responsive.getContentPadding(context);
-    final aspectRatio = Responsive.getGridAspectRatio(context);
+    // Single MediaQuery call for all layout values (performance optimization)
+    final layout = Responsive.getGridLayout(context);
     final l10n = AppLocalizations.of(context);
-
-    // Only show page header on desktop (mobile has AppBar from AppShell)
-    final showHeader = Responsive.shouldShowPageHeader(context);
-    final headerScale = Responsive.getHeaderExpandedScale(context);
 
     return Container(
       color: context.appBackground,
       child: CustomScrollView(
         slivers: [
           // Collapsible header with "Before the visit" title (desktop only)
-          if (showHeader)
+          if (layout.showHeader)
             SliverAppBar(
               expandedHeight: AppConstants.headerExpandedHeight,
               pinned: true,
@@ -120,7 +114,7 @@ class _BeforeVisitPageState extends ConsumerState<BeforeVisitPage> {
                     ),
                   ),
                 ),
-                expandedTitleScale: headerScale,
+                expandedTitleScale: layout.headerScale,
               ),
             ),
           // Story sequence section - fits same width as grid below
@@ -128,7 +122,10 @@ class _BeforeVisitPageState extends ConsumerState<BeforeVisitPage> {
             child: StorySequence(
               items: BeforeVisitData.storyItems,
               contentLanguage: contentLanguage,
-              padding: padding.copyWith(top: showHeader ? 16 : 24, bottom: 0),
+              padding: layout.padding.copyWith(
+                top: layout.showHeader ? 16 : 24,
+                bottom: 0,
+              ),
               onItemTap: (item) {
                 final translatedCaption = ContentTranslations.getCaption(
                   item.id,
@@ -142,27 +139,34 @@ class _BeforeVisitPageState extends ConsumerState<BeforeVisitPage> {
           const SliverToBoxAdapter(child: SizedBox(height: 32)),
           // Tools grid section
           SliverPadding(
-            padding: padding,
+            padding: layout.padding,
             sliver: SliverGrid(
               gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-                crossAxisCount: columnCount,
-                mainAxisSpacing: spacing,
-                crossAxisSpacing: spacing,
-                childAspectRatio: aspectRatio, // Responsive aspect ratio
+                crossAxisCount: layout.columnCount,
+                mainAxisSpacing: layout.spacing,
+                crossAxisSpacing: layout.spacing,
+                childAspectRatio: layout.aspectRatio, // Responsive aspect ratio
               ),
-              delegate: SliverChildBuilderDelegate((context, index) {
-                final item = BeforeVisitData.toolsItems[index];
-                final translatedCaption = ContentTranslations.getCaption(
-                  item.id,
-                  contentLanguage,
-                );
-                return LibraryCard(
-                  item: item,
-                  caption: translatedCaption,
-                  onTap: () => ttsService.speak(translatedCaption),
-                  isSpeaking: speakingText == translatedCaption,
-                );
-              }, childCount: BeforeVisitData.toolsItems.length),
+              delegate: SliverChildBuilderDelegate(
+                (context, index) {
+                  final item = BeforeVisitData.toolsItems[index];
+                  final translatedCaption = ContentTranslations.getCaption(
+                    item.id,
+                    contentLanguage,
+                  );
+                  return LibraryCard(
+                    key: ValueKey(item.id),
+                    item: item,
+                    caption: translatedCaption,
+                    onTap: () => ttsService.speak(translatedCaption),
+                    isSpeaking: speakingText == translatedCaption,
+                  );
+                },
+                childCount: BeforeVisitData.toolsItems.length,
+                // Optimize memory for grids
+                addAutomaticKeepAlives: false,
+                addRepaintBoundaries: true,
+              ),
             ),
           ),
           // Bottom padding

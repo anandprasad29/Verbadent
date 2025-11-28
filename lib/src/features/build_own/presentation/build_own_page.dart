@@ -131,10 +131,7 @@ class _BuildOwnPageState extends ConsumerState<BuildOwnPage> {
         actions: [
           TextButton(
             onPressed: () => Navigator.of(context).pop(),
-            child: Text(
-              'OK',
-              style: TextStyle(color: context.appPrimary),
-            ),
+            child: Text('OK', style: TextStyle(color: context.appPrimary)),
           ),
         ],
       ),
@@ -201,13 +198,9 @@ class _BuildOwnPageState extends ConsumerState<BuildOwnPage> {
     bool canCreate,
     int selectionCount,
   ) {
-    final columnCount = Responsive.getGridColumnCount(context);
-    final spacing = Responsive.getGridSpacing(context);
-    final padding = Responsive.getContentPadding(context);
-    final aspectRatio = Responsive.getGridAspectRatio(context);
+    // Single MediaQuery call for all layout values (performance optimization)
+    final layout = Responsive.getGridLayout(context);
     final l10n = AppLocalizations.of(context);
-
-    final showHeader = Responsive.shouldShowPageHeader(context);
 
     return Scaffold(
       backgroundColor: context.appBackground,
@@ -215,7 +208,7 @@ class _BuildOwnPageState extends ConsumerState<BuildOwnPage> {
       body: CustomScrollView(
         slivers: [
           // Collapsible header area (desktop only)
-          if (showHeader)
+          if (layout.showHeader)
             SliverAppBar(
               expandedHeight: AppConstants.headerExpandedHeight,
               pinned: true,
@@ -242,16 +235,16 @@ class _BuildOwnPageState extends ConsumerState<BuildOwnPage> {
                     ),
                   ),
                 ),
-                expandedTitleScale: Responsive.getHeaderExpandedScale(context),
+                expandedTitleScale: layout.headerScale,
               ),
             ),
           // Template name input
           SliverToBoxAdapter(
             child: Padding(
               padding: EdgeInsets.only(
-                left: padding.left,
-                right: padding.right,
-                top: showHeader ? 16 : 24,
+                left: layout.padding.left,
+                right: layout.padding.right,
+                top: layout.showHeader ? 16 : 24,
                 bottom: 16,
               ),
               child: _buildNameInput(context, l10n),
@@ -260,14 +253,19 @@ class _BuildOwnPageState extends ConsumerState<BuildOwnPage> {
           // Search bar
           SliverToBoxAdapter(
             child: Padding(
-              padding: EdgeInsets.symmetric(horizontal: padding.left),
+              padding: EdgeInsets.symmetric(horizontal: layout.padding.left),
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   _buildSearchBar(context, l10n, searchInput),
                   const SizedBox(height: 8),
-                  _buildResultInfo(context, l10n, filteredItems.length,
-                      searchInput, selectionCount),
+                  _buildResultInfo(
+                    context,
+                    l10n,
+                    filteredItems.length,
+                    searchInput,
+                    selectionCount,
+                  ),
                 ],
               ),
             ),
@@ -281,11 +279,7 @@ class _BuildOwnPageState extends ConsumerState<BuildOwnPage> {
                 child: Column(
                   mainAxisSize: MainAxisSize.min,
                   children: [
-                    Icon(
-                      Icons.search_off,
-                      size: 64,
-                      color: context.appNeutral,
-                    ),
+                    Icon(Icons.search_off, size: 64, color: context.appNeutral),
                     const SizedBox(height: 16),
                     Text(
                       l10n?.searchNoResults ?? 'No results found',
@@ -301,13 +295,16 @@ class _BuildOwnPageState extends ConsumerState<BuildOwnPage> {
             )
           else
             SliverPadding(
-              padding: padding.copyWith(top: 0, bottom: 80), // Space for FAB
+              padding: layout.padding.copyWith(
+                top: 0,
+                bottom: 80,
+              ), // Space for FAB
               sliver: SliverGrid(
                 gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-                  crossAxisCount: columnCount,
-                  mainAxisSpacing: spacing,
-                  crossAxisSpacing: spacing,
-                  childAspectRatio: aspectRatio,
+                  crossAxisCount: layout.columnCount,
+                  mainAxisSpacing: layout.spacing,
+                  crossAxisSpacing: layout.spacing,
+                  childAspectRatio: layout.aspectRatio,
                 ),
                 delegate: SliverChildBuilderDelegate(
                   (context, index) {
@@ -319,6 +316,7 @@ class _BuildOwnPageState extends ConsumerState<BuildOwnPage> {
                     final isSelected = selectedIds.contains(item.id);
 
                     return SelectableLibraryCard(
+                      key: ValueKey(item.id),
                       item: item,
                       caption: translatedCaption,
                       isSelected: isSelected,
@@ -326,6 +324,9 @@ class _BuildOwnPageState extends ConsumerState<BuildOwnPage> {
                     );
                   },
                   childCount: filteredItems.length,
+                  // Optimize memory for selection grids
+                  addAutomaticKeepAlives: false,
+                  addRepaintBoundaries: true,
                 ),
               ),
             ),
@@ -363,10 +364,7 @@ class _BuildOwnPageState extends ConsumerState<BuildOwnPage> {
           ),
         ),
         focusedBorder: UnderlineInputBorder(
-          borderSide: BorderSide(
-            color: context.appPrimary,
-            width: 2,
-          ),
+          borderSide: BorderSide(color: context.appPrimary, width: 2),
         ),
         contentPadding: const EdgeInsets.symmetric(vertical: 8),
       ),
@@ -391,16 +389,10 @@ class _BuildOwnPageState extends ConsumerState<BuildOwnPage> {
           fontFamily: 'InstrumentSans',
           color: context.appNeutral,
         ),
-        prefixIcon: Icon(
-          Icons.search,
-          color: context.appCardBorder,
-        ),
+        prefixIcon: Icon(Icons.search, color: context.appCardBorder),
         suffixIcon: searchInput.isNotEmpty
             ? IconButton(
-                icon: Icon(
-                  Icons.clear,
-                  color: context.appNeutral,
-                ),
+                icon: Icon(Icons.clear, color: context.appNeutral),
                 onPressed: () {
                   searchNotifier.clearSearch();
                   _searchController.clear();
@@ -455,11 +447,7 @@ class _BuildOwnPageState extends ConsumerState<BuildOwnPage> {
           // Empty state prompt
           Row(
             children: [
-              Icon(
-                Icons.touch_app,
-                size: 16,
-                color: context.appPrimary,
-              ),
+              Icon(Icons.touch_app, size: 16, color: context.appPrimary),
               const SizedBox(width: 6),
               Text(
                 l10n?.emptyTemplatePrompt ??
