@@ -6,7 +6,6 @@ import '../features/build_own/presentation/build_own_providers.dart';
 import '../localization/app_localizations.dart';
 import '../routing/routes.dart';
 import '../theme/app_colors.dart';
-import 'theme_toggle.dart';
 
 /// Data class for sidebar navigation items.
 /// Uses a localization key instead of hardcoded label.
@@ -42,6 +41,8 @@ class SidebarItemData {
         return l10n?.navBuildOwn ?? 'Build your own';
       case 'navLibrary':
         return l10n?.navLibrary ?? 'Library';
+      case 'navSettings':
+        return l10n?.navSettings ?? 'Settings';
       default:
         return labelKey;
     }
@@ -75,6 +76,11 @@ class SidebarConfig {
       labelKey: 'navLibrary',
       route: Routes.library,
       testKey: 'sidebar_item_library',
+    ),
+    SidebarItemData(
+      labelKey: 'navSettings',
+      route: Routes.settings,
+      testKey: 'sidebar_item_settings',
     ),
   ];
 
@@ -113,12 +119,14 @@ class Sidebar extends ConsumerWidget {
 
     // Build dynamic sidebar items from custom templates
     final customTemplateItems = customTemplates
-        .map((template) => SidebarItemData(
-              labelKey: template.name,
-              route: Routes.customTemplatePath(template.id),
-              testKey: 'sidebar_item_template_${template.id}',
-              isCustomTemplate: true,
-            ))
+        .map(
+          (template) => SidebarItemData(
+            labelKey: template.name,
+            route: Routes.customTemplatePath(template.id),
+            testKey: 'sidebar_item_template_${template.id}',
+            isCustomTemplate: true,
+          ),
+        )
         .toList();
 
     return Container(
@@ -134,12 +142,10 @@ class Sidebar extends ConsumerWidget {
                 crossAxisAlignment: CrossAxisAlignment.stretch,
                 children: [
                   // Top static items (Before Visit, During Visit)
-                  ...SidebarConfig.topItems.map((item) => _buildSidebarItem(
-                        context,
-                        item,
-                        l10n,
-                        currentRoute,
-                      )),
+                  ...SidebarConfig.topItems.map(
+                    (item) =>
+                        _buildSidebarItem(context, item, l10n, currentRoute),
+                  ),
                   // Loading indicator for custom templates
                   if (isLoading)
                     Padding(
@@ -172,30 +178,21 @@ class Sidebar extends ConsumerWidget {
                     ),
                   // Dynamic custom template items
                   if (!isLoading)
-                    ...customTemplateItems.map((item) => _buildSidebarItem(
-                          context,
-                          item,
-                          l10n,
-                          currentRoute,
-                        )),
+                    ...customTemplateItems.map(
+                      (item) =>
+                          _buildSidebarItem(context, item, l10n, currentRoute),
+                    ),
                   // Bottom static items (Build Your Own, Library)
-                  ...SidebarConfig.bottomItems.map((item) => _buildSidebarItem(
-                        context,
-                        item,
-                        l10n,
-                        currentRoute,
-                      )),
+                  ...SidebarConfig.bottomItems.map(
+                    (item) =>
+                        _buildSidebarItem(context, item, l10n, currentRoute),
+                  ),
                 ],
               ),
             ),
           ),
-          // Theme toggle at the bottom (always visible)
-          const Padding(
-            padding: EdgeInsets.only(bottom: 24, top: 16),
-            child: Center(
-              child: ThemeToggle(),
-            ),
-          ),
+          // Bottom padding
+          const SizedBox(height: 24),
         ],
       ),
     );
@@ -255,8 +252,9 @@ class SidebarItem extends StatelessWidget {
           color: isActive
               ? context.appSidebarItemActive
               : context.appSidebarItemBackground,
-          border:
-              isActive ? Border.all(color: context.appPrimary, width: 2) : null,
+          border: isActive
+              ? Border.all(color: context.appPrimary, width: 2)
+              : null,
         ),
         child: Center(
           child: Row(
@@ -271,8 +269,8 @@ class SidebarItem extends StatelessWidget {
                   color: isActive
                       ? context.appPrimary
                       : (isDark
-                          ? AppColors.sidebarItemTextDark
-                          : AppColors.sidebarItemText),
+                            ? AppColors.sidebarItemTextDark
+                            : AppColors.sidebarItemText),
                 ),
                 const SizedBox(width: 8),
               ],
@@ -286,8 +284,8 @@ class SidebarItem extends StatelessWidget {
                     color: isActive
                         ? context.appPrimary
                         : (isDark
-                            ? AppColors.sidebarItemTextDark
-                            : AppColors.sidebarItemText),
+                              ? AppColors.sidebarItemTextDark
+                              : AppColors.sidebarItemText),
                   ),
                   overflow: TextOverflow.ellipsis,
                   maxLines: 1,

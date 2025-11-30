@@ -155,4 +155,61 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get duplicateNameError => 'A template with this name already exists';
+
+  @override
+  String get navSettings => 'Settings';
+
+  @override
+  String get settingsTitle => 'Settings';
+
+  @override
+  String get settingsAppearance => 'Appearance';
+
+  @override
+  String get settingsSpeech => 'Speech';
+
+  @override
+  String get settingsTheme => 'Theme';
+
+  @override
+  String get settingsThemeLight => 'Light';
+
+  @override
+  String get settingsThemeDark => 'Dark';
+
+  @override
+  String get settingsThemeSystem => 'System';
+
+  @override
+  String get settingsSpeechRate => 'Speech Rate';
+
+  @override
+  String get settingsSpeechRateSlow => 'Slow';
+
+  @override
+  String get settingsSpeechRateNormal => 'Normal';
+
+  @override
+  String get settingsSpeechRateFast => 'Fast';
+
+  @override
+  String get settingsSpeechRateVeryFast => 'Very Fast';
+
+  @override
+  String get settingsVoice => 'Voice';
+
+  @override
+  String get settingsVoiceFemale => 'Female';
+
+  @override
+  String get settingsVoiceMale => 'Male';
+
+  @override
+  String get settingsTestSpeech => 'Test Speech';
+
+  @override
+  String get settingsTestSpeechHint => 'Tap to hear a sample';
+
+  @override
+  String get settingsTestSpeechSample => 'Hello! This is a test.';
 }

@@ -726,7 +726,7 @@ class _CustomTemplatePageState extends ConsumerState<CustomTemplatePage> {
     // Calculate item size based on available width
     final availableWidth = MediaQuery.of(context).size.width -
         Responsive.getContentPadding(context).horizontal -
-        (Responsive.shouldShowPageHeader(context) ? 250 : 0);
+        (Responsive.shouldShowPageHeader(context) ? AppConstants.sidebarWidth : 0);
     final itemWidth =
         (availableWidth - (spacing * (columnCount - 1))) / columnCount;
     final itemHeight = itemWidth / aspectRatio;

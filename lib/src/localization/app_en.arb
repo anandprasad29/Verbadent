@@ -193,5 +193,81 @@
   "duplicateNameError": "A template with this name already exists",
   "@duplicateNameError": {
     "description": "Error when template name is duplicate"
+  },
+  "navSettings": "Settings",
+  "@navSettings": {
+    "description": "Navigation label for settings"
+  },
+  "settingsTitle": "Settings",
+  "@settingsTitle": {
+    "description": "Settings page title"
+  },
+  "settingsAppearance": "Appearance",
+  "@settingsAppearance": {
+    "description": "Appearance section header"
+  },
+  "settingsSpeech": "Speech",
+  "@settingsSpeech": {
+    "description": "Speech section header"
+  },
+  "settingsTheme": "Theme",
+  "@settingsTheme": {
+    "description": "Theme setting label"
+  },
+  "settingsThemeLight": "Light",
+  "@settingsThemeLight": {
+    "description": "Light theme option"
+  },
+  "settingsThemeDark": "Dark",
+  "@settingsThemeDark": {
+    "description": "Dark theme option"
+  },
+  "settingsThemeSystem": "System",
+  "@settingsThemeSystem": {
+    "description": "System theme option"
+  },
+  "settingsSpeechRate": "Speech Rate",
+  "@settingsSpeechRate": {
+    "description": "Speech rate setting label"
+  },
+  "settingsSpeechRateSlow": "Slow",
+  "@settingsSpeechRateSlow": {
+    "description": "Slow speech rate"
+  },
+  "settingsSpeechRateNormal": "Normal",
+  "@settingsSpeechRateNormal": {
+    "description": "Normal speech rate"
+  },
+  "settingsSpeechRateFast": "Fast",
+  "@settingsSpeechRateFast": {
+    "description": "Fast speech rate"
+  },
+  "settingsSpeechRateVeryFast": "Very Fast",
+  "@settingsSpeechRateVeryFast": {
+    "description": "Very fast speech rate"
+  },
+  "settingsVoice": "Voice",
+  "@settingsVoice": {
+    "description": "Voice setting label"
+  },
+  "settingsVoiceFemale": "Female",
+  "@settingsVoiceFemale": {
+    "description": "Female voice option"
+  },
+  "settingsVoiceMale": "Male",
+  "@settingsVoiceMale": {
+    "description": "Male voice option"
+  },
+  "settingsTestSpeech": "Test Speech",
+  "@settingsTestSpeech": {
+    "description": "Test speech button label"
+  },
+  "settingsTestSpeechHint": "Tap to hear a sample",
+  "@settingsTestSpeechHint": {
+    "description": "Test speech hint"
+  },
+  "settingsTestSpeechSample": "Hello! This is a test.",
+  "@settingsTestSpeechSample": {
+    "description": "Sample text for TTS test"
   }
 }

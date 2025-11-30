@@ -53,13 +53,14 @@ class StorySequence extends StatelessWidget {
           final totalArrowSpace = arrowCount * (arrowWidth + arrowPadding * 2);
 
           // Calculate item size to fit all items in available width
-          final calculatedItemSize = (availableWidth - totalArrowSpace) / itemCount;
-          
+          final calculatedItemSize =
+              (availableWidth - totalArrowSpace) / itemCount;
+
           // Use minimum size if calculated size is too small
-          final itemSize = calculatedItemSize < _minItemSize 
-              ? _minItemSize 
+          final itemSize = calculatedItemSize < _minItemSize
+              ? _minItemSize
               : calculatedItemSize;
-          
+
           // Check if we need to scroll (items don't fit in available width)
           final needsScroll = calculatedItemSize < _minItemSize;
 
@@ -94,20 +95,24 @@ class StorySequence extends StatelessWidget {
           : items[i].caption;
 
       // Add the story item
-      widgets.add(_StoryItem(
-        item: items[i],
-        caption: caption,
-        size: itemSize,
-        onTap: onItemTap != null ? () => onItemTap!(items[i]) : null,
-      ));
+      widgets.add(
+        _StoryItem(
+          item: items[i],
+          caption: caption,
+          size: itemSize,
+          onTap: onItemTap != null ? () => onItemTap!(items[i]) : null,
+        ),
+      );
 
       // Add arrow between items (not after the last one)
       if (i < items.length - 1) {
-        widgets.add(_ArrowConnector(
-          width: arrowWidth,
-          horizontalPadding: arrowPadding,
-          imageSize: itemSize,
-        ));
+        widgets.add(
+          _ArrowConnector(
+            width: arrowWidth,
+            horizontalPadding: arrowPadding,
+            imageSize: itemSize,
+          ),
+        );
       }
     }
 
@@ -132,6 +137,11 @@ class _StoryItem extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    // Calculate optimal cache size based on display size and pixel ratio
+    // This reduces memory usage by ~70-90% for oversized source images
+    final pixelRatio = MediaQuery.devicePixelRatioOf(context);
+    final cacheSize = (size * pixelRatio).ceil();
+
     return Semantics(
       label: caption,
       button: true,
@@ -151,8 +161,9 @@ class _StoryItem extends StatelessWidget {
                     color: context.appCardBorder,
                     width: AppConstants.cardBorderWidth,
                   ),
-                  borderRadius:
-                      BorderRadius.circular(AppConstants.cardBorderRadius),
+                  borderRadius: BorderRadius.circular(
+                    AppConstants.cardBorderRadius,
+                  ),
                 ),
                 child: ClipRRect(
                   borderRadius: BorderRadius.circular(
@@ -162,6 +173,9 @@ class _StoryItem extends StatelessWidget {
                   child: Image.asset(
                     item.imagePath,
                     fit: BoxFit.cover,
+                    // Decode image at display size to reduce memory usage
+                    cacheWidth: cacheSize,
+                    cacheHeight: cacheSize,
                     errorBuilder: (context, error, stackTrace) {
                       return Container(
                         color: context.appBackground,
@@ -262,5 +276,6 @@ class _ArrowPainter extends CustomPainter {
   }
 
   @override
-  bool shouldRepaint(covariant CustomPainter oldDelegate) => false;
+  bool shouldRepaint(covariant _ArrowPainter oldDelegate) =>
+      oldDelegate.color != color;
 }

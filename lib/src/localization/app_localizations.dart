@@ -361,6 +361,120 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'A template with this name already exists'**
   String get duplicateNameError;
+
+  /// Navigation label for settings
+  ///
+  /// In en, this message translates to:
+  /// **'Settings'**
+  String get navSettings;
+
+  /// Settings page title
+  ///
+  /// In en, this message translates to:
+  /// **'Settings'**
+  String get settingsTitle;
+
+  /// Appearance section header
+  ///
+  /// In en, this message translates to:
+  /// **'Appearance'**
+  String get settingsAppearance;
+
+  /// Speech section header
+  ///
+  /// In en, this message translates to:
+  /// **'Speech'**
+  String get settingsSpeech;
+
+  /// Theme setting label
+  ///
+  /// In en, this message translates to:
+  /// **'Theme'**
+  String get settingsTheme;
+
+  /// Light theme option
+  ///
+  /// In en, this message translates to:
+  /// **'Light'**
+  String get settingsThemeLight;
+
+  /// Dark theme option
+  ///
+  /// In en, this message translates to:
+  /// **'Dark'**
+  String get settingsThemeDark;
+
+  /// System theme option
+  ///
+  /// In en, this message translates to:
+  /// **'System'**
+  String get settingsThemeSystem;
+
+  /// Speech rate setting label
+  ///
+  /// In en, this message translates to:
+  /// **'Speech Rate'**
+  String get settingsSpeechRate;
+
+  /// Slow speech rate
+  ///
+  /// In en, this message translates to:
+  /// **'Slow'**
+  String get settingsSpeechRateSlow;
+
+  /// Normal speech rate
+  ///
+  /// In en, this message translates to:
+  /// **'Normal'**
+  String get settingsSpeechRateNormal;
+
+  /// Fast speech rate
+  ///
+  /// In en, this message translates to:
+  /// **'Fast'**
+  String get settingsSpeechRateFast;
+
+  /// Very fast speech rate
+  ///
+  /// In en, this message translates to:
+  /// **'Very Fast'**
+  String get settingsSpeechRateVeryFast;
+
+  /// Voice setting label
+  ///
+  /// In en, this message translates to:
+  /// **'Voice'**
+  String get settingsVoice;
+
+  /// Female voice option
+  ///
+  /// In en, this message translates to:
+  /// **'Female'**
+  String get settingsVoiceFemale;
+
+  /// Male voice option
+  ///
+  /// In en, this message translates to:
+  /// **'Male'**
+  String get settingsVoiceMale;
+
+  /// Test speech button label
+  ///
+  /// In en, this message translates to:
+  /// **'Test Speech'**
+  String get settingsTestSpeech;
+
+  /// Test speech hint
+  ///
+  /// In en, this message translates to:
+  /// **'Tap to hear a sample'**
+  String get settingsTestSpeechHint;
+
+  /// Sample text for TTS test
+  ///
+  /// In en, this message translates to:
+  /// **'Hello! This is a test.'**
+  String get settingsTestSpeechSample;
 }
 
 class _AppLocalizationsDelegate

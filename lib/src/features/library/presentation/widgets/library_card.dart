@@ -44,68 +44,83 @@ class LibraryCard extends StatelessWidget {
             // Square image container with blue border
             AspectRatio(
               aspectRatio: 1.0, // Square
-              child: Stack(
-                children: [
-                  Container(
-                    decoration: BoxDecoration(
-                      border: Border.all(
-                        color: isSpeaking
-                            ? context.appSpeakingIndicator
-                            : context.appCardBorder,
-                        width: isSpeaking
-                            ? AppConstants.cardBorderWidth + 1
-                            : AppConstants.cardBorderWidth,
-                      ),
-                      borderRadius:
-                          BorderRadius.circular(AppConstants.cardBorderRadius),
-                    ),
-                    child: ClipRRect(
-                      borderRadius: BorderRadius.circular(
-                        AppConstants.cardBorderRadius -
-                            AppConstants.cardBorderWidth,
-                      ),
-                      child: Image.asset(
-                        item.imagePath,
-                        fit: BoxFit.cover,
-                        width: double.infinity,
-                        height: double.infinity,
-                        errorBuilder: (context, error, stackTrace) {
-                          // Placeholder for missing images
-                          return Container(
-                            color: context.appBackground,
-                            child: Icon(
-                              Icons.medical_services_outlined,
-                              size: 48,
-                              color: context.appCardBorder,
-                            ),
-                          );
-                        },
-                      ),
-                    ),
-                  ),
-                  // Speaking indicator overlay
-                  if (isSpeaking)
-                    Positioned(
-                      top: 8,
-                      right: 8,
-                      child: Container(
-                        padding: const EdgeInsets.all(6),
+              child: LayoutBuilder(
+                builder: (context, constraints) {
+                  // Calculate optimal cache size based on display size and pixel ratio
+                  // This reduces memory usage by ~70-90% for oversized source images
+                  final displaySize = constraints.maxWidth;
+                  final pixelRatio = MediaQuery.devicePixelRatioOf(context);
+                  final cacheSize = (displaySize * pixelRatio).ceil();
+
+                  return Stack(
+                    children: [
+                      Container(
                         decoration: BoxDecoration(
-                          color:
-                              context.appCardBackground.withValues(alpha: 0.9),
-                          borderRadius: BorderRadius.circular(16),
-                          boxShadow: [
-                            BoxShadow(
-                              color: Colors.black.withValues(alpha: 0.1),
-                              blurRadius: 4,
-                              offset: const Offset(0, 2),
-                            ),
-                          ],
+                          border: Border.all(
+                            color: isSpeaking
+                                ? context.appSpeakingIndicator
+                                : context.appCardBorder,
+                            width: isSpeaking
+                                ? AppConstants.cardBorderWidth + 1
+                                : AppConstants.cardBorderWidth,
+                          ),
+                          borderRadius: BorderRadius.circular(
+                            AppConstants.cardBorderRadius,
+                          ),
                         ),
-                        child: const SpeakingIndicator(size: 18),
+                        child: ClipRRect(
+                          borderRadius: BorderRadius.circular(
+                            AppConstants.cardBorderRadius -
+                                AppConstants.cardBorderWidth,
+                          ),
+                          child: Image.asset(
+                            item.imagePath,
+                            fit: BoxFit.cover,
+                            width: double.infinity,
+                            height: double.infinity,
+                            // Decode image at display size to reduce memory usage
+                            cacheWidth: cacheSize,
+                            cacheHeight: cacheSize,
+                            errorBuilder: (context, error, stackTrace) {
+                              // Placeholder for missing images
+                              return Container(
+                                color: context.appBackground,
+                                child: Icon(
+                                  Icons.medical_services_outlined,
+                                  size: 48,
+                                  color: context.appCardBorder,
+                                ),
+                              );
+                            },
+                          ),
+                        ),
                       ),
-                    ),
-                ],
+                      // Speaking indicator overlay
+                      if (isSpeaking)
+                        Positioned(
+                          top: 8,
+                          right: 8,
+                          child: Container(
+                            padding: const EdgeInsets.all(6),
+                            decoration: BoxDecoration(
+                              color: context.appCardBackground.withValues(
+                                alpha: 0.9,
+                              ),
+                              borderRadius: BorderRadius.circular(16),
+                              boxShadow: [
+                                BoxShadow(
+                                  color: Colors.black.withValues(alpha: 0.1),
+                                  blurRadius: 4,
+                                  offset: const Offset(0, 2),
+                                ),
+                              ],
+                            ),
+                            child: const SpeakingIndicator(size: 18),
+                          ),
+                        ),
+                    ],
+                  );
+                },
               ),
             ),
             const SizedBox(height: 8),
