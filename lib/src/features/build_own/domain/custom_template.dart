@@ -89,3 +89,4 @@ class CustomTemplate {
   String toString() =>
       'CustomTemplate(id: $id, name: $name, items: ${selectedItemIds.length})';
 }
+

@@ -90,3 +90,4 @@ Future<TemplateStorageService> templateStorageService(Ref ref) async {
   final prefs = await ref.watch(sharedPreferencesProvider.future);
   return TemplateStorageService(prefs);
 }
+

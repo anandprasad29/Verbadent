@@ -535,7 +535,7 @@ class _ReorderableWrapState extends State<ReorderableWrap> {
               transform: isDragging
                   ? Matrix4.identity()
                   : (isTarget
-                      ? (Matrix4.identity()..scale(1.05))
+                      ? (Matrix4.identity()..scale(1.05, 1.05, 1.0))
                       : Matrix4.identity()),
               decoration: isTarget
                   ? BoxDecoration(
