@@ -3,7 +3,7 @@ import '../../../constants/app_constants.dart';
 import '../../../theme/app_colors.dart';
 import '../../../widgets/app_shell.dart';
 
-/// Main dashboard page displaying the VERBADENT title.
+/// Main dashboard page displaying the VERBIDENT title.
 /// The title scales to fit the available width to handle landscape orientation.
 class DashboardPage extends StatelessWidget {
   const DashboardPage({super.key});
@@ -29,7 +29,7 @@ class DashboardPage extends StatelessWidget {
             child: FittedBox(
               fit: BoxFit.scaleDown,
               child: Text(
-                'VERBADENT',
+                'VERBIDENT',
                 style: TextStyle(
                   fontFamily: 'KumarOne',
                   // Use larger base size, FittedBox will scale down if needed
@@ -50,7 +50,7 @@ class DashboardPage extends StatelessWidget {
   /// Returns a size that should fit well, with FittedBox handling edge cases.
   double _calculateFontSize(double contentWidth) {
     // Target: text should be about 70% of content width
-    // VERBADENT has 9 characters, Kumar One is a wide font
+    // VERBIDENT has 9 characters, Kumar One is a wide font
     // Approximate character width ratio for Kumar One: ~0.7
     const charCount = 9;
     const charWidthRatio = 0.7;

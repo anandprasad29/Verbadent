@@ -1,13 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import 'package:verbadent/src/common/widgets/error_boundary.dart';
-import 'package:verbadent/src/common/widgets/skeleton_card.dart';
-import 'package:verbadent/src/common/widgets/speaking_indicator.dart';
-import 'package:verbadent/src/common/widgets/accessible_tap_target.dart';
-import 'package:verbadent/src/features/library/data/library_data.dart';
-import 'package:verbadent/src/features/library/domain/library_item.dart';
-import 'package:verbadent/src/features/library/presentation/widgets/library_card.dart';
+import 'package:verbident/src/common/widgets/error_boundary.dart';
+import 'package:verbident/src/common/widgets/skeleton_card.dart';
+import 'package:verbident/src/common/widgets/speaking_indicator.dart';
+import 'package:verbident/src/common/widgets/accessible_tap_target.dart';
+import 'package:verbident/src/features/library/data/library_data.dart';
+import 'package:verbident/src/features/library/domain/library_item.dart';
+import 'package:verbident/src/features/library/presentation/widgets/library_card.dart';
 
 void main() {
   setUpAll(() {

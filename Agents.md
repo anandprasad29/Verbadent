@@ -1,7 +1,7 @@
-                                                            # Verbadent CareQuest - AI Context & Agent Guide
+                                                            # Verbident CareQuest - AI Context & Agent Guide
 
 ## Project Overview
-Verbadent CareQuest is a Flutter application for dental/healthcare management, targeting **iOS and Android** across **mobile phones and tablets**. It focuses on responsive design to support different screen sizes seamlessly.
+Verbident CareQuest is a Flutter application for dental/healthcare management, targeting **iOS and Android** across **mobile phones and tablets**. It focuses on responsive design to support different screen sizes seamlessly.
 
 ## Deployment Platforms
 | Platform | Device Types | Status |

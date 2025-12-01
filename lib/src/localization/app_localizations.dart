@@ -101,7 +101,7 @@ abstract class AppLocalizations {
   /// The title of the application
   ///
   /// In en, this message translates to:
-  /// **'Verbadent CareQuest'**
+  /// **'Verbident CareQuest'**
   String get appTitle;
 
   /// Navigation label for library section

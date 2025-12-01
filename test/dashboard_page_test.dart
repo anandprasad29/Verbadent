@@ -4,10 +4,10 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:go_router/go_router.dart';
 import 'package:golden_toolkit/golden_toolkit.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import 'package:verbadent/src/constants/app_constants.dart';
-import 'package:verbadent/src/features/dashboard/presentation/dashboard_page.dart';
-import 'package:verbadent/src/theme/app_colors.dart';
-import 'package:verbadent/src/widgets/sidebar.dart';
+import 'package:verbident/src/constants/app_constants.dart';
+import 'package:verbident/src/features/dashboard/presentation/dashboard_page.dart';
+import 'package:verbident/src/theme/app_colors.dart';
+import 'package:verbident/src/widgets/sidebar.dart';
 
 void main() {
   setUpAll(() async {
@@ -46,7 +46,7 @@ void main() {
 
   group('DashboardPage Widget Tests', () {
     group('Desktop Layout', () {
-      testWidgets('displays VERBADENT title', (tester) async {
+      testWidgets('displays VERBIDENT title', (tester) async {
         tester.view.physicalSize = const Size(1024, 768);
         tester.view.devicePixelRatio = 1.0;
 
@@ -56,7 +56,7 @@ void main() {
           ),
         );
 
-        expect(find.text('VERBADENT'), findsOneWidget);
+        expect(find.text('VERBIDENT'), findsOneWidget);
 
         tester.view.resetPhysicalSize();
         tester.view.resetDevicePixelRatio();
@@ -88,7 +88,7 @@ void main() {
           ),
         );
 
-        final text = tester.widget<Text>(find.text('VERBADENT'));
+        final text = tester.widget<Text>(find.text('VERBIDENT'));
         // Font size is calculated dynamically and clamped between mobile and desktop sizes
         expect(text.style?.fontSize, isNotNull);
         expect(text.style!.fontSize!, greaterThanOrEqualTo(AppConstants.titleFontSizeMobile));
@@ -131,7 +131,7 @@ void main() {
 
         expect(
           find.ancestor(
-            of: find.text('VERBADENT'),
+            of: find.text('VERBIDENT'),
             matching: find.byType(Center),
           ),
           findsOneWidget,
@@ -164,7 +164,7 @@ void main() {
     });
 
     group('Mobile Layout', () {
-      testWidgets('displays VERBADENT title', (tester) async {
+      testWidgets('displays VERBIDENT title', (tester) async {
         tester.view.physicalSize = const Size(400, 800);
         tester.view.devicePixelRatio = 1.0;
 
@@ -174,7 +174,7 @@ void main() {
           ),
         );
 
-        expect(find.text('VERBADENT'), findsOneWidget);
+        expect(find.text('VERBIDENT'), findsOneWidget);
 
         tester.view.resetPhysicalSize();
         tester.view.resetDevicePixelRatio();
@@ -206,7 +206,7 @@ void main() {
           ),
         );
 
-        final text = tester.widget<Text>(find.text('VERBADENT'));
+        final text = tester.widget<Text>(find.text('VERBIDENT'));
         // Font size is calculated dynamically and clamped between mobile and desktop sizes
         expect(text.style?.fontSize, isNotNull);
         expect(text.style!.fontSize!, greaterThanOrEqualTo(AppConstants.titleFontSizeMobile));
@@ -309,7 +309,7 @@ void main() {
           ),
         );
 
-        final text = tester.widget<Text>(find.text('VERBADENT'));
+        final text = tester.widget<Text>(find.text('VERBIDENT'));
         // Font size is dynamically calculated based on available width
         expect(text.style?.fontSize, isNotNull);
         expect(text.style!.fontSize!, greaterThanOrEqualTo(AppConstants.titleFontSizeMobile));
@@ -331,7 +331,7 @@ void main() {
           ),
         );
 
-        final text = tester.widget<Text>(find.text('VERBADENT'));
+        final text = tester.widget<Text>(find.text('VERBIDENT'));
         // Font size is dynamically calculated based on available width
         expect(text.style?.fontSize, isNotNull);
         expect(text.style!.fontSize!, greaterThanOrEqualTo(AppConstants.titleFontSizeMobile));
@@ -361,7 +361,7 @@ void main() {
         expect(find.byType(FittedBox), findsOneWidget);
 
         // Text should be visible
-        expect(find.text('VERBADENT'), findsOneWidget);
+        expect(find.text('VERBIDENT'), findsOneWidget);
 
         // No overflow errors should occur
         expect(tester.takeException(), isNull);
@@ -384,7 +384,7 @@ void main() {
 
         // FittedBox should handle sizing
         expect(find.byType(FittedBox), findsOneWidget);
-        expect(find.text('VERBADENT'), findsOneWidget);
+        expect(find.text('VERBIDENT'), findsOneWidget);
         expect(tester.takeException(), isNull);
 
         tester.view.resetPhysicalSize();
@@ -404,7 +404,7 @@ void main() {
         );
 
         expect(find.byType(FittedBox), findsOneWidget);
-        expect(find.text('VERBADENT'), findsOneWidget);
+        expect(find.text('VERBIDENT'), findsOneWidget);
         expect(tester.takeException(), isNull);
 
         tester.view.resetPhysicalSize();
@@ -461,7 +461,7 @@ void main() {
           ),
         );
 
-        final text = tester.widget<Text>(find.text('VERBADENT'));
+        final text = tester.widget<Text>(find.text('VERBIDENT'));
         expect(text.style?.fontFamily, equals('KumarOne'));
 
         tester.view.resetPhysicalSize();
@@ -478,7 +478,7 @@ void main() {
           ),
         );
 
-        final text = tester.widget<Text>(find.text('VERBADENT'));
+        final text = tester.widget<Text>(find.text('VERBIDENT'));
         // Text should be dark on white background
         expect(text.style?.color, equals(AppColors.textTitle));
 

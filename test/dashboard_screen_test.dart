@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:golden_toolkit/golden_toolkit.dart';
-import 'package:verbadent/dashboard_screen.dart';
+import 'package:verbident/dashboard_screen.dart';
 
 void main() {
   // Load fonts for golden tests

@@ -7,14 +7,14 @@ import 'src/routing/app_router.dart';
 import 'src/theme/app_theme.dart';
 import 'src/theme/theme_provider.dart';
 
-class VerbadentApp extends ConsumerStatefulWidget {
-  const VerbadentApp({super.key});
+class VerbidentApp extends ConsumerStatefulWidget {
+  const VerbidentApp({super.key});
 
   @override
-  ConsumerState<VerbadentApp> createState() => _VerbadentAppState();
+  ConsumerState<VerbidentApp> createState() => _VerbidentAppState();
 }
 
-class _VerbadentAppState extends ConsumerState<VerbadentApp> {
+class _VerbidentAppState extends ConsumerState<VerbidentApp> {
   bool _initialized = false;
 
   @override
@@ -44,7 +44,7 @@ class _VerbadentAppState extends ConsumerState<VerbadentApp> {
 
     return MaterialApp.router(
       routerConfig: goRouter,
-      onGenerateTitle: (context) => 'Verbadent CareQuest',
+      onGenerateTitle: (context) => 'Verbident CareQuest',
       theme: AppTheme.staticLightTheme,
       darkTheme: AppTheme.staticDarkTheme,
       themeMode: themeMode.themeMode,

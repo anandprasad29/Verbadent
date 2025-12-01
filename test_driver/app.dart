@@ -3,7 +3,7 @@ import 'package:flutter/services.dart';
 import 'package:flutter_driver/driver_extension.dart';
 import 'package:flutter_native_splash/flutter_native_splash.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:verbadent/app.dart';
+import 'package:verbident/app.dart';
 
 void main() {
   // Enable Flutter Driver extension for UI automation
@@ -21,5 +21,5 @@ void main() {
     DeviceOrientation.landscapeRight,
   ]);
 
-  runApp(const ProviderScope(child: VerbadentApp()));
+  runApp(const ProviderScope(child: VerbidentApp()));
 }

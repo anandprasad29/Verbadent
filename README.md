@@ -1,6 +1,6 @@
-# Verbadent CareQuest
+# Verbident CareQuest
 
-Flutter application for Verbadent CareQuest deployed on **iOS and Android** across **mobile phones and tablets**.
+Flutter application for Verbident CareQuest deployed on **iOS and Android** across **mobile phones and tablets**.
 
 ## Deployment Platforms
 
@@ -33,7 +33,7 @@ Flutter application for Verbadent CareQuest deployed on **iOS and Android** acro
 ## Features
 
 ### Dashboard
-- Main landing page with VERBADENT branding
+- Main landing page with VERBIDENT branding
 - Responsive sidebar navigation (desktop) or drawer menu (mobile)
 
 ### Before the Visit

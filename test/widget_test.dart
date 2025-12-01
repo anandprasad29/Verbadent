@@ -9,7 +9,7 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:verbadent/app.dart';
+import 'package:verbident/app.dart';
 
 void main() {
   setUpAll(() {
@@ -19,7 +19,7 @@ void main() {
 
   testWidgets('App renders smoke test', (WidgetTester tester) async {
     // Build our app and trigger a frame.
-    await tester.pumpWidget(const ProviderScope(child: VerbadentApp()));
+    await tester.pumpWidget(const ProviderScope(child: VerbidentApp()));
 
     // Wait for the router to navigate and any splash screen/TTS timers to complete
     // The TTS service has a 3-second configuration timeout, so we need to wait longer
@@ -27,7 +27,7 @@ void main() {
     await tester.pumpAndSettle(const Duration(seconds: 1));
 
     // Verify that the dashboard title is present
-    expect(find.text('VERBADENT'), findsOneWidget);
+    expect(find.text('VERBIDENT'), findsOneWidget);
 
     // Pump additional frames to ensure all pending timers complete
     await tester.pump(const Duration(seconds: 2));

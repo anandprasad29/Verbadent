@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:golden_toolkit/golden_toolkit.dart';
-import 'package:verbadent/src/constants/app_constants.dart';
-import 'package:verbadent/src/features/library/domain/library_item.dart';
-import 'package:verbadent/src/features/library/presentation/widgets/library_card.dart';
-import 'package:verbadent/src/theme/app_colors.dart';
+import 'package:verbident/src/constants/app_constants.dart';
+import 'package:verbident/src/features/library/domain/library_item.dart';
+import 'package:verbident/src/features/library/presentation/widgets/library_card.dart';
+import 'package:verbident/src/theme/app_colors.dart';
 
 void main() {
   // Load fonts for golden tests

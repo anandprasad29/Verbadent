@@ -1,7 +1,7 @@
 import 'package:flutter/services.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:verbadent/src/features/library/services/tts_service.dart';
-import 'package:verbadent/src/localization/content_language_provider.dart';
+import 'package:verbident/src/features/library/services/tts_service.dart';
+import 'package:verbident/src/localization/content_language_provider.dart';
 
 void main() {
   // Ensure Flutter bindings are initialized for platform channel tests

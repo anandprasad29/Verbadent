@@ -1,5 +1,5 @@
 #!/bin/bash
-# Watch script for Verbadent development
+# Watch script for Verbident development
 # Runs build_runner in watch mode and ensures localization files exist
 
 set -e  # Exit on error

@@ -5,11 +5,11 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:go_router/go_router.dart';
 import 'package:golden_toolkit/golden_toolkit.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import 'package:verbadent/src/features/library/data/library_data.dart';
-import 'package:verbadent/src/features/library/presentation/library_page.dart';
-import 'package:verbadent/src/features/library/presentation/library_search_provider.dart';
-import 'package:verbadent/src/features/library/presentation/widgets/library_card.dart';
-import 'package:verbadent/src/localization/content_language_provider.dart';
+import 'package:verbident/src/features/library/data/library_data.dart';
+import 'package:verbident/src/features/library/presentation/library_page.dart';
+import 'package:verbident/src/features/library/presentation/library_search_provider.dart';
+import 'package:verbident/src/features/library/presentation/widgets/library_card.dart';
+import 'package:verbident/src/localization/content_language_provider.dart';
 
 void main() {
   TestWidgetsFlutterBinding.ensureInitialized();

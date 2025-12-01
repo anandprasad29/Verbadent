@@ -5,7 +5,7 @@ import '../constants/app_constants.dart';
 /// Centralized text styles for the application.
 /// Use these instead of inline TextStyle definitions.
 class AppTextStyles {
-  // Main title style (VERBADENT)
+  // Main title style (VERBIDENT)
   static const TextStyle titleLarge = TextStyle(
     fontFamily: 'KumarOne',
     fontSize: AppConstants.titleFontSizeDesktop,

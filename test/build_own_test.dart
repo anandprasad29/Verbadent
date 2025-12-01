@@ -4,12 +4,12 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import 'package:verbadent/src/common/domain/dental_item.dart';
-import 'package:verbadent/src/features/build_own/data/template_storage_service.dart';
-import 'package:verbadent/src/features/build_own/domain/custom_template.dart';
-import 'package:verbadent/src/features/build_own/presentation/build_own_providers.dart';
-import 'package:verbadent/src/features/build_own/presentation/widgets/selectable_library_card.dart';
-import 'package:verbadent/src/features/library/data/library_data.dart';
+import 'package:verbident/src/common/domain/dental_item.dart';
+import 'package:verbident/src/features/build_own/data/template_storage_service.dart';
+import 'package:verbident/src/features/build_own/domain/custom_template.dart';
+import 'package:verbident/src/features/build_own/presentation/build_own_providers.dart';
+import 'package:verbident/src/features/build_own/presentation/widgets/selectable_library_card.dart';
+import 'package:verbident/src/features/library/data/library_data.dart';
 
 void main() {
   group('CustomTemplate', () {

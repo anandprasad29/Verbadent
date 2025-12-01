@@ -4,10 +4,10 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:go_router/go_router.dart';
 import 'package:golden_toolkit/golden_toolkit.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import 'package:verbadent/src/constants/app_constants.dart';
-import 'package:verbadent/src/theme/app_colors.dart';
-import 'package:verbadent/src/widgets/app_shell.dart';
-import 'package:verbadent/src/widgets/sidebar.dart';
+import 'package:verbident/src/constants/app_constants.dart';
+import 'package:verbident/src/theme/app_colors.dart';
+import 'package:verbident/src/widgets/app_shell.dart';
+import 'package:verbident/src/widgets/sidebar.dart';
 
 void main() {
   setUpAll(() async {

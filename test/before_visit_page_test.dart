@@ -4,9 +4,9 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:go_router/go_router.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import 'package:verbadent/src/common/widgets/story_sequence.dart';
-import 'package:verbadent/src/features/before_visit/presentation/before_visit_page.dart';
-import 'package:verbadent/src/features/library/presentation/widgets/library_card.dart';
+import 'package:verbident/src/common/widgets/story_sequence.dart';
+import 'package:verbident/src/features/before_visit/presentation/before_visit_page.dart';
+import 'package:verbident/src/features/library/presentation/widgets/library_card.dart';
 
 void main() {
   TestWidgetsFlutterBinding.ensureInitialized();

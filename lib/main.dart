@@ -17,5 +17,5 @@ void main() {
     DeviceOrientation.landscapeRight,
   ]);
 
-  runApp(const ProviderScope(child: VerbadentApp()));
+  runApp(const ProviderScope(child: VerbidentApp()));
 }

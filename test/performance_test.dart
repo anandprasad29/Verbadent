@@ -3,8 +3,8 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:golden_toolkit/golden_toolkit.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import 'package:verbadent/src/features/library/data/library_data.dart';
-import 'package:verbadent/src/features/library/presentation/widgets/library_card.dart';
+import 'package:verbident/src/features/library/data/library_data.dart';
+import 'package:verbident/src/features/library/presentation/widgets/library_card.dart';
 
 void main() {
   setUpAll(() async {

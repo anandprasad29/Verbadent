@@ -1,5 +1,5 @@
 #!/bin/bash
-# Build script for Verbadent
+# Build script for Verbident
 # Runs build_runner and regenerates localization files
 
 set -e  # Exit on error

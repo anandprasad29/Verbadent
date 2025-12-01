@@ -22,7 +22,7 @@ class DashboardScreen extends StatelessWidget {
                     color: Colors.white,
                     child: const Center(
                       child: Text(
-                        'VERBADENT',
+                        'VERBIDENT',
                         style: TextStyle(
                           fontFamily: 'KumarOne',
                           fontSize: 80,
@@ -52,7 +52,7 @@ class DashboardScreen extends StatelessWidget {
               color: Colors.white,
               child: const Center(
                 child: Text(
-                  'VERBADENT',
+                  'VERBIDENT',
                   style: TextStyle(
                     fontFamily: 'KumarOne',
                     fontSize: 40, // Smaller font for mobile

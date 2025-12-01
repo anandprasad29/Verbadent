@@ -26,7 +26,7 @@ class HomePage extends StatelessWidget {
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
                   Text(
-                    'VERBADENT',
+                    'VERBIDENT',
                     style: theme.textTheme.displayLarge,
                     textAlign: TextAlign.center,
                   ),

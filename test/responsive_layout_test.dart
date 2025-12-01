@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:verbadent/src/constants/app_constants.dart';
-import 'package:verbadent/src/utils/responsive.dart';
+import 'package:verbident/src/constants/app_constants.dart';
+import 'package:verbident/src/utils/responsive.dart';
 
 void main() {
   group('Responsive Utilities', () {

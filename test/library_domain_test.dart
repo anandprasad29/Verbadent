@@ -1,6 +1,6 @@
 import 'package:flutter_test/flutter_test.dart';
-import 'package:verbadent/src/features/library/domain/library_item.dart';
-import 'package:verbadent/src/features/library/data/library_data.dart';
+import 'package:verbident/src/features/library/domain/library_item.dart';
+import 'package:verbident/src/features/library/data/library_data.dart';
 
 void main() {
   group('LibraryItem', () {

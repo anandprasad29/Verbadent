@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:verbadent/src/common/domain/dental_item.dart';
-import 'package:verbadent/src/common/widgets/story_sequence.dart';
-import 'package:verbadent/src/localization/content_language_provider.dart';
+import 'package:verbident/src/common/domain/dental_item.dart';
+import 'package:verbident/src/common/widgets/story_sequence.dart';
+import 'package:verbident/src/localization/content_language_provider.dart';
 
 void main() {
   group('StorySequence Widget', () {
