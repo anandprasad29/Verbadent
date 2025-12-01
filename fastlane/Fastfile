@@ -1,0 +1,94 @@
+# Fastlane configuration for Verbident
+
+default_platform(:ios)
+
+PROJECT_ROOT = File.expand_path("..", __dir__)
+
+# =====================
+# ANDROID LANES
+# =====================
+platform :android do
+  desc "Build and upload to Play Store Internal Testing"
+  lane :beta do
+    Dir.chdir(PROJECT_ROOT) do
+      sh("flutter build appbundle --release")
+    end
+    
+    upload_to_play_store(
+      track: "internal",
+      aab: "#{PROJECT_ROOT}/build/app/outputs/bundle/release/app-release.aab",
+      skip_upload_metadata: true,
+      skip_upload_images: true,
+      skip_upload_screenshots: true
+    )
+    
+    UI.success("✅ Android build uploaded to Internal Testing!")
+  end
+end
+
+# =====================
+# iOS LANES
+# =====================
+platform :ios do
+  desc "Build and upload to TestFlight"
+  lane :beta do
+    ENV["PATH"] = "/usr/bin:" + ENV["PATH"]
+    
+    api_key = app_store_connect_api_key(
+      key_id: "W663NX6L7M",
+      issuer_id: "f3d4bbef-fcdf-4d27-8e8f-ae2b998abb50",
+      key_filepath: "#{PROJECT_ROOT}/fastlane/AuthKey_W663NX6L7M.p8"
+    )
+    
+    # Get distribution certificate
+    get_certificates(
+      api_key: api_key,
+      platform: "ios"
+    )
+    
+    # Get App Store provisioning profile
+    get_provisioning_profile(
+      api_key: api_key,
+      app_identifier: "com.verbident",
+      platform: "ios"
+    )
+    
+    # Build Flutter
+    Dir.chdir(PROJECT_ROOT) do
+      sh("flutter build ios --release --no-codesign")
+    end
+    
+    # Build and sign
+    build_app(
+      workspace: "#{PROJECT_ROOT}/ios/Runner.xcworkspace",
+      scheme: "Runner",
+      export_method: "app-store",
+      output_directory: "#{PROJECT_ROOT}/build/ios/ipa",
+      output_name: "Verbadent.ipa"
+    )
+    
+    # Upload to TestFlight
+    upload_to_testflight(
+      api_key: api_key,
+      ipa: "#{PROJECT_ROOT}/build/ios/ipa/Verbadent.ipa",
+      skip_waiting_for_build_processing: true
+    )
+    
+    UI.success("✅ iOS build uploaded to TestFlight!")
+  end
+end
+
+# =====================
+# UTILITY LANES
+# =====================
+desc "Bump build number"
+lane :bump do
+  pubspec = File.read("#{PROJECT_ROOT}/pubspec.yaml")
+  match = pubspec.match(/version:\s*(\d+\.\d+\.\d+)\+(\d+)/)
+  new_build = match[2].to_i + 1
+  
+  new_pubspec = pubspec.gsub(/version:\s*\d+\.\d+\.\d+\+\d+/, "version: #{match[1]}+#{new_build}")
+  File.write("#{PROJECT_ROOT}/pubspec.yaml", new_pubspec)
+  
+  UI.success("✅ Build number bumped to #{new_build}")
+end

@@ -1,0 +1,10 @@
+# App identifiers for Fastlane
+
+# Android
+json_key_file("fastlane/play-store-key.json")
+package_name("com.verbident")
+
+# iOS
+app_identifier("com.verbident")
+apple_id("anandprasad29@gmail.com")
+team_id("BB38N67TSX")
