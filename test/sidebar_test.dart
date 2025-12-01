@@ -72,14 +72,14 @@ void main() {
       );
     });
 
-    testWidgets('renders all 5 sidebar items', (tester) async {
+    testWidgets('renders all 4 sidebar items', (tester) async {
       await tester.pumpWidget(
         ProviderScope(child: MaterialApp.router(routerConfig: testRouter)),
       );
 
-      // Verify all 5 sidebar items are present
+      // Verify all 4 sidebar items are present
+      // Note: "During the visit" is temporarily removed (TODO: add back when ready)
       expect(find.text('Before the visit'), findsOneWidget);
-      expect(find.text('During the visit'), findsOneWidget);
       expect(find.text('Build your own'), findsOneWidget);
       expect(find.text('Library'), findsOneWidget);
       expect(find.text('Settings'), findsOneWidget);
@@ -136,9 +136,10 @@ void main() {
         ProviderScope(child: MaterialApp.router(routerConfig: testRouter)),
       );
 
-      // Find SidebarItem widgets (2 top + 3 bottom = 5 total)
+      // Find SidebarItem widgets (1 top + 3 bottom = 4 total)
+      // Note: "During the visit" is temporarily removed
       final sidebarItemFinder = find.byType(SidebarItem);
-      expect(sidebarItemFinder, findsNWidgets(5));
+      expect(sidebarItemFinder, findsNWidgets(4));
     });
 
     testWidgets('sidebar items use KumarOne font', (tester) async {
@@ -160,12 +161,9 @@ void main() {
       );
 
       // Verify test keys are present
+      // Note: "During the visit" is temporarily removed (TODO: add back when ready)
       expect(
         find.byKey(const Key('sidebar_item_before_visit')),
-        findsOneWidget,
-      );
-      expect(
-        find.byKey(const Key('sidebar_item_during_visit')),
         findsOneWidget,
       );
       expect(find.byKey(const Key('sidebar_item_build_own')), findsOneWidget);
@@ -173,16 +171,17 @@ void main() {
       expect(find.byKey(const Key('sidebar_item_settings')), findsOneWidget);
     });
 
-    testWidgets('During the visit button navigates correctly', (tester) async {
-      await tester.pumpWidget(
-        ProviderScope(child: MaterialApp.router(routerConfig: testRouter)),
-      );
-
-      await tester.tap(find.text('During the visit'));
-      await tester.pumpAndSettle();
-
-      expect(navigatedTo, equals('/during-visit'));
-    });
+    // TODO: Add "During the visit" navigation test back when feature is ready
+    // testWidgets('During the visit button navigates correctly', (tester) async {
+    //   await tester.pumpWidget(
+    //     ProviderScope(child: MaterialApp.router(routerConfig: testRouter)),
+    //   );
+    //
+    //   await tester.tap(find.text('During the visit'));
+    //   await tester.pumpAndSettle();
+    //
+    //   expect(navigatedTo, equals('/during-visit'));
+    // });
 
     testWidgets('Build your own button navigates correctly', (tester) async {
       await tester.pumpWidget(
@@ -200,12 +199,13 @@ void main() {
         ProviderScope(child: MaterialApp.router(routerConfig: testRouter)),
       );
 
-      // Find SidebarItem containers (2 top + 3 bottom = 5 total)
+      // Find SidebarItem containers (1 top + 3 bottom = 4 total)
+      // Note: "During the visit" is temporarily removed
       final sidebarItems = tester.widgetList<SidebarItem>(
         find.byType(SidebarItem),
       );
 
-      expect(sidebarItems.length, equals(5));
+      expect(sidebarItems.length, equals(4));
     });
   });
 
@@ -475,10 +475,10 @@ void main() {
   });
 
   group('SidebarConfig', () {
-    test('topItems has Before Visit and During Visit', () {
-      expect(SidebarConfig.topItems.length, 2);
+    test('topItems has Before Visit', () {
+      // Note: "During the visit" is temporarily removed (TODO: add back when ready)
+      expect(SidebarConfig.topItems.length, 1);
       expect(SidebarConfig.topItems[0].route, '/before-visit');
-      expect(SidebarConfig.topItems[1].route, '/during-visit');
     });
 
     test('bottomItems has Build Your Own, Library, and Settings', () {
