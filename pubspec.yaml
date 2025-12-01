@@ -31,6 +31,7 @@ dev_dependencies:
   flutter_lints: ^5.0.0
   build_runner: ^2.4.9
   riverpod_generator: ^2.4.0
+  flutter_launcher_icons: ^0.14.3
 
 flutter:
   uses-material-design: true
@@ -49,6 +50,20 @@ flutter:
       fonts:
         - asset: fonts/InstrumentSans-Bold.ttf
           weight: 700
+
+# App icon configuration
+# Run: dart run flutter_launcher_icons
+flutter_launcher_icons:
+  android: "ic_launcher"
+  ios: true
+  image_path: "assets/icon/app_icon.png"
+  min_sdk_android: 21
+  remove_alpha_ios: true
+  # iOS-specific settings
+  ios_content_mode: scaleAspectFill
+  # Android adaptive icon (for Android 8.0+)
+  adaptive_icon_background: "#B8E4F0"
+  adaptive_icon_foreground: "assets/icon/app_icon.png"
 
 # Native splash screen configuration
 # Hides Flutter initialization frame drops behind a native splash
