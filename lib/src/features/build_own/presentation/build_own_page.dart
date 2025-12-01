@@ -445,20 +445,25 @@ class _BuildOwnPageState extends ConsumerState<BuildOwnPage> {
           )
         else if (selectionCount == 0)
           // Empty state prompt
-          Row(
-            children: [
-              Icon(Icons.touch_app, size: 16, color: context.appPrimary),
-              const SizedBox(width: 6),
-              Text(
-                l10n?.emptyTemplatePrompt ??
-                    'Tap images below to add them to your template',
-                style: TextStyle(
-                  fontFamily: 'InstrumentSans',
-                  fontSize: 14,
-                  color: context.appPrimary,
+          Flexible(
+            child: Row(
+              children: [
+                Icon(Icons.touch_app, size: 16, color: context.appPrimary),
+                const SizedBox(width: 6),
+                Flexible(
+                  child: Text(
+                    l10n?.emptyTemplatePrompt ??
+                        'Tap images below to add them to your template',
+                    style: TextStyle(
+                      fontFamily: 'InstrumentSans',
+                      fontSize: 14,
+                      color: context.appPrimary,
+                    ),
+                    overflow: TextOverflow.ellipsis,
+                  ),
                 ),
-              ),
-            ],
+              ],
+            ),
           ),
         const Spacer(),
         if (selectionCount > 0)

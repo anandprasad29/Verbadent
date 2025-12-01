@@ -30,10 +30,15 @@ class AppShell extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final isWideScreen =
-        MediaQuery.of(context).size.width >= AppConstants.sidebarBreakpoint;
+    final size = MediaQuery.of(context).size;
+    final isWideScreen = size.width >= AppConstants.sidebarBreakpoint;
 
-    if (isWideScreen) {
+    // On phones (shortest side < 600), always use hamburger menu
+    // This prevents sidebar from showing on phones in landscape mode
+    final shortestSide = size.shortestSide;
+    final isPhone = shortestSide < 600;
+
+    if (isWideScreen && !isPhone) {
       return _buildDesktopLayout(context);
     } else {
       return _buildMobileLayout(context);
