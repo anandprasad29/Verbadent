@@ -258,9 +258,8 @@ class SidebarItem extends StatelessWidget {
           color: isActive
               ? context.appSidebarItemActive
               : context.appSidebarItemBackground,
-          border: isActive
-              ? Border.all(color: context.appPrimary, width: 2)
-              : null,
+          border:
+              isActive ? Border.all(color: context.appPrimary, width: 2) : null,
         ),
         child: Center(
           child: Row(
@@ -275,8 +274,8 @@ class SidebarItem extends StatelessWidget {
                   color: isActive
                       ? context.appPrimary
                       : (isDark
-                            ? AppColors.sidebarItemTextDark
-                            : AppColors.sidebarItemText),
+                          ? AppColors.sidebarItemTextDark
+                          : AppColors.sidebarItemText),
                 ),
                 const SizedBox(width: 8),
               ],
@@ -290,8 +289,8 @@ class SidebarItem extends StatelessWidget {
                     color: isActive
                         ? context.appPrimary
                         : (isDark
-                              ? AppColors.sidebarItemTextDark
-                              : AppColors.sidebarItemText),
+                            ? AppColors.sidebarItemTextDark
+                            : AppColors.sidebarItemText),
                   ),
                   overflow: TextOverflow.ellipsis,
                   maxLines: 1,
