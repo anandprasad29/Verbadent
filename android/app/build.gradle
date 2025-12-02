@@ -5,6 +5,11 @@ plugins {
     id "dev.flutter.flutter-gradle-plugin"
 }
 
+// Apply Firebase plugins
+apply plugin: 'com.google.gms.google-services'
+apply plugin: 'com.google.firebase.crashlytics'
+apply plugin: 'com.google.firebase.firebase-perf'
+
 // Load key.properties for release signing
 def keystoreProperties = new Properties()
 def keystorePropertiesFile = rootProject.file('key.properties')

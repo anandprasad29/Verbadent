@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "527913988300",
+    "project_id": "verbident-app",
+    "storage_bucket": "verbident-app.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:527913988300:android:00c3ac3a70d942f32d9269",
+        "android_client_info": {
+          "package_name": "com.verbident"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAYoor6BLSWUT3dpdYwC1Beo5u5GtmWNhs"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
