@@ -19,7 +19,8 @@ platform :android do
       aab: "#{PROJECT_ROOT}/build/app/outputs/bundle/release/app-release.aab",
       skip_upload_metadata: true,
       skip_upload_images: true,
-      skip_upload_screenshots: true
+      skip_upload_screenshots: true,
+      release_status: "draft"
     )
     
     UI.success("✅ Android build uploaded to Internal Testing!")
