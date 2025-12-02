@@ -4,6 +4,7 @@ import '../../localization/content_language_provider.dart';
 import '../../localization/content_translations.dart';
 import '../../theme/app_colors.dart';
 import '../domain/dental_item.dart';
+import 'speaking_indicator.dart';
 import 'tappable_card.dart';
 
 /// A horizontal widget displaying dental items in a story sequence
@@ -16,6 +17,9 @@ class StorySequence extends StatelessWidget {
 
   /// Content language for translations
   final ContentLanguage? contentLanguage;
+
+  /// The text currently being spoken by TTS (for showing speaking indicator)
+  final String? speakingText;
 
   /// Padding around the sequence (should match grid padding)
   final EdgeInsets padding;
@@ -34,6 +38,7 @@ class StorySequence extends StatelessWidget {
     required this.items,
     this.onItemTap,
     this.contentLanguage,
+    this.speakingText,
     this.padding = const EdgeInsets.symmetric(horizontal: 48, vertical: 16),
     this.arrowPadding = 8,
     this.arrowWidth = 24,
@@ -94,6 +99,9 @@ class StorySequence extends StatelessWidget {
           ? ContentTranslations.getCaption(items[i].id, contentLanguage!)
           : items[i].caption;
 
+      // Check if this item is currently being spoken
+      final isSpeaking = speakingText != null && speakingText == caption;
+
       // Add the story item with key for efficient updates
       widgets.add(
         _StoryItem(
@@ -102,6 +110,7 @@ class StorySequence extends StatelessWidget {
           caption: caption,
           size: itemSize,
           onTap: onItemTap != null ? () => onItemTap!(items[i]) : null,
+          isSpeaking: isSpeaking,
         ),
       );
 
@@ -123,12 +132,13 @@ class StorySequence extends StatelessWidget {
 }
 
 /// Individual item in the story sequence with image and caption.
-/// Includes tap feedback animation.
+/// Includes tap feedback animation and speaking indicator.
 class _StoryItem extends StatelessWidget {
   final DentalItem item;
   final String caption;
   final double size;
   final VoidCallback? onTap;
+  final bool isSpeaking;
 
   const _StoryItem({
     super.key,
@@ -136,6 +146,7 @@ class _StoryItem extends StatelessWidget {
     required this.caption,
     required this.size,
     this.onTap,
+    this.isSpeaking = false,
   });
 
   @override
@@ -155,42 +166,73 @@ class _StoryItem extends StatelessWidget {
           child: Column(
             mainAxisSize: MainAxisSize.min,
             children: [
-              // Image container with blue border
-              Container(
-                width: size,
-                height: size,
-                decoration: BoxDecoration(
-                  border: Border.all(
-                    color: context.appCardBorder,
-                    width: AppConstants.cardBorderWidth,
+              // Image container with blue border (wrapped in Stack for speaking indicator)
+              Stack(
+                children: [
+                  Container(
+                    width: size,
+                    height: size,
+                    decoration: BoxDecoration(
+                      border: Border.all(
+                        color: isSpeaking
+                            ? context.appSpeakingIndicator
+                            : context.appCardBorder,
+                        width: isSpeaking
+                            ? AppConstants.cardBorderWidth + 1
+                            : AppConstants.cardBorderWidth,
+                      ),
+                      borderRadius: BorderRadius.circular(
+                        AppConstants.cardBorderRadius,
+                      ),
+                    ),
+                    child: ClipRRect(
+                      borderRadius: BorderRadius.circular(
+                        AppConstants.cardBorderRadius -
+                            AppConstants.cardBorderWidth,
+                      ),
+                      child: Image.asset(
+                        item.imagePath,
+                        fit: BoxFit.cover,
+                        // Decode image at display size to reduce memory usage
+                        cacheWidth: cacheSize,
+                        cacheHeight: cacheSize,
+                        errorBuilder: (context, error, stackTrace) {
+                          return Container(
+                            color: context.appBackground,
+                            child: Icon(
+                              Icons.medical_services_outlined,
+                              size: 48,
+                              color: context.appCardBorder,
+                            ),
+                          );
+                        },
+                      ),
+                    ),
                   ),
-                  borderRadius: BorderRadius.circular(
-                    AppConstants.cardBorderRadius,
-                  ),
-                ),
-                child: ClipRRect(
-                  borderRadius: BorderRadius.circular(
-                    AppConstants.cardBorderRadius -
-                        AppConstants.cardBorderWidth,
-                  ),
-                  child: Image.asset(
-                    item.imagePath,
-                    fit: BoxFit.cover,
-                    // Decode image at display size to reduce memory usage
-                    cacheWidth: cacheSize,
-                    cacheHeight: cacheSize,
-                    errorBuilder: (context, error, stackTrace) {
-                      return Container(
-                        color: context.appBackground,
-                        child: Icon(
-                          Icons.medical_services_outlined,
-                          size: 48,
-                          color: context.appCardBorder,
+                  // Speaking indicator overlay
+                  if (isSpeaking)
+                    Positioned(
+                      top: 8,
+                      right: 8,
+                      child: Container(
+                        padding: const EdgeInsets.all(6),
+                        decoration: BoxDecoration(
+                          color: context.appCardBackground.withValues(
+                            alpha: 0.9,
+                          ),
+                          borderRadius: BorderRadius.circular(16),
+                          boxShadow: [
+                            BoxShadow(
+                              color: Colors.black.withValues(alpha: 0.1),
+                              blurRadius: 4,
+                              offset: const Offset(0, 2),
+                            ),
+                          ],
                         ),
-                      );
-                    },
-                  ),
-                ),
+                        child: const SpeakingIndicator(size: 18),
+                      ),
+                    ),
+                ],
               ),
               const SizedBox(height: 12),
               // Caption text

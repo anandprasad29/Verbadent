@@ -131,6 +131,7 @@ class _BeforeVisitPageState extends ConsumerState<BeforeVisitPage> {
             child: StorySequence(
               items: DentalItems.beforeVisitStoryItems,
               contentLanguage: contentLanguage,
+              speakingText: speakingText,
               padding: layout.padding.copyWith(
                 top: layout.showHeader ? 16 : 24,
                 bottom: 0,
