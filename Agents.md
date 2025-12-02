@@ -288,3 +288,87 @@ Since we use `riverpod_generator` and `go_router_builder`, you must run the buil
 - **Fonts**: 
   - `fonts/KumarOne-Regular.ttf` - Headers
   - `fonts/InstrumentSans-Bold.ttf` - Captions
+
+## Deployment & Release
+
+### Automated Deployment with Fastlane
+
+The project uses **Fastlane** for automated builds and deployments. Configuration files are in `fastlane/`.
+
+#### Fastlane Structure
+```
+fastlane/
+├── Appfile           # App identifiers and API key paths
+├── Fastfile          # Build and deploy lanes
+├── .gitignore        # Protects API keys from being committed
+├── AuthKey_*.p8      # iOS App Store Connect API key (gitignored)
+└── play-store-key.json  # Android Google Play API key (gitignored)
+```
+
+#### Available Commands
+
+| Command | Platform | Destination |
+|---------|----------|-------------|
+| `fastlane bump` | Both | Increments build number in pubspec.yaml |
+| `fastlane ios beta` | iOS | Builds and uploads to TestFlight |
+| `fastlane android beta` | Android | Builds and uploads to Play Store Internal Testing |
+
+#### iOS Deployment Flow (`fastlane ios beta`)
+1. Configures App Store Connect API key
+2. Downloads/creates distribution certificate
+3. Downloads/creates provisioning profile
+4. Builds Flutter iOS app (`flutter build ios --release --no-codesign`)
+5. Signs and packages with Xcode (gym)
+6. Uploads to TestFlight
+
+#### Android Deployment Flow (`fastlane android beta`)
+1. Builds Flutter Android app bundle (`flutter build appbundle --release`)
+2. Uploads to Google Play Internal Testing track
+3. Creates draft release (requires manual promotion while app is in draft status)
+
+### Release Workflow
+
+```bash
+# 1. Ensure tests pass
+flutter test
+
+# 2. Bump build number (required for each upload)
+fastlane bump
+
+# 3. Deploy to iOS
+fastlane ios beta
+
+# 4. Deploy to Android
+fastlane android beta
+
+# 5. Commit version bump
+git add pubspec.yaml
+git commit -m "chore: bump version to X.X.X+N"
+```
+
+### API Key Setup (One-time)
+
+#### iOS (App Store Connect)
+1. Go to [App Store Connect](https://appstoreconnect.apple.com) → Users and Access → Keys
+2. Generate API Key with "App Manager" role
+3. Download `.p8` file → save as `fastlane/AuthKey_<KeyID>.p8`
+4. Update Key ID and Issuer ID in `fastlane/Fastfile`
+
+#### Android (Google Play)
+1. Go to [Google Play Console](https://play.google.com/console) → Settings → API access
+2. Create Service Account with JSON key
+3. Save JSON file as `fastlane/play-store-key.json`
+4. Grant service account access to app in Users and permissions
+
+### Build Numbers
+
+- Format: `version: X.X.X+N` in pubspec.yaml
+- `X.X.X` = version name (e.g., 0.1.0)
+- `N` = build number (must increment for each store upload)
+- Use `fastlane bump` to auto-increment the build number
+
+### Store URLs
+
+- **TestFlight/App Store**: https://appstoreconnect.apple.com
+- **Google Play Console**: https://play.google.com/console
+- **App Bundle ID**: `com.verbident`

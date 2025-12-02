@@ -113,3 +113,12 @@ test/failures/
 
 # General / Misc
 logs/
+
+# Code signing certificates and provisioning profiles
+*.cer
+*.certSigningRequest
+*.p12
+*.mobileprovision
+
+# Screenshot automation
+app_store_screenshots/

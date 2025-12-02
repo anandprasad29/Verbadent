@@ -210,3 +210,54 @@ The app follows a **Feature-First** architecture with:
 - `Responsive.getGridColumnCount()` - Responsive grid helpers
 
 See [Agents.md](./Agents.md) for detailed architecture documentation.
+
+## Deployment
+
+The app uses **Fastlane** for automated deployments to TestFlight and Google Play.
+
+### Prerequisites
+
+- [Fastlane](https://fastlane.tools/) installed (`brew install fastlane`)
+- API keys configured in `fastlane/` folder (gitignored for security)
+
+### Deploy to TestFlight (iOS)
+
+```bash
+# Bump build number first
+fastlane bump
+
+# Build and upload to TestFlight
+fastlane ios beta
+```
+
+### Deploy to Google Play (Android)
+
+```bash
+# Bump build number first
+fastlane bump
+
+# Build and upload to Internal Testing
+fastlane android beta
+```
+
+### Available Fastlane Commands
+
+| Command | Description |
+|---------|-------------|
+| `fastlane bump` | Increment build number in pubspec.yaml |
+| `fastlane ios beta` | Build and upload to TestFlight |
+| `fastlane android beta` | Build and upload to Play Store Internal Testing |
+
+### Release Workflow
+
+1. Make your code changes
+2. Run tests: `flutter test`
+3. Bump version: `fastlane bump`
+4. Deploy iOS: `fastlane ios beta`
+5. Deploy Android: `fastlane android beta`
+6. Commit the version bump
+
+### Store Links
+
+- **App Store Connect**: [appstoreconnect.apple.com](https://appstoreconnect.apple.com)
+- **Google Play Console**: [play.google.com/console](https://play.google.com/console)
