@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import '../../../common/data/dental_items.dart';
 import '../../../common/domain/dental_item.dart';
 import '../../../constants/app_constants.dart';
 import '../../../localization/app_localizations.dart';
@@ -9,7 +10,6 @@ import '../../../theme/app_colors.dart';
 import '../../../utils/responsive.dart';
 import '../../../widgets/app_shell.dart';
 import '../../../widgets/language_selector.dart';
-import '../data/library_data.dart';
 import '../services/tts_service.dart';
 import 'library_search_provider.dart';
 import 'widgets/library_card.dart';
@@ -50,7 +50,7 @@ class _LibraryPageState extends ConsumerState<LibraryPage> {
 
   /// Precache all library images for smoother scrolling performance
   void _precacheImages() {
-    for (final item in LibraryData.sampleItems) {
+    for (final item in DentalItems.all) {
       precacheImage(AssetImage(item.imagePath), context);
     }
   }

@@ -2,10 +2,10 @@ import 'dart:async';
 
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
+import '../../../common/data/dental_items.dart';
 import '../../../common/domain/dental_item.dart';
 import '../../../localization/content_language_provider.dart';
 import '../../../localization/content_translations.dart';
-import '../../library/data/library_data.dart';
 import '../data/template_storage_service.dart';
 import '../domain/custom_template.dart';
 
@@ -224,11 +224,11 @@ final filteredBuildOwnItemsProvider = Provider<List<DentalItem>>((ref) {
   final language = ref.watch(contentLanguageNotifierProvider);
 
   if (query.isEmpty) {
-    return LibraryData.sampleItems;
+    return DentalItems.all;
   }
 
   final lowerQuery = query.toLowerCase();
-  return LibraryData.sampleItems.where((item) {
+  return DentalItems.all.where((item) {
     final caption = ContentTranslations.getCaption(item.id, language);
     return caption.toLowerCase().contains(lowerQuery);
   }).toList();
@@ -308,7 +308,7 @@ final filteredEditTemplateItemsProvider = Provider<List<DentalItem>>((ref) {
   final selectedIds = ref.watch(editTemplateSelectedIdsProvider);
 
   // Filter out already selected items
-  var items = LibraryData.sampleItems
+  var items = DentalItems.all
       .where((item) => !selectedIds.contains(item.id))
       .toList();
 
@@ -325,9 +325,5 @@ final filteredEditTemplateItemsProvider = Provider<List<DentalItem>>((ref) {
 
 /// Gets DentalItems from a list of IDs
 List<DentalItem> getItemsFromIds(List<String> ids) {
-  final itemMap = {for (var item in LibraryData.sampleItems) item.id: item};
-  return ids
-      .where((id) => itemMap.containsKey(id))
-      .map((id) => itemMap[id]!)
-      .toList();
+  return DentalItems.getByIds(ids);
 }

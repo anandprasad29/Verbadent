@@ -39,7 +39,6 @@ flutter:
   
   assets:
     - assets/images/library/
-    - assets/images/before_visit/
 
   fonts:
     - family: KumarOne

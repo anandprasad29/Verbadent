@@ -5,7 +5,7 @@ import 'package:verbident/src/common/widgets/error_boundary.dart';
 import 'package:verbident/src/common/widgets/skeleton_card.dart';
 import 'package:verbident/src/common/widgets/speaking_indicator.dart';
 import 'package:verbident/src/common/widgets/accessible_tap_target.dart';
-import 'package:verbident/src/features/library/data/library_data.dart';
+import 'package:verbident/src/common/data/dental_items.dart';
 import 'package:verbident/src/features/library/domain/library_item.dart';
 import 'package:verbident/src/features/library/presentation/widgets/library_card.dart';
 
@@ -225,7 +225,7 @@ void main() {
     testWidgets('LibraryCard has semantic label for accessibility', (
       tester,
     ) async {
-      final item = LibraryData.sampleItems.first;
+      final item = DentalItems.all.first;
 
       await tester.pumpWidget(
         MaterialApp(
@@ -248,7 +248,7 @@ void main() {
 
   group('Responsive Layout Tests', () {
     testWidgets('LibraryCard adapts to small container', (tester) async {
-      final item = LibraryData.sampleItems.first;
+      final item = DentalItems.all.first;
 
       await tester.pumpWidget(
         MaterialApp(
@@ -266,7 +266,7 @@ void main() {
     });
 
     testWidgets('LibraryCard adapts to large container', (tester) async {
-      final item = LibraryData.sampleItems.first;
+      final item = DentalItems.all.first;
 
       await tester.pumpWidget(
         MaterialApp(
@@ -287,7 +287,7 @@ void main() {
   group('Interaction Tests', () {
     testWidgets('LibraryCard onTap callback is called', (tester) async {
       bool tapped = false;
-      final item = LibraryData.sampleItems.first;
+      final item = DentalItems.all.first;
 
       await tester.pumpWidget(
         MaterialApp(
@@ -312,7 +312,7 @@ void main() {
     });
 
     testWidgets('LibraryCard works without onTap', (tester) async {
-      final item = LibraryData.sampleItems.first;
+      final item = DentalItems.all.first;
 
       await tester.pumpWidget(
         MaterialApp(

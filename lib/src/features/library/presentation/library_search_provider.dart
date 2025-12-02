@@ -1,10 +1,10 @@
 import 'dart:async';
 
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import '../../../common/data/dental_items.dart';
 import '../../../common/domain/dental_item.dart';
 import '../../../localization/content_language_provider.dart';
 import '../../../localization/content_translations.dart';
-import '../data/library_data.dart';
 
 /// Provider for the raw (immediate) search query input.
 /// This updates instantly as the user types.
@@ -73,11 +73,11 @@ final filteredLibraryItemsProvider = Provider<List<DentalItem>>((ref) {
   final language = ref.watch(contentLanguageNotifierProvider);
 
   if (query.isEmpty) {
-    return LibraryData.sampleItems;
+    return DentalItems.all;
   }
 
   final lowerQuery = query.toLowerCase();
-  return LibraryData.sampleItems.where((item) {
+  return DentalItems.all.where((item) {
     final caption = ContentTranslations.getCaption(item.id, language);
     return caption.toLowerCase().contains(lowerQuery);
   }).toList();

@@ -43,16 +43,33 @@ Flutter application for Verbident CareQuest deployed on **iOS and Android** acro
 - Content localization (English/Spanish)
 - Tap feedback animations
 
+### Build Your Own
+- Create custom templates by selecting images from the library
+- Name and save personalized collections (up to 5 templates)
+- Edit existing templates: rename, add/remove images, reorder with drag-and-drop
+- Templates persist locally via SharedPreferences
+- Search/filter images during template creation
+- Delete templates with confirmation dialog
+
 ### Library
 - Scrollable grid of dental-related images with captions
 - Text-to-speech: tap any image to hear its caption
 - Collapsing header that minimizes on scroll
 - Responsive grid layout (5/3/2 columns based on screen size)
+- Search/filter images by caption
 - Content localization (English/Spanish)
+
+### Settings
+- **Theme**: Light, Dark, or System (auto-detect) modes
+- **Voice Settings**: Male or Female TTS voice selection
+- **Speech Rate**: Adjustable from Slow to Very Fast
+- Test speech button to preview settings
 
 ## Design Tokens
 
 ### Colors (defined in `lib/src/theme/app_colors.dart`)
+
+**Light Theme:**
 - **Primary:** `#5483F5` (Blue - sidebar, accents)
 - **Background:** `#FFFFFF` (White)
 - **Text Primary:** `#0A2D6D` (Dark Blue - headers)
@@ -60,6 +77,11 @@ Flutter application for Verbident CareQuest deployed on **iOS and Android** acro
 - **Text Secondary:** `#000000` (Black - body text)
 - **Sidebar Item:** `#D9D9D9` (Light Gray - buttons)
 - **Card Border:** `#5483F5` (Blue - image borders)
+
+**Dark Theme:**
+- **Background:** `#1A1A2E` (Dark Navy)
+- **Card Background:** `#16213E` (Darker Navy)
+- **Text colors** automatically adjusted for contrast
 
 ### Fonts
 - **Kumar One** - Headers, branding, navigation labels
@@ -113,26 +135,36 @@ lib/
 ├── app.dart                     # MaterialApp.router configuration
 └── src/
     ├── common/                  # Shared components
+    │   ├── data/
+    │   │   └── dental_items.dart    # Single source of truth for all dental content
     │   ├── domain/
-    │   │   └── dental_item.dart # Shared data model
+    │   │   └── dental_item.dart     # Shared data model
     │   └── widgets/
-    │       ├── image_card.dart      # Generic image+caption card
-    │       ├── story_sequence.dart  # Horizontal story with arrows
-    │       └── tappable_card.dart   # Tap feedback wrapper
+    │       ├── accessible_tap_target.dart  # A11y tap target
+    │       ├── error_boundary.dart         # Error handling wrapper
+    │       ├── image_card.dart             # Generic image+caption card
+    │       ├── skeleton_card.dart          # Loading placeholder
+    │       ├── speaking_indicator.dart     # TTS active indicator
+    │       ├── story_sequence.dart         # Horizontal story with arrows
+    │       └── tappable_card.dart          # Tap feedback wrapper
     ├── constants/
     │   └── app_constants.dart   # Dimensions, breakpoints, grid settings
     ├── features/
     │   ├── before_visit/
-    │   │   ├── data/            # Content data
     │   │   └── presentation/    # UI (before_visit_page.dart)
+    │   ├── build_own/
+    │   │   ├── data/            # Template storage service
+    │   │   ├── domain/          # CustomTemplate model
+    │   │   └── presentation/    # BuildOwnPage, CustomTemplatePage
     │   ├── dashboard/
     │   │   └── presentation/
     │   │       └── dashboard_page.dart
-    │   └── library/
-    │       ├── data/            # Sample data
-    │       ├── domain/          # Data models
-    │       ├── presentation/    # UI widgets
-    │       └── services/        # TTS service
+    │   ├── library/
+    │   │   ├── domain/          # Re-exports DentalItem
+    │   │   ├── presentation/    # UI widgets
+    │   │   └── services/        # TTS service
+    │   └── settings/
+    │       └── presentation/    # SettingsPage (theme, TTS controls)
     ├── localization/
     │   ├── app_en.arb           # English UI strings
     │   ├── app_es.arb           # Spanish UI strings
@@ -142,19 +174,20 @@ lib/
     │   ├── app_router.dart      # GoRouter configuration
     │   └── routes.dart          # Route path constants
     ├── theme/
-    │   ├── app_colors.dart      # Color constants
+    │   ├── app_colors.dart      # Color constants (light & dark)
     │   ├── app_text_styles.dart # Text style constants
-    │   └── app_theme.dart       # Theme configuration
+    │   ├── app_theme.dart       # Theme configuration
+    │   └── theme_provider.dart  # Theme mode state (light/dark/system)
     ├── utils/
     │   └── responsive.dart      # Responsive layout utilities
     └── widgets/
         ├── app_shell.dart       # Shared layout (sidebar/drawer)
+        ├── language_selector.dart  # Content language dropdown
         └── sidebar.dart         # Navigation sidebar
 
 assets/
 └── images/
-    ├── before_visit/            # Before Visit content images
-    └── library/                 # Library content images
+    └── library/                 # All dental content images (single source)
 
 fonts/
 ├── KumarOne-Regular.ttf
@@ -162,8 +195,10 @@ fonts/
 
 test/
 ├── before_visit_page_test.dart  # Before Visit page tests
+├── build_own_page_test.dart     # Build Your Own tests
 ├── library_card_test.dart       # LibraryCard widget tests
 ├── library_page_test.dart       # LibraryPage widget tests
+├── settings_page_test.dart      # Settings page tests
 ├── sidebar_test.dart            # Sidebar navigation tests
 ├── story_sequence_test.dart     # StorySequence widget tests
 └── ...                          # Additional test files
@@ -172,7 +207,7 @@ test/
 ## Testing
 
 ```bash
-# Run all tests (209 tests)
+# Run all tests (365 tests)
 flutter test
 
 # Run with coverage
@@ -202,12 +237,16 @@ The app follows a **Feature-First** architecture with:
 - **Shared components** in `common/` for cross-feature reuse
 - Centralized constants, colors, and text styles
 - Content localization with TTS integration
+- **Dark theme** support with system auto-detection
 
 ### Key Patterns
 - `TappableCard` - Wrap interactive elements for tap feedback
 - `StorySequence` - Display sequential content with arrows
 - `DentalItem` - Unified model for dental content
+- `SelectableLibraryCard` - Card with selection state for template building
+- `LanguageSelector` - Dropdown for content language switching
 - `Responsive.getGridColumnCount()` - Responsive grid helpers
+- `ThemeModeNotifier` - Manage light/dark/system theme state
 
 See [Agents.md](./Agents.md) for detailed architecture documentation.
 

@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import '../../../common/data/dental_items.dart';
 import '../../../common/widgets/story_sequence.dart';
 import '../../../constants/app_constants.dart';
 import '../../../localization/app_localizations.dart';
@@ -11,7 +12,6 @@ import '../../../widgets/app_shell.dart';
 import '../../../widgets/language_selector.dart';
 import '../../library/presentation/widgets/library_card.dart';
 import '../../library/services/tts_service.dart';
-import '../data/before_visit_data.dart';
 
 /// Before Visit page displaying dental visit preparation content.
 /// Shows a story sequence with arrows and a tools grid below.
@@ -39,11 +39,11 @@ class _BeforeVisitPageState extends ConsumerState<BeforeVisitPage> {
   /// Precache all before visit images for smoother scrolling performance
   void _precacheImages() {
     // Precache story sequence images
-    for (final item in BeforeVisitData.storyItems) {
+    for (final item in DentalItems.beforeVisitStoryItems) {
       precacheImage(AssetImage(item.imagePath), context);
     }
     // Precache tools grid images
-    for (final item in BeforeVisitData.toolsItems) {
+    for (final item in DentalItems.beforeVisitToolsItems) {
       precacheImage(AssetImage(item.imagePath), context);
     }
   }
@@ -120,7 +120,7 @@ class _BeforeVisitPageState extends ConsumerState<BeforeVisitPage> {
           // Story sequence section - fits same width as grid below
           SliverToBoxAdapter(
             child: StorySequence(
-              items: BeforeVisitData.storyItems,
+              items: DentalItems.beforeVisitStoryItems,
               contentLanguage: contentLanguage,
               padding: layout.padding.copyWith(
                 top: layout.showHeader ? 16 : 24,
@@ -149,7 +149,7 @@ class _BeforeVisitPageState extends ConsumerState<BeforeVisitPage> {
               ),
               delegate: SliverChildBuilderDelegate(
                 (context, index) {
-                  final item = BeforeVisitData.toolsItems[index];
+                  final item = DentalItems.beforeVisitToolsItems[index];
                   final translatedCaption = ContentTranslations.getCaption(
                     item.id,
                     contentLanguage,
@@ -162,7 +162,7 @@ class _BeforeVisitPageState extends ConsumerState<BeforeVisitPage> {
                     isSpeaking: speakingText == translatedCaption,
                   );
                 },
-                childCount: BeforeVisitData.toolsItems.length,
+                childCount: DentalItems.beforeVisitToolsItems.length,
                 // Optimize memory for grids
                 addAutomaticKeepAlives: false,
                 addRepaintBoundaries: true,

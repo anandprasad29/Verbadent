@@ -3,7 +3,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:golden_toolkit/golden_toolkit.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import 'package:verbident/src/features/library/data/library_data.dart';
+import 'package:verbident/src/common/data/dental_items.dart';
 import 'package:verbident/src/features/library/presentation/widgets/library_card.dart';
 
 void main() {
@@ -36,8 +36,8 @@ void main() {
                       delegate: SliverChildBuilderDelegate(
                         (context, index) {
                           final item =
-                              LibraryData.sampleItems[index %
-                                  LibraryData.sampleItems.length];
+                              DentalItems.all[index %
+                                  DentalItems.all.length];
                           return LibraryCard(
                             key: ValueKey('card_$index'),
                             item: item,
@@ -100,7 +100,7 @@ void main() {
                           ),
                       itemCount: 10,
                       itemBuilder: (context, index) {
-                        final item = LibraryData.sampleItems[index];
+                        final item = DentalItems.all[index];
                         return LibraryCard(
                           key: ValueKey(item.id),
                           item: item,
@@ -152,7 +152,7 @@ void main() {
                         width: 200,
                         height: 280,
                         child: _CountingLibraryCard(
-                          item: LibraryData.sampleItems.first,
+                          item: DentalItems.all.first,
                           onBuild: () => cardBuildCount++,
                         ),
                       ),
@@ -200,8 +200,8 @@ void main() {
                       delegate: SliverChildBuilderDelegate(
                         (context, index) {
                           final item =
-                              LibraryData.sampleItems[index %
-                                  LibraryData.sampleItems.length];
+                              DentalItems.all[index %
+                                  DentalItems.all.length];
                           return LibraryCard(
                             key: ValueKey('card_$index'),
                             item: item,

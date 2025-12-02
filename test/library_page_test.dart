@@ -5,7 +5,7 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:go_router/go_router.dart';
 import 'package:golden_toolkit/golden_toolkit.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import 'package:verbident/src/features/library/data/library_data.dart';
+import 'package:verbident/src/common/data/dental_items.dart';
 import 'package:verbident/src/features/library/presentation/library_page.dart';
 import 'package:verbident/src/features/library/presentation/library_search_provider.dart';
 import 'package:verbident/src/features/library/presentation/widgets/library_card.dart';
@@ -779,7 +779,7 @@ void main() {
       addTearDown(container.dispose);
 
       final items = container.read(filteredLibraryItemsProvider);
-      expect(items.length, equals(LibraryData.sampleItems.length));
+      expect(items.length, equals(DentalItems.all.length));
     });
 
     test('filteredLibraryItemsProvider filters items by caption', () {

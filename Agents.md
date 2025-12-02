@@ -1,4 +1,4 @@
-                                                            # Verbident CareQuest - AI Context & Agent Guide
+# Verbident CareQuest - AI Context & Agent Guide
 
 ## Project Overview
 Verbident CareQuest is a Flutter application for dental/healthcare management, targeting **iOS and Android** across **mobile phones and tablets**. It focuses on responsive design to support different screen sizes seamlessly.
@@ -18,8 +18,11 @@ Verbident CareQuest is a Flutter application for dental/healthcare management, t
 - **Focus**: Building dental visit journey features with reusable component architecture.
 - **Completed Features**: 
   - Dashboard page with responsive sidebar navigation
-  - Library page with image grid and text-to-speech
+  - Library page with image grid, search, and text-to-speech
   - **Before Visit page** with story sequence and tools grid
+  - **Build Your Own** custom template creation with persistence
+  - **Settings page** with theme and TTS controls
+  - **Dark theme** support with system auto-detection
   - Shared AppShell layout component
   - Data-driven sidebar with active route highlighting
   - Content localization (English/Spanish) with TTS language sync
@@ -31,6 +34,7 @@ Verbident CareQuest is a Flutter application for dental/healthcare management, t
 - **State Management**: Flutter Riverpod (v2.6+) using `riverpod_annotation` and code generation.
 - **Navigation**: GoRouter (v14+)
 - **Text-to-Speech**: flutter_tts (v4.0+)
+- **Persistence**: shared_preferences (v2.2+)
 - **Design**: Custom design system using "Kumar One" and "Instrument Sans" fonts.
 
 ## Architecture & Folder Structure
@@ -41,34 +45,51 @@ We follow a **Feature-First** architecture. Code is organized by business domain
 ```
 lib/src/
 ├── common/                         # Shared components across features
+│   ├── data/
+│   │   └── dental_items.dart       # Single source of truth for all dental content
 │   ├── domain/
 │   │   └── dental_item.dart        # Shared data model for dental content
 │   └── widgets/
-│       ├── image_card.dart         # Generic image+caption card
-│       ├── story_sequence.dart     # Horizontal story row with arrows
-│       └── tappable_card.dart      # Tap feedback animation wrapper
+│       ├── accessible_tap_target.dart  # Accessibility-compliant tap target
+│       ├── error_boundary.dart         # Error handling wrapper
+│       ├── image_card.dart             # Generic image+caption card
+│       ├── skeleton_card.dart          # Loading placeholder card
+│       ├── speaking_indicator.dart     # TTS active indicator
+│       ├── story_sequence.dart         # Horizontal story row with arrows
+│       └── tappable_card.dart          # Tap feedback animation wrapper
 ├── constants/
 │   └── app_constants.dart          # Dimensions, breakpoints, grid settings
 ├── features/
 │   ├── before_visit/
-│   │   ├── data/
-│   │   │   └── before_visit_data.dart  # Story and tools content
 │   │   └── presentation/
 │   │       └── before_visit_page.dart
+│   ├── build_own/
+│   │   ├── data/
+│   │   │   └── template_storage_service.dart  # SharedPreferences persistence
+│   │   ├── domain/
+│   │   │   └── custom_template.dart    # Template data model
+│   │   └── presentation/
+│   │       ├── build_own_page.dart     # Template creation page
+│   │       ├── build_own_providers.dart  # State management
+│   │       ├── custom_template_page.dart # View/edit template page
+│   │       └── widgets/
+│   │           └── selectable_library_card.dart  # Selection & drag cards
 │   ├── dashboard/
 │   │   └── presentation/
 │   │       └── dashboard_page.dart
-│   └── library/
-│       ├── data/
-│       │   └── library_data.dart       # Sample data
-│       ├── domain/
-│       │   └── library_item.dart       # Re-exports DentalItem
-│       ├── presentation/
-│       │   ├── library_page.dart
-│       │   └── widgets/
-│       │       └── library_card.dart
-│       └── services/
-│           └── tts_service.dart        # Text-to-speech (Riverpod)
+│   ├── library/
+│   │   ├── domain/
+│   │   │   └── library_item.dart       # Re-exports DentalItem
+│   │   ├── presentation/
+│   │   │   ├── library_page.dart
+│   │   │   ├── library_search_provider.dart  # Search state
+│   │   │   └── widgets/
+│   │   │       └── library_card.dart
+│   │   └── services/
+│   │       └── tts_service.dart        # Text-to-speech (Riverpod)
+│   └── settings/
+│       └── presentation/
+│           └── settings_page.dart      # Theme & TTS settings
 ├── localization/
 │   ├── app_en.arb                  # English UI strings
 │   ├── app_es.arb                  # Spanish UI strings
@@ -80,13 +101,15 @@ lib/src/
 │   ├── app_router.g.dart           # Generated
 │   └── routes.dart                 # Route path constants
 ├── theme/
-│   ├── app_colors.dart             # Centralized color definitions
+│   ├── app_colors.dart             # Centralized color definitions (light & dark)
 │   ├── app_text_styles.dart        # Centralized text styles
-│   └── app_theme.dart              # Theme configuration
+│   ├── app_theme.dart              # Theme configuration
+│   └── theme_provider.dart         # Theme mode state (light/dark/system)
 ├── utils/
 │   └── responsive.dart             # Responsive layout utilities + grid helpers
 └── widgets/
     ├── app_shell.dart              # Shared desktop/mobile layout
+    ├── language_selector.dart      # Content language dropdown
     └── sidebar.dart                # Data-driven sidebar with navigation
 ```
 
@@ -107,6 +130,7 @@ lib/src/
 - **Colors**: Use `AppColors` class from `lib/src/theme/app_colors.dart`. Never hardcode `Color(0xFF...)`.
 - **Dimensions**: Use `AppConstants` class for breakpoints, spacing, border radius, etc.
 - **Text Styles**: Use `AppTextStyles` class for consistent typography.
+- **Theme Mode**: Use `ThemeModeNotifier` for light/dark/system theme state.
 
 ### 4. UI & Responsiveness
 - Use the `Responsive` class utilities for screen size checks and grid layout values.
@@ -114,6 +138,7 @@ lib/src/
   - `Responsive.getGridColumnCount(context)` - Returns 5/3/2 columns
   - `Responsive.getGridSpacing(context)` - Returns 24/20/16 spacing
   - `Responsive.getContentPadding(context)` - Returns responsive EdgeInsets
+  - `Responsive.getGridLayout(context)` - Returns all layout values in one call
 - **Breakpoints** (defined in `AppConstants`):
   - Mobile: < 600px
   - Tablet: 600px - 1200px
@@ -136,10 +161,15 @@ lib/src/
   ```
 
 ### 6. Shared Components (common/)
-- **DentalItem**: Use for any dental content with id, imagePath, caption.
+- **DentalItems**: Single source of truth for all dental content. Use `DentalItems.all` for all items, or `DentalItems.getByIds()` for specific items.
+- **DentalItem**: Data model for dental content with id, imagePath, caption.
 - **TappableCard**: Wrap interactive elements for tap feedback animation.
 - **StorySequence**: Use for horizontal story flows with arrow connectors.
 - **ImageCard**: Use for standalone image+caption cards.
+- **SelectableLibraryCard**: Use for cards with selection state (template building).
+- **SkeletonCard**: Use for loading placeholders.
+- **SpeakingIndicator**: Use to show TTS is active.
+- **ErrorBoundary**: Wrap widgets that may throw errors.
 
 Example using TappableCard:
 ```dart
@@ -152,10 +182,11 @@ TappableCard(
 ### 7. Sidebar Navigation
 - Sidebar items are configured in `SidebarConfig.items` (data-driven).
 - Active route is automatically highlighted.
+- Custom templates appear dynamically between static sections.
 - To add a new sidebar item:
   1. Add route constant to `Routes` class
   2. Add `GoRoute` in `app_router.dart`
-  3. Add `SidebarItemData` to `SidebarConfig.items`
+  3. Add `SidebarItemData` to `SidebarConfig.topItems` or `SidebarConfig.bottomItems`
 
 ### 8. Localization
 - **NEVER hardcode strings** in the app. All user-facing text must be localizable.
@@ -190,7 +221,7 @@ TappableCard(
 - **Integration Tests**: Run `flutter test integration_test/app_test.dart` on a real device/emulator.
 - **Regression Policy**: **ALWAYS** run `flutter test` after completing a task to ensure no regressions were introduced.
 - Test files location: `test/` directory with `*_test.dart` naming.
-- Current test count: **340 tests**
+- Current test count: **365 tests**
 
 ### 10. Git Best Practices
 Follow these git conventions for all commits:
@@ -276,18 +307,60 @@ Since we use `riverpod_generator` and `go_router_builder`, you must run the buil
 10. Write tests in `test/<feature>_test.dart`
 
 ### Adding Dental Content
-1. Use `DentalItem` model with unique `id`
-2. Add images to `assets/images/<feature>/`
-3. Register asset folder in `pubspec.yaml`
-4. Add caption translations to `ContentTranslations._captions`
+1. Add images to `assets/images/library/` (single source for all features)
+2. Add item to `DentalItems.all` in `lib/src/common/data/dental_items.dart`
+3. Add caption translations to `ContentTranslations._captions`
+4. If needed for a specific feature (e.g., Before Visit), add IDs to the appropriate list (e.g., `DentalItems.beforeVisitStoryIds`)
 
 ## Assets
 - **Images**: 
-  - `assets/images/library/` - Library content images
-  - `assets/images/before_visit/` - Before Visit content images
+  - `assets/images/library/` - All dental content images (single source of truth)
 - **Fonts**: 
   - `fonts/KumarOne-Regular.ttf` - Headers
   - `fonts/InstrumentSans-Bold.ttf` - Captions
+
+## Data Persistence
+
+### SharedPreferences Schema
+
+The app uses SharedPreferences to persist user-created custom templates locally.
+
+#### Custom Templates Storage
+
+| Key | Type | Description |
+|-----|------|-------------|
+| `custom_templates` | JSON String | Array of CustomTemplate objects |
+
+**Schema:**
+```json
+[
+  {
+    "id": "1733123456789",
+    "name": "My Visit Story",
+    "selectedItemIds": ["dentist-chair", "dentist-mask", "bright-light"],
+    "createdAt": "2025-12-02T10:30:45.123Z"
+  }
+]
+```
+
+**Field Definitions:**
+
+| Field | Type | Description |
+|-------|------|-------------|
+| `id` | String | Unique identifier (timestamp-based) |
+| `name` | String | User-defined template name |
+| `selectedItemIds` | List\<String\> | Ordered list of DentalItem IDs |
+| `createdAt` | ISO 8601 String | Template creation timestamp |
+
+**Constraints:**
+- Maximum 5 templates allowed (`maxTemplateCount` in `build_own_providers.dart`)
+- Template names must be unique (case-insensitive)
+- `selectedItemIds` references items from `DentalItems.all`
+
+**Related Files:**
+- `lib/src/features/build_own/data/template_storage_service.dart` - Storage operations
+- `lib/src/features/build_own/domain/custom_template.dart` - Data model
+- `lib/src/features/build_own/presentation/build_own_providers.dart` - State management
 
 ## Deployment & Release
 
@@ -372,3 +445,12 @@ git commit -m "chore: bump version to X.X.X+N"
 - **TestFlight/App Store**: https://appstoreconnect.apple.com
 - **Google Play Console**: https://play.google.com/console
 - **App Bundle ID**: `com.verbident`
+
+## Known TODOs & Future Work
+
+### Planned Features (Not Yet Implemented)
+- **During the Visit**: Feature planned but not yet developed. Route exists but is disabled in sidebar.
+
+### Architecture Notes
+- GoRouter provider uses `keepAlive: true` to prevent router recreation issues
+- TTS service uses `keepAlive: true` to prevent disposal and re-initialization issues

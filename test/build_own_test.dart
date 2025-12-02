@@ -9,7 +9,7 @@ import 'package:verbident/src/features/build_own/data/template_storage_service.d
 import 'package:verbident/src/features/build_own/domain/custom_template.dart';
 import 'package:verbident/src/features/build_own/presentation/build_own_providers.dart';
 import 'package:verbident/src/features/build_own/presentation/widgets/selectable_library_card.dart';
-import 'package:verbident/src/features/library/data/library_data.dart';
+import 'package:verbident/src/common/data/dental_items.dart';
 
 void main() {
   group('CustomTemplate', () {
@@ -616,7 +616,7 @@ void main() {
       addTearDown(container.dispose);
 
       final items = container.read(filteredBuildOwnItemsProvider);
-      expect(items.length, LibraryData.sampleItems.length);
+      expect(items.length, DentalItems.all.length);
     });
 
     test('filteredEditTemplateItemsProvider returns all items when no search',
@@ -625,7 +625,7 @@ void main() {
       addTearDown(container.dispose);
 
       final items = container.read(filteredEditTemplateItemsProvider);
-      expect(items.length, LibraryData.sampleItems.length);
+      expect(items.length, DentalItems.all.length);
     });
 
     test('filteredBuildOwnItemsProvider filters items by search query', () {
@@ -679,7 +679,7 @@ void main() {
 
   group('Utility Functions', () {
     test('getItemsFromIds returns items in order', () {
-      // Use actual IDs from LibraryData.sampleItems
+      // Use actual IDs from DentalItems.all
       final ids = ['dentist-chair', 'dental-mirror', 'suction'];
       final items = getItemsFromIds(ids);
 
@@ -705,10 +705,10 @@ void main() {
     test('getItemsFromIds returns all library items when all IDs are valid',
         () {
       // Get all IDs from LibraryData
-      final allIds = LibraryData.sampleItems.map((item) => item.id).toList();
+      final allIds = DentalItems.all.map((item) => item.id).toList();
       final items = getItemsFromIds(allIds);
 
-      expect(items.length, LibraryData.sampleItems.length);
+      expect(items.length, DentalItems.all.length);
     });
   });
 

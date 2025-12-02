@@ -1,6 +1,6 @@
 import 'package:flutter_test/flutter_test.dart';
+import 'package:verbident/src/common/data/dental_items.dart';
 import 'package:verbident/src/features/library/domain/library_item.dart';
-import 'package:verbident/src/features/library/data/library_data.dart';
 
 void main() {
   group('LibraryItem', () {
@@ -88,27 +88,27 @@ void main() {
 
   group('LibraryData', () {
     test('sampleItems is not empty', () {
-      expect(LibraryData.sampleItems, isNotEmpty);
+      expect(DentalItems.all, isNotEmpty);
     });
 
     test('sampleItems contains 10 items', () {
-      expect(LibraryData.sampleItems.length, equals(10));
+      expect(DentalItems.all.length, equals(10));
     });
 
     test('all items have unique ids', () {
-      final ids = LibraryData.sampleItems.map((item) => item.id).toList();
+      final ids = DentalItems.all.map((item) => item.id).toList();
       final uniqueIds = ids.toSet();
       expect(uniqueIds.length, equals(ids.length));
     });
 
     test('all items have non-empty captions', () {
-      for (final item in LibraryData.sampleItems) {
+      for (final item in DentalItems.all) {
         expect(item.caption, isNotEmpty);
       }
     });
 
     test('all items have valid image paths', () {
-      for (final item in LibraryData.sampleItems) {
+      for (final item in DentalItems.all) {
         expect(item.imagePath, startsWith('assets/images/library/'));
         expect(item.imagePath, endsWith('.webp'));
       }
@@ -130,7 +130,7 @@ void main() {
         'stop',
       ];
 
-      for (final item in LibraryData.sampleItems) {
+      for (final item in DentalItems.all) {
         final captionLower = item.caption.toLowerCase();
         final containsDentalKeyword = dentalKeywords.any(
           (keyword) => captionLower.contains(keyword),
@@ -145,7 +145,7 @@ void main() {
     });
 
     test('sample items include expected dental items', () {
-      final captions = LibraryData.sampleItems.map((i) => i.caption).toList();
+      final captions = DentalItems.all.map((i) => i.caption).toList();
 
       // Check for some expected items
       expect(
@@ -166,7 +166,7 @@ void main() {
     });
 
     test('all image file names are unique', () {
-      final paths = LibraryData.sampleItems
+      final paths = DentalItems.all
           .map((item) => item.imagePath)
           .toList();
       final uniquePaths = paths.toSet();
@@ -187,15 +187,15 @@ void main() {
         'stop',
       ];
 
-      for (int i = 0; i < LibraryData.sampleItems.length; i++) {
-        expect(LibraryData.sampleItems[i].id, equals(expectedIds[i]));
+      for (int i = 0; i < DentalItems.all.length; i++) {
+        expect(DentalItems.all[i].id, equals(expectedIds[i]));
       }
     });
 
     test('sampleItems is a fixed list', () {
       // Should be the same instance each time
-      final list1 = LibraryData.sampleItems;
-      final list2 = LibraryData.sampleItems;
+      final list1 = DentalItems.all;
+      final list2 = DentalItems.all;
       expect(identical(list1, list2), isTrue);
     });
   });

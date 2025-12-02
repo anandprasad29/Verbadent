@@ -31,22 +31,6 @@ class HomePage extends StatelessWidget {
                     textAlign: TextAlign.center,
                   ),
                   const SizedBox(height: 24),
-                  // Show device type for debugging (remove in production)
-                  if (Responsive.isMobile(context))
-                    Text(
-                      'Mobile View',
-                      style: theme.textTheme.bodyLarge,
-                    )
-                  else if (Responsive.isTablet(context))
-                    Text(
-                      'Tablet View',
-                      style: theme.textTheme.bodyLarge,
-                    )
-                  else
-                    Text(
-                      'Desktop/Web View',
-                      style: theme.textTheme.bodyLarge,
-                    ),
                 ],
               ),
             ),
