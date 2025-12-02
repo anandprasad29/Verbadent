@@ -207,7 +207,7 @@ test/
 ## Testing
 
 ```bash
-# Run all tests (365 tests)
+# Run all tests (361 tests)
 flutter test
 
 # Run with coverage

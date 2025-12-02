@@ -221,7 +221,7 @@ TappableCard(
 - **Integration Tests**: Run `flutter test integration_test/app_test.dart` on a real device/emulator.
 - **Regression Policy**: **ALWAYS** run `flutter test` after completing a task to ensure no regressions were introduced.
 - Test files location: `test/` directory with `*_test.dart` naming.
-- Current test count: **365 tests**
+- Current test count: **361 tests**
 
 ### 10. Git Best Practices
 Follow these git conventions for all commits:
