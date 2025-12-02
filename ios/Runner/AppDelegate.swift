@@ -1,6 +1,7 @@
 import Flutter
 import UIKit
 import AVFoundation
+import FirebaseCore
 
 @main
 @objc class AppDelegate: FlutterAppDelegate {
@@ -18,6 +19,13 @@ import AVFoundation
       try AVAudioSession.sharedInstance().setActive(true)
     } catch {
       print("Failed to configure audio session: \(error)")
+    }
+    
+    // Verify Firebase is configured (helps debug analytics issues)
+    if FirebaseApp.app() != nil {
+      print("✅ Firebase configured successfully")
+    } else {
+      print("⚠️ Firebase not configured - check GoogleService-Info.plist")
     }
     
     GeneratedPluginRegistrant.register(with: self)
