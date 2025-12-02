@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
+import '../../../common/services/analytics_service.dart';
 import '../../../constants/app_constants.dart';
 import '../../../localization/app_localizations.dart';
 import '../../../localization/content_language_provider.dart';
@@ -64,6 +65,11 @@ class _CustomTemplatePageState extends ConsumerState<CustomTemplatePage> {
       // This ensures correct comparison even if data changes before entering edit mode
       _originalName = template.name;
       _originalSelectedIds = List.from(template.selectedItemIds);
+
+      // Log template played analytics
+      ref.read(analyticsServiceProvider).logTemplatePlayed(
+        template.selectedItemIds.length,
+      );
     }
   }
 

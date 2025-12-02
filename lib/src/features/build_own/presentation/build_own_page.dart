@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import '../../../common/domain/dental_item.dart';
+import '../../../common/services/analytics_service.dart';
 import '../../../constants/app_constants.dart';
 import '../../../localization/app_localizations.dart';
 import '../../../localization/content_language_provider.dart';
@@ -85,6 +86,9 @@ class _BuildOwnPageState extends ConsumerState<BuildOwnPage> {
 
     if (mounted) {
       if (error == null) {
+        // Log template creation analytics
+        ref.read(analyticsServiceProvider).logTemplateCreated(selectedIds.length);
+        
         _resetForm();
         // Navigate to the newly created template
         context.go(Routes.customTemplatePath(template.id));

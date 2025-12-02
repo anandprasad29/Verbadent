@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../../../common/data/dental_items.dart';
+import '../../../common/services/analytics_service.dart';
 import '../../../common/widgets/story_sequence.dart';
 import '../../../constants/app_constants.dart';
 import '../../../localization/app_localizations.dart';
@@ -50,8 +51,9 @@ class _BeforeVisitPageState extends ConsumerState<BeforeVisitPage> {
 
   @override
   Widget build(BuildContext context) {
-    // Read TTS service (don't watch - only need for speak calls)
+    // Read services (don't watch - only need for method calls)
     final ttsService = ref.read(ttsServiceProvider);
+    final analytics = ref.read(analyticsServiceProvider);
     final contentLanguage = ref.watch(contentLanguageNotifierProvider);
 
     // Watch speaking text stream for UI feedback
@@ -67,13 +69,20 @@ class _BeforeVisitPageState extends ConsumerState<BeforeVisitPage> {
     });
 
     return AppShell(
-      child: _buildContent(context, ttsService, contentLanguage, speakingText),
+      child: _buildContent(
+        context,
+        ttsService,
+        analytics,
+        contentLanguage,
+        speakingText,
+      ),
     );
   }
 
   Widget _buildContent(
     BuildContext context,
     TtsService ttsService,
+    AnalyticsService analytics,
     ContentLanguage contentLanguage,
     String? speakingText,
   ) {
@@ -131,6 +140,11 @@ class _BeforeVisitPageState extends ConsumerState<BeforeVisitPage> {
                   item.id,
                   contentLanguage,
                 );
+                // Log analytics events
+                final position = DentalItems.beforeVisitStoryItems.indexOf(item);
+                analytics.logStoryItemTapped(item.id, position);
+                analytics.logStoryTtsPlayed(item.id, contentLanguage.code);
+                // Play TTS
                 ttsService.speak(translatedCaption);
               },
             ),
@@ -158,7 +172,13 @@ class _BeforeVisitPageState extends ConsumerState<BeforeVisitPage> {
                     key: ValueKey(item.id),
                     item: item,
                     caption: translatedCaption,
-                    onTap: () => ttsService.speak(translatedCaption),
+                    onTap: () {
+                      // Log analytics events
+                      analytics.logToolsItemTapped(item.id);
+                      analytics.logToolsTtsPlayed(item.id, contentLanguage.code);
+                      // Play TTS
+                      ttsService.speak(translatedCaption);
+                    },
                     isSpeaking: speakingText == translatedCaption,
                   );
                 },

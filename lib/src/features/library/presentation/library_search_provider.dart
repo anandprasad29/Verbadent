@@ -3,6 +3,7 @@ import 'dart:async';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../../../common/data/dental_items.dart';
 import '../../../common/domain/dental_item.dart';
+import '../../../common/services/analytics_service.dart';
 import '../../../localization/content_language_provider.dart';
 import '../../../localization/content_translations.dart';
 
@@ -39,6 +40,15 @@ class LibrarySearchNotifier extends StateNotifier<String> {
     _debounceTimer = Timer(_debounceDuration, () {
       // Update the debounced query provider (triggers filtering)
       _ref.read(librarySearchQueryProvider.notifier).state = query;
+
+      // Log search analytics (only for non-empty queries)
+      if (query.isNotEmpty) {
+        final resultsCount = _ref.read(filteredLibraryItemsProvider).length;
+        _ref.read(analyticsServiceProvider).logLibrarySearch(
+          query.length,
+          resultsCount,
+        );
+      }
     });
   }
 

@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import '../common/services/analytics_service.dart';
 import '../localization/content_language_provider.dart';
 import '../theme/app_colors.dart';
 
@@ -81,7 +82,17 @@ class LanguageSelector extends ConsumerWidget {
             );
           }).toList(),
           onChanged: (ContentLanguage? newLanguage) {
-            if (newLanguage != null) {
+            if (newLanguage != null && newLanguage != currentLanguage) {
+              // Log analytics event for language change
+              ref.read(analyticsServiceProvider).logLanguageChanged(
+                currentLanguage.code,
+                newLanguage.code,
+              );
+              // Also update the user property for preferred language
+              ref.read(analyticsServiceProvider).setPreferredLanguage(
+                newLanguage.code,
+              );
+              // Update the language
               notifier.setLanguage(newLanguage);
             }
           },

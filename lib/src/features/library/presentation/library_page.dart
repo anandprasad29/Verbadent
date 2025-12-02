@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../../../common/data/dental_items.dart';
 import '../../../common/domain/dental_item.dart';
+import '../../../common/services/analytics_service.dart';
 import '../../../constants/app_constants.dart';
 import '../../../localization/app_localizations.dart';
 import '../../../localization/content_language_provider.dart';
@@ -63,8 +64,9 @@ class _LibraryPageState extends ConsumerState<LibraryPage> {
 
   @override
   Widget build(BuildContext context) {
-    // Read TTS service (don't watch - only need for speak calls)
+    // Read services (don't watch - only need for method calls)
     final ttsService = ref.read(ttsServiceProvider);
+    final analytics = ref.read(analyticsServiceProvider);
 
     // Watch only what's needed for UI updates
     final contentLanguage = ref.watch(contentLanguageNotifierProvider);
@@ -96,6 +98,7 @@ class _LibraryPageState extends ConsumerState<LibraryPage> {
       child: _buildLibraryContent(
         context,
         ttsService,
+        analytics,
         contentLanguage,
         speakingText,
         filteredItems,
@@ -107,6 +110,7 @@ class _LibraryPageState extends ConsumerState<LibraryPage> {
   Widget _buildLibraryContent(
     BuildContext context,
     TtsService ttsService,
+    AnalyticsService analytics,
     ContentLanguage contentLanguage,
     String? speakingText,
     List<DentalItem> filteredItems,
@@ -220,7 +224,16 @@ class _LibraryPageState extends ConsumerState<LibraryPage> {
                       key: ValueKey(item.id),
                       item: item,
                       caption: translatedCaption,
-                      onTap: () => ttsService.speak(translatedCaption),
+                      onTap: () {
+                        // Log analytics events
+                        analytics.logLibraryItemTapped(item.id);
+                        analytics.logLibraryTtsPlayed(
+                          item.id,
+                          contentLanguage.code,
+                        );
+                        // Play TTS
+                        ttsService.speak(translatedCaption);
+                      },
                       isSpeaking: speakingText == translatedCaption,
                     );
                   },
