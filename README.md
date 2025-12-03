@@ -57,11 +57,23 @@ fastlane bump_major        # 0.3.0+1 → 1.0.0+1
 ### Deploy Commands
 
 ```bash
-# Deploy to iOS TestFlight
+# Deploy to iOS TestFlight (binary only)
 fastlane ios beta
 
-# Deploy to Android Play Store Internal Testing
+# Deploy to Android Play Store Internal Testing (binary only)
 fastlane android beta
+
+# Upload metadata only (no binary)
+fastlane ios metadata       # App Store descriptions, keywords, etc.
+fastlane android metadata   # Play Store descriptions, changelogs
+
+# Full release (binary + metadata)
+fastlane ios release        # Build, upload, and update metadata
+fastlane android release    # Build, upload, and update metadata
+
+# Screenshot capture instructions
+fastlane ios screenshots    # Shows how to capture iOS screenshots
+fastlane android screenshots # Shows how to capture Android screenshots
 ```
 
 ### Typical Release Workflow
@@ -74,14 +86,50 @@ flutter test
 # 3. Bump version appropriately
 fastlane bump_patch   # or bump_minor, bump_major, or just bump
 
-# 4. Deploy
-fastlane ios beta
-fastlane android beta
+# 4. Update release notes in metadata files
+# Edit: fastlane/metadata/en-US/release_notes.txt (iOS)
+# Edit: fastlane/metadata/android/en-US/changelogs/default.txt (Android)
 
-# 5. Commit the version change
-git add pubspec.yaml
+# 5. Deploy (with metadata)
+fastlane ios release      # Uploads binary + metadata
+fastlane android release  # Uploads binary + metadata
+
+# 6. Commit changes
+git add pubspec.yaml fastlane/metadata
 git commit -m "chore: release v0.2.1"
 ```
+
+### Updating App Store Metadata
+
+Edit metadata files directly, then upload:
+
+**iOS App Store:**
+- `fastlane/metadata/en-US/description.txt` - Full description
+- `fastlane/metadata/en-US/keywords.txt` - Search keywords
+- `fastlane/metadata/en-US/release_notes.txt` - What's new
+- `fastlane/metadata/en-US/promotional_text.txt` - Promo text
+
+**Android Play Store:**
+- `fastlane/metadata/android/en-US/full_description.txt` - Full description
+- `fastlane/metadata/android/en-US/short_description.txt` - Short description
+- `fastlane/metadata/android/en-US/changelogs/default.txt` - Release notes
+
+After editing:
+```bash
+fastlane ios metadata      # Upload to App Store Connect
+fastlane android metadata  # Upload to Play Store
+```
+
+### Screenshots
+
+Screenshots are currently captured manually:
+
+**iOS:** Run `fastlane ios screenshots` for device-specific instructions
+- Save to: `fastlane/screenshots/en-US/`
+- Required: iPhone 16 Pro Max, iPhone 15 Pro Max, iPhone 8 Plus, iPad Pro 12.9", iPad Pro 11"
+
+**Android:** Run `fastlane android screenshots` for instructions
+- Save to: `fastlane/metadata/android/en-US/images/phoneScreenshots/`
 
 ### Store Links
 
