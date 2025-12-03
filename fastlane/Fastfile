@@ -1,4 +1,26 @@
 # Fastlane configuration for Verbident
+#
+# VERSION FORMAT: major.minor.patch+build (e.g., 1.2.3+45)
+#
+# WHEN TO BUMP WHAT:
+# ┌─────────┬────────────────────────────────────────────────────────────┐
+# │ Component│ When to bump                                              │
+# ├─────────┼────────────────────────────────────────────────────────────┤
+# │ MAJOR   │ Breaking changes, major redesign, incompatible API changes │
+# │ MINOR   │ New features, significant improvements (backwards compat)  │
+# │ PATCH   │ Bug fixes, small improvements, text changes                │
+# │ BUILD   │ Every TestFlight/Play Store upload (auto-incremented)      │
+# └─────────┴────────────────────────────────────────────────────────────┘
+#
+# IMPORTANT: Once a version (e.g., 0.2.0) is approved on TestFlight/App Store,
+# you MUST bump at least the PATCH version for new submissions.
+#
+# COMMANDS:
+#   fastlane bump         - Increment build number only (for same version)
+#   fastlane bump_patch   - Bump patch version (0.2.0 → 0.2.1), reset build to 1
+#   fastlane bump_minor   - Bump minor version (0.2.1 → 0.3.0), reset build to 1
+#   fastlane bump_major   - Bump major version (0.3.0 → 1.0.0), reset build to 1
+#   fastlane version      - Show current version
 
 default_platform(:ios)
 
@@ -41,25 +63,21 @@ platform :ios do
       key_filepath: "#{PROJECT_ROOT}/fastlane/AuthKey_W663NX6L7M.p8"
     )
     
-    # Get distribution certificate
     get_certificates(
       api_key: api_key,
       platform: "ios"
     )
     
-    # Get App Store provisioning profile
     get_provisioning_profile(
       api_key: api_key,
       app_identifier: "com.verbident",
       platform: "ios"
     )
     
-    # Build Flutter
     Dir.chdir(PROJECT_ROOT) do
       sh("flutter build ios --release --no-codesign")
     end
     
-    # Build and sign
     build_app(
       workspace: "#{PROJECT_ROOT}/ios/Runner.xcworkspace",
       scheme: "Runner",
@@ -68,7 +86,6 @@ platform :ios do
       output_name: "Verbadent.ipa"
     )
     
-    # Upload to TestFlight
     upload_to_testflight(
       api_key: api_key,
       ipa: "#{PROJECT_ROOT}/build/ios/ipa/Verbadent.ipa",
@@ -80,16 +97,70 @@ platform :ios do
 end
 
 # =====================
-# UTILITY LANES
+# VERSION MANAGEMENT
 # =====================
-desc "Bump build number"
-lane :bump do
+
+def get_current_version
   pubspec = File.read("#{PROJECT_ROOT}/pubspec.yaml")
-  match = pubspec.match(/version:\s*(\d+\.\d+\.\d+)\+(\d+)/)
-  new_build = match[2].to_i + 1
-  
-  new_pubspec = pubspec.gsub(/version:\s*\d+\.\d+\.\d+\+\d+/, "version: #{match[1]}+#{new_build}")
-  File.write("#{PROJECT_ROOT}/pubspec.yaml", new_pubspec)
-  
-  UI.success("✅ Build number bumped to #{new_build}")
+  match = pubspec.match(/version:\s*(\d+)\.(\d+)\.(\d+)\+(\d+)/)
+  {
+    major: match[1].to_i,
+    minor: match[2].to_i,
+    patch: match[3].to_i,
+    build: match[4].to_i,
+    full: "#{match[1]}.#{match[2]}.#{match[3]}+#{match[4]}"
+  }
+end
+
+def set_version(major, minor, patch, build)
+  pubspec_path = "#{PROJECT_ROOT}/pubspec.yaml"
+  pubspec = File.read(pubspec_path)
+  new_version = "#{major}.#{minor}.#{patch}+#{build}"
+  new_pubspec = pubspec.gsub(/version:\s*\d+\.\d+\.\d+\+\d+/, "version: #{new_version}")
+  File.write(pubspec_path, new_pubspec)
+  new_version
+end
+
+desc "Show current version"
+lane :version do
+  v = get_current_version
+  UI.message("═══════════════════════════════════════")
+  UI.message("  Current Version: #{v[:major]}.#{v[:minor]}.#{v[:patch]}+#{v[:build]}")
+  UI.message("═══════════════════════════════════════")
+  UI.message("  Major: #{v[:major]}  (breaking changes)")
+  UI.message("  Minor: #{v[:minor]}  (new features)")
+  UI.message("  Patch: #{v[:patch]}  (bug fixes)")
+  UI.message("  Build: #{v[:build]}  (upload number)")
+  UI.message("═══════════════════════════════════════")
+end
+
+desc "Bump build number only (same version, new upload)"
+lane :bump do
+  v = get_current_version
+  new_version = set_version(v[:major], v[:minor], v[:patch], v[:build] + 1)
+  UI.success("✅ Build bumped: #{v[:full]} → #{new_version}")
+end
+
+desc "Bump PATCH version (bug fixes) - resets build to 1"
+lane :bump_patch do
+  v = get_current_version
+  new_version = set_version(v[:major], v[:minor], v[:patch] + 1, 1)
+  UI.success("✅ Patch bumped: #{v[:full]} → #{new_version}")
+  UI.important("Use this for: bug fixes, small improvements, text changes")
+end
+
+desc "Bump MINOR version (new features) - resets patch and build"
+lane :bump_minor do
+  v = get_current_version
+  new_version = set_version(v[:major], v[:minor] + 1, 0, 1)
+  UI.success("✅ Minor bumped: #{v[:full]} → #{new_version}")
+  UI.important("Use this for: new features, significant improvements")
+end
+
+desc "Bump MAJOR version (breaking changes) - resets all"
+lane :bump_major do
+  v = get_current_version
+  new_version = set_version(v[:major] + 1, 0, 0, 1)
+  UI.success("✅ Major bumped: #{v[:full]} → #{new_version}")
+  UI.important("Use this for: breaking changes, major redesign, v1.0.0 release")
 end

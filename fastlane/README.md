@@ -13,13 +13,45 @@ For _fastlane_ installation instructions, see [Installing _fastlane_](https://do
 
 # Available Actions
 
+### version
+
+```sh
+[bundle exec] fastlane version
+```
+
+Show current version
+
 ### bump
 
 ```sh
 [bundle exec] fastlane bump
 ```
 
-Bump build number
+Bump build number only (same version, new upload)
+
+### bump_patch
+
+```sh
+[bundle exec] fastlane bump_patch
+```
+
+Bump PATCH version (bug fixes) - resets build to 1
+
+### bump_minor
+
+```sh
+[bundle exec] fastlane bump_minor
+```
+
+Bump MINOR version (new features) - resets patch and build
+
+### bump_major
+
+```sh
+[bundle exec] fastlane bump_major
+```
+
+Bump MAJOR version (breaking changes) - resets all
 
 ----
 
