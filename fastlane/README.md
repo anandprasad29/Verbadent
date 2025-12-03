@@ -66,6 +66,30 @@ Bump MAJOR version (breaking changes) - resets all
 
 Build and upload to Play Store Internal Testing
 
+### android metadata
+
+```sh
+[bundle exec] fastlane android metadata
+```
+
+Upload Play Store metadata only (no binary)
+
+### android screenshots
+
+```sh
+[bundle exec] fastlane android screenshots
+```
+
+Capture Android screenshots
+
+### android release
+
+```sh
+[bundle exec] fastlane android release
+```
+
+Full release with metadata
+
 ----
 
 
@@ -78,6 +102,30 @@ Build and upload to Play Store Internal Testing
 ```
 
 Build and upload to TestFlight
+
+### ios metadata
+
+```sh
+[bundle exec] fastlane ios metadata
+```
+
+Upload App Store metadata only (no binary)
+
+### ios screenshots
+
+```sh
+[bundle exec] fastlane ios screenshots
+```
+
+Capture iOS screenshots
+
+### ios release
+
+```sh
+[bundle exec] fastlane ios release
+```
+
+Full release with metadata
 
 ----
 

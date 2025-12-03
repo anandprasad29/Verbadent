@@ -1,0 +1,24 @@
+# Deliverfile - iOS App Store metadata configuration
+# Note: API key is provided by Fastfile
+
+# App identifier
+app_identifier("com.verbident")
+
+# Metadata path
+metadata_path("./fastlane/metadata")
+
+# Screenshots path
+screenshots_path("./fastlane/screenshots")
+
+# Don't submit for review automatically
+submit_for_review(false)
+
+# Automatically release after approval
+automatic_release(false)
+
+# Force overwrite of metadata
+force(true)
+
+# Precheck for common issues before upload
+precheck_include_in_app_purchases(false)
+run_precheck_before_submit(false)

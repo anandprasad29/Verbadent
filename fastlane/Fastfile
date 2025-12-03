@@ -12,19 +12,37 @@
 # │ BUILD   │ Every TestFlight/Play Store upload (auto-incremented)      │
 # └─────────┴────────────────────────────────────────────────────────────┘
 #
-# IMPORTANT: Once a version (e.g., 0.2.0) is approved on TestFlight/App Store,
-# you MUST bump at least the PATCH version for new submissions.
+# DEPLOYMENT COMMANDS:
+#   fastlane ios beta           - Build and upload to TestFlight
+#   fastlane android beta       - Build and upload to Play Store Internal
 #
-# COMMANDS:
-#   fastlane bump         - Increment build number only (for same version)
-#   fastlane bump_patch   - Bump patch version (0.2.0 → 0.2.1), reset build to 1
-#   fastlane bump_minor   - Bump minor version (0.2.1 → 0.3.0), reset build to 1
-#   fastlane bump_major   - Bump major version (0.3.0 → 1.0.0), reset build to 1
+# METADATA COMMANDS:
+#   fastlane ios metadata       - Upload App Store metadata only
+#   fastlane android metadata   - Upload Play Store metadata only
+#   fastlane ios screenshots    - Capture iOS screenshots
+#   fastlane android screenshots - Capture Android screenshots
+#
+# VERSION COMMANDS:
 #   fastlane version      - Show current version
+#   fastlane bump         - Increment build number only
+#   fastlane bump_patch   - Bump patch version (0.2.0 → 0.2.1)
+#   fastlane bump_minor   - Bump minor version (0.2.1 → 0.3.0)
+#   fastlane bump_major   - Bump major version (0.3.0 → 1.0.0)
 
 default_platform(:ios)
 
 PROJECT_ROOT = File.expand_path("..", __dir__)
+
+# =====================
+# iOS API KEY HELPER
+# =====================
+def ios_api_key
+  app_store_connect_api_key(
+    key_id: "W663NX6L7M",
+    issuer_id: "f3d4bbef-fcdf-4d27-8e8f-ae2b998abb50",
+    key_filepath: "#{PROJECT_ROOT}/fastlane/AuthKey_W663NX6L7M.p8"
+  )
+end
 
 # =====================
 # ANDROID LANES
@@ -47,6 +65,58 @@ platform :android do
     
     UI.success("✅ Android build uploaded to Internal Testing!")
   end
+  
+  desc "Upload Play Store metadata only (no binary)"
+  lane :metadata do
+    upload_to_play_store(
+      skip_upload_aab: true,
+      skip_upload_apk: true,
+      skip_upload_screenshots: false,
+      skip_upload_images: false,
+      skip_upload_metadata: false
+    )
+    
+    UI.success("✅ Android metadata uploaded to Play Store!")
+  end
+  
+  desc "Capture Android screenshots"
+  lane :screenshots do
+    UI.message("📱 Android Screenshot Capture")
+    UI.message("============================")
+    
+    # Build the app
+    Dir.chdir(PROJECT_ROOT) do
+      sh("flutter build apk --release")
+    end
+    
+    # Run screengrab (requires emulator running)
+    # screengrab
+    
+    UI.important("For manual screenshots:")
+    UI.message("1. Start emulator: emulator -avd <name>")
+    UI.message("2. Run: flutter run -d emulator-5554")
+    UI.message("3. Navigate to each screen")
+    UI.message("4. Capture: adb shell screencap -p /sdcard/screen.png && adb pull /sdcard/screen.png")
+    UI.message("5. Save to: fastlane/metadata/android/en-US/images/phoneScreenshots/")
+  end
+  
+  desc "Full release with metadata"
+  lane :release do
+    Dir.chdir(PROJECT_ROOT) do
+      sh("flutter build appbundle --release")
+    end
+    
+    upload_to_play_store(
+      track: "internal",
+      aab: "#{PROJECT_ROOT}/build/app/outputs/bundle/release/app-release.aab",
+      skip_upload_metadata: false,
+      skip_upload_images: false,
+      skip_upload_screenshots: false,
+      release_status: "draft"
+    )
+    
+    UI.success("✅ Android release with metadata uploaded!")
+  end
 end
 
 # =====================
@@ -57,11 +127,7 @@ platform :ios do
   lane :beta do
     ENV["PATH"] = "/usr/bin:" + ENV["PATH"]
     
-    api_key = app_store_connect_api_key(
-      key_id: "W663NX6L7M",
-      issuer_id: "f3d4bbef-fcdf-4d27-8e8f-ae2b998abb50",
-      key_filepath: "#{PROJECT_ROOT}/fastlane/AuthKey_W663NX6L7M.p8"
-    )
+    api_key = ios_api_key
     
     get_certificates(
       api_key: api_key,
@@ -93,6 +159,77 @@ platform :ios do
     )
     
     UI.success("✅ iOS build uploaded to TestFlight!")
+  end
+  
+  desc "Upload App Store metadata only (no binary)"
+  lane :metadata do
+    api_key = ios_api_key
+    
+    deliver(
+      api_key: api_key,
+      skip_binary_upload: true,
+      skip_screenshots: false,
+      skip_metadata: false,
+      force: true,
+      submit_for_review: false
+    )
+    
+    UI.success("✅ iOS metadata uploaded to App Store Connect!")
+  end
+  
+  desc "Capture iOS screenshots"
+  lane :screenshots do
+    UI.message("📱 iOS Screenshot Capture")
+    UI.message("=========================")
+    
+    # Note: Full automation requires UI test target in Xcode
+    # snapshot
+    
+    UI.important("For manual screenshots:")
+    UI.message("1. Run: flutter run -d 'iPhone 16 Pro Max'")
+    UI.message("2. Navigate to each screen")
+    UI.message("3. Press Cmd+S in Simulator to save screenshot")
+    UI.message("4. Save to: fastlane/screenshots/en-US/")
+    UI.message("")
+    UI.message("Required devices:")
+    UI.message("  - iPhone 16 Pro Max (6.9\")")
+    UI.message("  - iPhone 15 Pro Max (6.7\")")
+    UI.message("  - iPhone 8 Plus (5.5\")")
+    UI.message("  - iPad Pro 12.9\"")
+    UI.message("  - iPad Pro 11\"")
+  end
+  
+  desc "Full release with metadata"
+  lane :release do
+    ENV["PATH"] = "/usr/bin:" + ENV["PATH"]
+    
+    api_key = ios_api_key
+    
+    get_certificates(api_key: api_key, platform: "ios")
+    get_provisioning_profile(api_key: api_key, app_identifier: "com.verbident", platform: "ios")
+    
+    Dir.chdir(PROJECT_ROOT) do
+      sh("flutter build ios --release --no-codesign")
+    end
+    
+    build_app(
+      workspace: "#{PROJECT_ROOT}/ios/Runner.xcworkspace",
+      scheme: "Runner",
+      export_method: "app-store",
+      output_directory: "#{PROJECT_ROOT}/build/ios/ipa",
+      output_name: "Verbadent.ipa"
+    )
+    
+    deliver(
+      api_key: api_key,
+      ipa: "#{PROJECT_ROOT}/build/ios/ipa/Verbadent.ipa",
+      skip_screenshots: false,
+      skip_metadata: false,
+      force: true,
+      submit_for_review: false
+    )
+    
+    UI.success("✅ iOS release with metadata uploaded!")
   end
 end
 

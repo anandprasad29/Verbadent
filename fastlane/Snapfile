@@ -1,0 +1,39 @@
+# Snapfile - iOS Screenshot Configuration
+
+# Devices to capture screenshots on
+# Required: 6.7" (iPhone 15 Pro Max), 6.5" (iPhone 14 Plus), 5.5" (iPhone 8 Plus)
+# iPad: 12.9" and 11"
+devices([
+  "iPhone 16 Pro Max",       # 6.9" - newest large phone
+  "iPhone 15 Pro Max",       # 6.7" display (required)
+  "iPhone 8 Plus",           # 5.5" display (required)
+  "iPad Pro (12.9-inch) (6th generation)",  # 12.9" iPad
+  "iPad Pro (11-inch) (4th generation)"     # 11" iPad
+])
+
+# Languages for screenshots
+languages(["en-US"])
+
+# Xcode scheme
+scheme("Runner")
+
+# Workspace
+workspace("../ios/Runner.xcworkspace")
+
+# Output directory
+output_directory("./fastlane/screenshots")
+
+# Clear old screenshots before capture
+clear_previous_screenshots(true)
+
+# Launch arguments for the app
+launch_arguments(["-UITesting"])
+
+# Stop after first error
+stop_after_first_error(false)
+
+# Skip open summary after completion
+skip_open_summary(true)
+
+# Number of retries
+number_of_retries(1)

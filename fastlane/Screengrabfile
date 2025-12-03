@@ -1,0 +1,29 @@
+# Screengrabfile - Android Screenshot Configuration
+
+# Package name
+app_package_name("com.verbident")
+
+# APK paths
+app_apk_path("build/app/outputs/flutter-apk/app-release.apk")
+tests_apk_path("build/app/outputs/apk/androidTest/debug/app-debug-androidTest.apk")
+
+# Locales to capture
+locales(["en-US"])
+
+# Output directory
+output_directory("fastlane/metadata/android/en-US/images")
+
+# Clear previous screenshots
+clear_previous_screenshots(true)
+
+# Use ADB instead of Screengrab library (simpler setup)
+use_adb_root(false)
+
+# Ending locale
+ending_locale("en-US")
+
+# Skip open summary
+skip_open_summary(true)
+
+# Launch arguments
+# launch_arguments(["--uitesting"])
