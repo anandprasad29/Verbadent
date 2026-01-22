@@ -1,13 +1,18 @@
+// GENERATED CODE - DO NOT EDIT BY HAND
+// Generated from assets/dental_items.yaml
+// To regenerate, run: dart run tool/generate_dental_items.dart
+
 import '../domain/dental_item.dart';
 
 /// Central repository of all dental items used across the app.
 /// This is the single source of truth for dental content.
 /// All features (Library, Before Visit, Build Your Own, etc.) reference these items.
+///
+/// To add or modify items, edit assets/dental_items.yaml and regenerate this file.
 class DentalItems {
   /// All dental items available in the app.
   /// Images are stored in `assets/images/library/`.
   static const List<DentalItem> all = [
-    // Dental visit scenarios
     DentalItem(
       id: 'dentist-chair',
       imagePath: 'assets/images/library/dentist_chair.webp',
@@ -33,7 +38,6 @@ class DentalItems {
       imagePath: 'assets/images/library/count_teeth.webp',
       caption: 'The dentist will count your teeth',
     ),
-    // Dental tools and actions
     DentalItem(
       id: 'dental-mirror',
       imagePath: 'assets/images/library/dental_mirror.webp',
@@ -110,4 +114,3 @@ class DentalItems {
   // Private constructor to prevent instantiation
   DentalItems._();
 }
-
