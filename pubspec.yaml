@@ -37,6 +37,7 @@ dev_dependencies:
   build_runner: ^2.4.9
   riverpod_generator: ^2.4.0
   flutter_launcher_icons: ^0.14.3
+  yaml: ^3.1.2
 
 flutter:
   uses-material-design: true
@@ -44,6 +45,7 @@ flutter:
   
   assets:
     - assets/images/library/
+    - assets/dental_items.yaml
 
   fonts:
     - family: KumarOne

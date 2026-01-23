@@ -135,3 +135,17 @@ Screenshots are currently captured manually:
 
 - **App Store Connect**: [appstoreconnect.apple.com](https://appstoreconnect.apple.com)
 - **Google Play Console**: [play.google.com/console](https://play.google.com/console)
+
+## Content Management
+
+### Adding Images
+
+To add new images to the app, see the complete guide: **[docs/ADDING_IMAGES.md](docs/ADDING_IMAGES.md)**
+
+Quick summary:
+1. Add `.webp` image to `assets/images/library/`
+2. Edit `assets/dental_items.yaml` to add metadata entry
+3. Run `./scripts/generate_dental_items.sh` to generate code
+4. Build and test the app
+
+The app uses a metadata-driven workflow where images are defined in YAML and Dart code is auto-generated.
