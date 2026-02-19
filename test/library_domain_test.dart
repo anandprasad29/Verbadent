@@ -91,8 +91,8 @@ void main() {
       expect(DentalItems.all, isNotEmpty);
     });
 
-    test('sampleItems contains 10 items', () {
-      expect(DentalItems.all.length, equals(10));
+    test('sampleItems contains 29 items', () {
+      expect(DentalItems.all.length, equals(29));
     });
 
     test('all items have unique ids', () {
@@ -114,32 +114,12 @@ void main() {
       }
     });
 
-    test('all items have dental-related captions', () {
-      final dentalKeywords = [
-        'dentist',
-        'teeth',
-        'mouth',
-        'dental',
-        'chair',
-        'mask',
-        'gloves',
-        'light',
-        'mirror',
-        'drill',
-        'suction',
-        'stop',
-      ];
-
+    test('all items have non-empty string captions', () {
       for (final item in DentalItems.all) {
-        final captionLower = item.caption.toLowerCase();
-        final containsDentalKeyword = dentalKeywords.any(
-          (keyword) => captionLower.contains(keyword),
-        );
         expect(
-          containsDentalKeyword,
+          item.caption.isNotEmpty,
           isTrue,
-          reason:
-              'Caption "${item.caption}" should contain dental-related keyword',
+          reason: 'Caption for "${item.id}" should not be empty',
         );
       }
     });
@@ -174,7 +154,7 @@ void main() {
     });
 
     test('items have meaningful ids', () {
-      final expectedIds = [
+      final expectedFirstIds = [
         'dentist-chair',
         'dentist-mask',
         'dentist-gloves',
@@ -187,8 +167,18 @@ void main() {
         'stop',
       ];
 
-      for (int i = 0; i < DentalItems.all.length; i++) {
-        expect(DentalItems.all[i].id, equals(expectedIds[i]));
+      // Verify original items are still first in the list
+      for (int i = 0; i < expectedFirstIds.length; i++) {
+        expect(DentalItems.all[i].id, equals(expectedFirstIds[i]));
+      }
+
+      // Verify all IDs use kebab-case format
+      for (final item in DentalItems.all) {
+        expect(
+          item.id,
+          matches(RegExp(r'^[a-z][a-z0-9-]*$')),
+          reason: 'ID "${item.id}" should be kebab-case',
+        );
       }
     });
 

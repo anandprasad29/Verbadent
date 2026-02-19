@@ -383,9 +383,9 @@ void main() {
       tester.view.resetDevicePixelRatio();
     });
 
-    testWidgets('renders all 10 sample items', (tester) async {
+    testWidgets('renders all 29 sample items', (tester) async {
       tester.view.physicalSize =
-          const Size(1450, 1200); // Tall to show all items
+          const Size(1450, 4000); // Tall to show all items
       tester.view.devicePixelRatio = 1.0;
 
       await tester.pumpWidget(
@@ -397,11 +397,11 @@ void main() {
       );
 
       // Scroll to load all items
-      await tester.drag(find.byType(CustomScrollView), const Offset(0, -500));
+      await tester.drag(find.byType(CustomScrollView), const Offset(0, -2000));
       await tester.pumpAndSettle();
 
-      // Should have 10 LibraryCard widgets
-      expect(find.byType(LibraryCard), findsNWidgets(10));
+      // Should have 29 LibraryCard widgets
+      expect(find.byType(LibraryCard), findsNWidgets(29));
 
       tester.view.resetPhysicalSize();
       tester.view.resetDevicePixelRatio();

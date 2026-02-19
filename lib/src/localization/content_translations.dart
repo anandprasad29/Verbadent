@@ -47,6 +47,83 @@ class ContentTranslations {
       'en': 'Stop',
       'es': 'Para',
     },
+    // Communication and actions
+    'all-done': {
+      'en': 'All done',
+      'es': 'Todo listo',
+    },
+    'bite-down': {
+      'en': 'Bite down',
+      'es': 'Muerde',
+    },
+    'break': {
+      'en': 'Break',
+      'es': 'Descanso',
+    },
+    'close-your-mouth': {
+      'en': 'Close your mouth',
+      'es': 'Cierra la boca',
+    },
+    'do-not-swallow': {
+      'en': 'Do not swallow',
+      'es': 'No tragues',
+    },
+    'floss': {
+      'en': 'Floss',
+      'es': 'Hilo dental',
+    },
+    'hands-on-the-side': {
+      'en': 'Hands on the side',
+      'es': 'Manos a los lados',
+    },
+    'hurt': {
+      'en': 'Hurt',
+      'es': 'Duele',
+    },
+    'i-dont-like-that': {
+      'en': "I don't like that",
+      'es': 'No me gusta eso',
+    },
+    'mad': {
+      'en': 'Mad',
+      'es': 'Enojado',
+    },
+    'no': {
+      'en': 'No',
+      'es': 'No',
+    },
+    'spit-out': {
+      'en': 'Spit out',
+      'es': 'Escupe',
+    },
+    'tired': {
+      'en': 'Tired',
+      'es': 'Cansado',
+    },
+    'tongue': {
+      'en': 'Tongue',
+      'es': 'Lengua',
+    },
+    'tooth': {
+      'en': 'Tooth',
+      'es': 'Diente',
+    },
+    'toothbrush': {
+      'en': 'Toothbrush',
+      'es': 'Cepillo de dientes',
+    },
+    'toothpaste': {
+      'en': 'Toothpaste',
+      'es': 'Pasta de dientes',
+    },
+    'water': {
+      'en': 'Water',
+      'es': 'Agua',
+    },
+    'yes': {
+      'en': 'Yes',
+      'es': 'Sí',
+    },
   };
 
   /// Get the translated caption for a given item ID and language.

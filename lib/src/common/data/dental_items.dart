@@ -63,6 +63,101 @@ class DentalItems {
       imagePath: 'assets/images/library/stop.webp',
       caption: 'Stop',
     ),
+    DentalItem(
+      id: 'all-done',
+      imagePath: 'assets/images/library/all_done.webp',
+      caption: 'All done',
+    ),
+    DentalItem(
+      id: 'bite-down',
+      imagePath: 'assets/images/library/bite_down.webp',
+      caption: 'Bite down',
+    ),
+    DentalItem(
+      id: 'break',
+      imagePath: 'assets/images/library/break.webp',
+      caption: 'Break',
+    ),
+    DentalItem(
+      id: 'close-your-mouth',
+      imagePath: 'assets/images/library/close_your_mouth.webp',
+      caption: 'Close your mouth',
+    ),
+    DentalItem(
+      id: 'do-not-swallow',
+      imagePath: 'assets/images/library/do_not_swallow.webp',
+      caption: 'Do not swallow',
+    ),
+    DentalItem(
+      id: 'floss',
+      imagePath: 'assets/images/library/floss.webp',
+      caption: 'Floss',
+    ),
+    DentalItem(
+      id: 'hands-on-the-side',
+      imagePath: 'assets/images/library/hands_on_the_side.webp',
+      caption: 'Hands on the side',
+    ),
+    DentalItem(
+      id: 'hurt',
+      imagePath: 'assets/images/library/hurt.webp',
+      caption: 'Hurt',
+    ),
+    DentalItem(
+      id: 'i-dont-like-that',
+      imagePath: 'assets/images/library/i_dont_like_that.webp',
+      caption: "I don't like that",
+    ),
+    DentalItem(
+      id: 'mad',
+      imagePath: 'assets/images/library/mad.webp',
+      caption: 'Mad',
+    ),
+    DentalItem(
+      id: 'no',
+      imagePath: 'assets/images/library/no.webp',
+      caption: 'No',
+    ),
+    DentalItem(
+      id: 'spit-out',
+      imagePath: 'assets/images/library/spit_out.webp',
+      caption: 'Spit out',
+    ),
+    DentalItem(
+      id: 'tired',
+      imagePath: 'assets/images/library/tired.webp',
+      caption: 'Tired',
+    ),
+    DentalItem(
+      id: 'tongue',
+      imagePath: 'assets/images/library/tongue.webp',
+      caption: 'Tongue',
+    ),
+    DentalItem(
+      id: 'tooth',
+      imagePath: 'assets/images/library/tooth.webp',
+      caption: 'Tooth',
+    ),
+    DentalItem(
+      id: 'toothbrush',
+      imagePath: 'assets/images/library/toothbrush.webp',
+      caption: 'Toothbrush',
+    ),
+    DentalItem(
+      id: 'toothpaste',
+      imagePath: 'assets/images/library/toothpaste.webp',
+      caption: 'Toothpaste',
+    ),
+    DentalItem(
+      id: 'water',
+      imagePath: 'assets/images/library/water.webp',
+      caption: 'Water',
+    ),
+    DentalItem(
+      id: 'yes',
+      imagePath: 'assets/images/library/yes.webp',
+      caption: 'Yes',
+    ),
   ];
 
   /// IDs for the "Before Visit" story sequence.
@@ -114,3 +209,4 @@ class DentalItems {
   // Private constructor to prevent instantiation
   DentalItems._();
 }
+
