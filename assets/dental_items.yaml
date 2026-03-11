@@ -107,7 +107,10 @@ dental_items:
 # These items are shown as a flat image grid
 during_visit_items:
   - dental-mirror
+  - hurt
+  - tongue
   - dental-drill
   - suction
   - open-mouth
   - stop
+  - bite-down

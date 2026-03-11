@@ -179,15 +179,18 @@ void main() {
 
     test('duringVisitItems has correct items', () {
       final items = DentalItems.duringVisitItems;
-      expect(items.length, equals(5));
+      expect(items.length, equals(8));
 
       final ids = items.map((i) => i.id).toList();
       expect(ids, [
         'dental-mirror',
+        'hurt',
+        'tongue',
         'dental-drill',
         'suction',
         'open-mouth',
         'stop',
+        'bite-down',
       ]);
     });
 

@@ -139,10 +139,13 @@ class DentalItems {
   /// These items are shown as a flat image grid.
   static const List<String> duringVisitIds = [
     'dental-mirror',
+    'hurt',
+    'tongue',
     'dental-drill',
     'suction',
     'open-mouth',
     'stop',
+    'bite-down',
   ];
 
   /// Lookup map for fast ID-based access.
