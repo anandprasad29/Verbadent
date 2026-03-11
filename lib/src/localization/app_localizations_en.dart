@@ -157,6 +157,9 @@ class AppLocalizationsEn extends AppLocalizations {
   String get duplicateNameError => 'A template with this name already exists';
 
   @override
+  String get navVisitWorkflow => 'Visit Workflow';
+
+  @override
   String get navSettings => 'Settings';
 
   @override

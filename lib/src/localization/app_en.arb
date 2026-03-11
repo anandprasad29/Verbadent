@@ -194,6 +194,10 @@
   "@duplicateNameError": {
     "description": "Error when template name is duplicate"
   },
+  "navVisitWorkflow": "Visit Workflow",
+  "@navVisitWorkflow": {
+    "description": "Navigation label for visit workflow accordion"
+  },
   "navSettings": "Settings",
   "@navSettings": {
     "description": "Navigation label for settings"
