@@ -1,5 +1,6 @@
-Version 0.2.0:
-• Improved app stability
-• Enhanced visual storytelling experience
-• Better support for iPad layouts
-• Performance optimizations
+Version 1.0.0:
+• New "During the Visit" interactive page — follow along with each step of the dental appointment
+• Expanded dental library with 19 new items organized by category with sticky headers
+• Redesigned Before Visit story with improved illustrations
+• Fresh new look with InstrumentSans font and CareQuest brand colors
+• Visit Workflow accordion in the sidebar for easy navigation

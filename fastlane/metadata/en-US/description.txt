@@ -5,8 +5,11 @@ FEATURES:
 Before the Visit Story
 Walk through a dental visit step-by-step with friendly illustrations. Children can see what to expect: the dentist chair, dental mirror, bright light, and more.
 
+During the Visit
+Follow along during the dental appointment with an interactive guide showing each step as it happens — from sitting in the chair to getting a cleaning.
+
 Dental Tools Library
-Explore common dental tools and equipment in a safe, non-threatening way. Tap any item to hear its name spoken aloud.
+Explore common dental tools and equipment organized by category in a safe, non-threatening way. Tap any item to hear its name spoken aloud.
 
 Text-to-Speech
 Every image can be tapped to hear its description, helping children learn vocabulary and feel comfortable with dental terminology.
