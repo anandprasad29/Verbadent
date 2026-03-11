@@ -201,8 +201,8 @@ void main() {
 
   group('AppColors', () {
     group('Primary Colors', () {
-      test('primary color is #5483F5', () {
-        expect(AppColors.primary, equals(const Color(0xFF5483F5)));
+      test('primary color is #4284F3', () {
+        expect(AppColors.primary, equals(const Color(0xFF4284F3)));
       });
 
       test('primary dark color is #4284F3', () {
@@ -225,8 +225,8 @@ void main() {
         expect(AppColors.textPrimary, equals(const Color(0xFF0A2D6D)));
       });
 
-      test('text title is #1B2B57', () {
-        expect(AppColors.textTitle, equals(const Color(0xFF1B2B57)));
+      test('text title is #0A2D6D', () {
+        expect(AppColors.textTitle, equals(const Color(0xFF0A2D6D)));
       });
 
       test('text secondary is black', () {
@@ -285,8 +285,8 @@ void main() {
 
   group('AppTextStyles', () {
     group('Title Styles', () {
-      test('titleLarge uses KumarOne font', () {
-        expect(AppTextStyles.titleLarge.fontFamily, equals('KumarOne'));
+      test('titleLarge uses InstrumentSans font', () {
+        expect(AppTextStyles.titleLarge.fontFamily, equals('InstrumentSans'));
       });
 
       test('titleLarge has desktop font size', () {
@@ -304,8 +304,8 @@ void main() {
         expect(AppTextStyles.titleLarge.color, equals(AppColors.textTitle));
       });
 
-      test('titleMobile uses KumarOne font', () {
-        expect(AppTextStyles.titleMobile.fontFamily, equals('KumarOne'));
+      test('titleMobile uses InstrumentSans font', () {
+        expect(AppTextStyles.titleMobile.fontFamily, equals('InstrumentSans'));
       });
 
       test('titleMobile has mobile font size', () {
@@ -317,8 +317,8 @@ void main() {
     });
 
     group('Page Header Style', () {
-      test('pageHeader uses KumarOne font', () {
-        expect(AppTextStyles.pageHeader.fontFamily, equals('KumarOne'));
+      test('pageHeader uses InstrumentSans font', () {
+        expect(AppTextStyles.pageHeader.fontFamily, equals('InstrumentSans'));
       });
 
       test('pageHeader has header font size', () {
@@ -334,8 +334,8 @@ void main() {
     });
 
     group('Sidebar Item Styles', () {
-      test('sidebarItem uses KumarOne font', () {
-        expect(AppTextStyles.sidebarItem.fontFamily, equals('KumarOne'));
+      test('sidebarItem uses InstrumentSans font', () {
+        expect(AppTextStyles.sidebarItem.fontFamily, equals('InstrumentSans'));
       });
 
       test('sidebarItem is bold', () {

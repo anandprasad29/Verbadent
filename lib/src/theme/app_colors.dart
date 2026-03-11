@@ -10,8 +10,8 @@ class AppColors {
 
   // Primary colors
   static const Color primary = Color(
-    0xFF5483F5,
-  ); // Blue for sidebar and accents
+    0xFF4284F3,
+  ); // Quest Blue for sidebar and accents
   static const Color primaryDark = Color(0xFF4284F3); // Darker blue variant
 
   // Background colors
@@ -20,17 +20,17 @@ class AppColors {
 
   // Text colors
   static const Color textPrimary = Color(0xFF0A2D6D); // Dark blue for headers
-  static const Color textTitle = Color(0xFF1B2B57); // Navy for main titles
+  static const Color textTitle = Color(0xFF0A2D6D); // System Blue for main titles
   static const Color textSecondary = Color(0xFF000000); // Black for body text
 
   // Sidebar colors
-  static const Color sidebarBackground = Color(0xFF5483F5); // Blue sidebar
+  static const Color sidebarBackground = Color(0xFF4284F3); // Quest Blue sidebar
   static const Color sidebarItemBackground = Color(0xFFD9D9D9); // Gray buttons
   static const Color sidebarItemActive = Color(0xFFFFFFFF); // White for active
   static const Color sidebarItemText = Color(0xFF000000); // Black text
 
   // Card colors
-  static const Color cardBorder = Color(0xFF5483F5); // Blue border
+  static const Color cardBorder = Color(0xFF4284F3); // Quest Blue border
   static const Color cardBackground = Color(0xFFFFFFFF); // White background
 
   // Neutral colors
@@ -44,7 +44,7 @@ class AppColors {
 
   // Primary colors (slightly brighter for dark mode)
   static const Color primaryDarkMode = Color(0xFF6B9AFF);
-  static const Color primaryDarkModeDark = Color(0xFF5483F5);
+  static const Color primaryDarkModeDark = Color(0xFF4284F3);
 
   // Background colors
   static const Color backgroundDark = Color(0xFF121218); // Deep dark

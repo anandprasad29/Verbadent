@@ -127,8 +127,8 @@ void main() {
             .first,
       );
 
-      // Verify blue background color (#5483F5)
-      expect(container.color, equals(const Color(0xFF5483F5)));
+      // Verify Quest Blue background color (#4284F3)
+      expect(container.color, equals(const Color(0xFF4284F3)));
     });
 
     testWidgets('sidebar items have neutral background color', (tester) async {
@@ -141,7 +141,7 @@ void main() {
       expect(sidebarItemFinder, findsNWidgets(5));
     });
 
-    testWidgets('sidebar items use KumarOne font', (tester) async {
+    testWidgets('sidebar items use InstrumentSans font', (tester) async {
       await tester.pumpWidget(
         ProviderScope(child: MaterialApp.router(routerConfig: testRouter)),
       );
@@ -151,7 +151,7 @@ void main() {
       expect(textFinder, findsOneWidget);
 
       final textWidget = tester.widget<Text>(textFinder);
-      expect(textWidget.style?.fontFamily, equals('KumarOne'));
+      expect(textWidget.style?.fontFamily, equals('InstrumentSans'));
     });
 
     testWidgets('sidebar items have correct keys for testing', (tester) async {
