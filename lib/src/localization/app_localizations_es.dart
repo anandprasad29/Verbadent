@@ -158,6 +158,9 @@ class AppLocalizationsEs extends AppLocalizations {
   String get duplicateNameError => 'Ya existe una plantilla con este nombre';
 
   @override
+  String get navVisitWorkflow => 'Flujo de visita';
+
+  @override
   String get navSettings => 'Ajustes';
 
   @override

@@ -44,6 +44,7 @@
   "dragToReorder": "Arrastra para reordenar",
   "emptyTemplatePrompt": "Toca las imágenes abajo para agregarlas a tu plantilla",
   "duplicateNameError": "Ya existe una plantilla con este nombre",
+  "navVisitWorkflow": "Flujo de visita",
   "navSettings": "Ajustes",
   "settingsTitle": "Ajustes",
   "settingsAppearance": "Apariencia",

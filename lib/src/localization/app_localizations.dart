@@ -362,6 +362,12 @@ abstract class AppLocalizations {
   /// **'A template with this name already exists'**
   String get duplicateNameError;
 
+  /// Navigation label for visit workflow accordion
+  ///
+  /// In en, this message translates to:
+  /// **'Visit Workflow'**
+  String get navVisitWorkflow;
+
   /// Navigation label for settings
   ///
   /// In en, this message translates to:
