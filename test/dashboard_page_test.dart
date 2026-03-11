@@ -451,7 +451,7 @@ void main() {
     });
 
     group('Accessibility', () {
-      testWidgets('title uses KumarOne font', (tester) async {
+      testWidgets('title uses InstrumentSans font', (tester) async {
         tester.view.physicalSize = const Size(1024, 768);
         tester.view.devicePixelRatio = 1.0;
 
@@ -462,7 +462,7 @@ void main() {
         );
 
         final text = tester.widget<Text>(find.text('VERBIDENT'));
-        expect(text.style?.fontFamily, equals('KumarOne'));
+        expect(text.style?.fontFamily, equals('InstrumentSans'));
 
         tester.view.resetPhysicalSize();
         tester.view.resetDevicePixelRatio();

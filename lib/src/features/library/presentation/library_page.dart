@@ -147,7 +147,7 @@ class _LibraryPageState extends ConsumerState<LibraryPage> {
                   child: Text(
                     l10n?.pageHeaderLibrary ?? 'Library',
                     style: TextStyle(
-                      fontFamily: 'KumarOne',
+                      fontFamily: 'InstrumentSans',
                       fontSize: AppConstants.headerFontSize,
                       color: context.appTextPrimary,
                     ),

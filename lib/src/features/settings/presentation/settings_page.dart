@@ -48,7 +48,7 @@ class SettingsPage extends ConsumerWidget {
                     child: Text(
                       l10n?.settingsTitle ?? 'Settings',
                       style: TextStyle(
-                        fontFamily: 'KumarOne',
+                        fontFamily: 'InstrumentSans',
                         fontSize: AppConstants.headerFontSize,
                         color: context.appTextPrimary,
                       ),
@@ -89,7 +89,7 @@ class SettingsPage extends ConsumerWidget {
     return Text(
       title,
       style: TextStyle(
-        fontFamily: 'KumarOne',
+        fontFamily: 'InstrumentSans',
         fontSize: 18,
         color: context.appTextPrimary,
       ),

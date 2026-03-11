@@ -283,7 +283,7 @@ class SidebarItem extends StatelessWidget {
                 child: Text(
                   label,
                   style: TextStyle(
-                    fontFamily: 'KumarOne',
+                    fontFamily: 'InstrumentSans',
                     fontSize: AppConstants.sidebarItemFontSize,
                     fontWeight: FontWeight.bold,
                     color: isActive

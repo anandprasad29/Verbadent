@@ -31,7 +31,7 @@ class DashboardPage extends StatelessWidget {
               child: Text(
                 'VERBIDENT',
                 style: TextStyle(
-                  fontFamily: 'KumarOne',
+                  fontFamily: 'InstrumentSans',
                   // Use larger base size, FittedBox will scale down if needed
                   fontSize: _calculateFontSize(contentWidth),
                   fontWeight: FontWeight.bold,

@@ -104,7 +104,7 @@ class _DuringVisitPageState extends ConsumerState<DuringVisitPage> {
                   child: Text(
                     l10n?.pageHeaderDuringVisit ?? 'During the visit',
                     style: TextStyle(
-                      fontFamily: 'KumarOne',
+                      fontFamily: 'InstrumentSans',
                       fontSize: AppConstants.headerFontSize,
                       color: context.appTextPrimary,
                     ),

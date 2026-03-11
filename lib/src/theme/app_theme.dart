@@ -29,19 +29,19 @@ class AppTheme {
       // Text theme with responsive sizes
       textTheme: TextTheme(
         displayLarge: TextStyle(
-          fontFamily: 'KumarOne',
+          fontFamily: 'InstrumentSans',
           fontSize: displayLargeSize,
           color: AppColors.textPrimary,
           fontWeight: FontWeight.w400,
         ),
         bodyLarge: TextStyle(
-          fontFamily: 'KumarOne',
+          fontFamily: 'InstrumentSans',
           fontSize: bodyLargeSize,
           color: AppColors.textSecondary,
           fontWeight: FontWeight.w400,
         ),
         bodyMedium: TextStyle(
-          fontFamily: 'KumarOne',
+          fontFamily: 'InstrumentSans',
           fontSize: bodyLargeSize,
           color: AppColors.textSecondary,
           fontWeight: FontWeight.w400,
@@ -55,7 +55,7 @@ class AppTheme {
         centerTitle: true,
         systemOverlayStyle: SystemUiOverlayStyle.dark,
         titleTextStyle: TextStyle(
-          fontFamily: 'KumarOne',
+          fontFamily: 'InstrumentSans',
           fontSize: appBarTitleSize,
           color: AppColors.textPrimary,
           fontWeight: FontWeight.w400,
@@ -76,13 +76,13 @@ class AppTheme {
       scaffoldBackgroundColor: AppColors.background,
       textTheme: const TextTheme(
         displayLarge: TextStyle(
-          fontFamily: 'KumarOne',
+          fontFamily: 'InstrumentSans',
           fontSize: 85,
           color: AppColors.textPrimary,
           fontWeight: FontWeight.w400,
         ),
         bodyLarge: TextStyle(
-          fontFamily: 'KumarOne',
+          fontFamily: 'InstrumentSans',
           fontSize: 12,
           color: AppColors.textSecondary,
           fontWeight: FontWeight.w400,
@@ -93,7 +93,7 @@ class AppTheme {
         elevation: 0,
         centerTitle: true,
         titleTextStyle: TextStyle(
-          fontFamily: 'KumarOne',
+          fontFamily: 'InstrumentSans',
           fontSize: 24,
           color: AppColors.textPrimary,
           fontWeight: FontWeight.w400,
@@ -114,13 +114,13 @@ class AppTheme {
       scaffoldBackgroundColor: AppColors.backgroundDark,
       textTheme: const TextTheme(
         displayLarge: TextStyle(
-          fontFamily: 'KumarOne',
+          fontFamily: 'InstrumentSans',
           fontSize: 85,
           color: AppColors.textPrimaryDark,
           fontWeight: FontWeight.w400,
         ),
         bodyLarge: TextStyle(
-          fontFamily: 'KumarOne',
+          fontFamily: 'InstrumentSans',
           fontSize: 12,
           color: AppColors.textSecondaryDark,
           fontWeight: FontWeight.w400,
@@ -131,7 +131,7 @@ class AppTheme {
         elevation: 0,
         centerTitle: true,
         titleTextStyle: TextStyle(
-          fontFamily: 'KumarOne',
+          fontFamily: 'InstrumentSans',
           fontSize: 24,
           color: AppColors.textPrimaryDark,
           fontWeight: FontWeight.w400,

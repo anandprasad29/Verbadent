@@ -7,14 +7,14 @@ import '../constants/app_constants.dart';
 class AppTextStyles {
   // Main title style (VERBIDENT)
   static const TextStyle titleLarge = TextStyle(
-    fontFamily: 'KumarOne',
+    fontFamily: 'InstrumentSans',
     fontSize: AppConstants.titleFontSizeDesktop,
     fontWeight: FontWeight.bold,
     color: AppColors.textTitle,
   );
 
   static const TextStyle titleMobile = TextStyle(
-    fontFamily: 'KumarOne',
+    fontFamily: 'InstrumentSans',
     fontSize: AppConstants.titleFontSizeMobile,
     fontWeight: FontWeight.bold,
     color: AppColors.textTitle,
@@ -22,14 +22,14 @@ class AppTextStyles {
 
   // Page header style (Library, Before Visit, etc.)
   static const TextStyle pageHeader = TextStyle(
-    fontFamily: 'KumarOne',
+    fontFamily: 'InstrumentSans',
     fontSize: AppConstants.headerFontSize,
     color: AppColors.textPrimary,
   );
 
   // Sidebar item text style
   static const TextStyle sidebarItem = TextStyle(
-    fontFamily: 'KumarOne',
+    fontFamily: 'InstrumentSans',
     fontSize: AppConstants.sidebarItemFontSize,
     fontWeight: FontWeight.bold,
     color: AppColors.sidebarItemText,
@@ -37,7 +37,7 @@ class AppTextStyles {
 
   // Active sidebar item text style
   static const TextStyle sidebarItemActive = TextStyle(
-    fontFamily: 'KumarOne',
+    fontFamily: 'InstrumentSans',
     fontSize: AppConstants.sidebarItemFontSize,
     fontWeight: FontWeight.bold,
     color: AppColors.primary,
@@ -53,7 +53,7 @@ class AppTextStyles {
 
   // Body text style
   static const TextStyle bodyLarge = TextStyle(
-    fontFamily: 'KumarOne',
+    fontFamily: 'InstrumentSans',
     fontSize: 16,
     color: AppColors.textSecondary,
   );

@@ -120,7 +120,7 @@ class _BuildOwnPageState extends ConsumerState<BuildOwnPage> {
         title: Text(
           l10n?.templateLimitReached ?? 'Template limit reached',
           style: TextStyle(
-            fontFamily: 'KumarOne',
+            fontFamily: 'InstrumentSans',
             color: context.appTextPrimary,
           ),
         ),
@@ -233,7 +233,7 @@ class _BuildOwnPageState extends ConsumerState<BuildOwnPage> {
                   child: Text(
                     l10n?.pageHeaderBuildOwn ?? 'Build your own',
                     style: TextStyle(
-                      fontFamily: 'KumarOne',
+                      fontFamily: 'InstrumentSans',
                       fontSize: AppConstants.headerFontSize,
                       color: context.appTextPrimary,
                     ),
@@ -349,14 +349,14 @@ class _BuildOwnPageState extends ConsumerState<BuildOwnPage> {
         ref.read(buildOwnTemplateNameProvider.notifier).state = value;
       },
       style: TextStyle(
-        fontFamily: 'KumarOne',
+        fontFamily: 'InstrumentSans',
         fontSize: 24,
         color: isEmpty ? context.appNeutral : context.appTextPrimary,
       ),
       decoration: InputDecoration(
         hintText: l10n?.templateNamePlaceholder ?? 'Template Name',
         hintStyle: TextStyle(
-          fontFamily: 'KumarOne',
+          fontFamily: 'InstrumentSans',
           fontSize: 24,
           color: context.appNeutral,
         ),

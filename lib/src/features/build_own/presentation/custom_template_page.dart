@@ -121,7 +121,7 @@ class _CustomTemplatePageState extends ConsumerState<CustomTemplatePage> {
           title: Text(
             l10n?.unsavedChangesTitle ?? 'Unsaved Changes',
             style: TextStyle(
-              fontFamily: 'KumarOne',
+              fontFamily: 'InstrumentSans',
               color: context.appTextPrimary,
             ),
           ),
@@ -212,7 +212,7 @@ class _CustomTemplatePageState extends ConsumerState<CustomTemplatePage> {
         title: Text(
           l10n?.deleteTemplate ?? 'Delete Template',
           style: TextStyle(
-            fontFamily: 'KumarOne',
+            fontFamily: 'InstrumentSans',
             color: context.appTextPrimary,
           ),
         ),
@@ -364,7 +364,7 @@ class _CustomTemplatePageState extends ConsumerState<CustomTemplatePage> {
                   child: Text(
                     template.name,
                     style: TextStyle(
-                      fontFamily: 'KumarOne',
+                      fontFamily: 'InstrumentSans',
                       fontSize: AppConstants.headerFontSize,
                       color: context.appTextPrimary,
                     ),
@@ -389,7 +389,7 @@ class _CustomTemplatePageState extends ConsumerState<CustomTemplatePage> {
                       child: Text(
                         template.name,
                         style: TextStyle(
-                          fontFamily: 'KumarOne',
+                          fontFamily: 'InstrumentSans',
                           fontSize: 20,
                           color: context.appTextPrimary,
                         ),
@@ -486,7 +486,7 @@ class _CustomTemplatePageState extends ConsumerState<CustomTemplatePage> {
             title: Text(
               l10n?.editTemplate ?? 'Edit',
               style: TextStyle(
-                fontFamily: 'KumarOne',
+                fontFamily: 'InstrumentSans',
                 fontSize: 18,
                 color: context.appTextPrimary,
               ),
@@ -526,14 +526,14 @@ class _CustomTemplatePageState extends ConsumerState<CustomTemplatePage> {
                   ref.read(editTemplateNameProvider.notifier).state = value;
                 },
                 style: TextStyle(
-                  fontFamily: 'KumarOne',
+                  fontFamily: 'InstrumentSans',
                   fontSize: 24,
                   color: context.appTextPrimary,
                 ),
                 decoration: InputDecoration(
                   hintText: l10n?.templateNamePlaceholder ?? 'Template Name',
                   hintStyle: TextStyle(
-                    fontFamily: 'KumarOne',
+                    fontFamily: 'InstrumentSans',
                     fontSize: 24,
                     color: context.appNeutral,
                   ),

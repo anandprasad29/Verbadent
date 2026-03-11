@@ -133,7 +133,7 @@ class _BeforeVisitPageState extends ConsumerState<BeforeVisitPage> {
                   child: Text(
                     l10n?.pageHeaderBeforeVisit ?? 'Before the visit',
                     style: TextStyle(
-                      fontFamily: 'KumarOne',
+                      fontFamily: 'InstrumentSans',
                       fontSize: AppConstants.headerFontSize,
                       color: context.appTextPrimary,
                     ),

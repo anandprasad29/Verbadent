@@ -85,7 +85,7 @@ class AppShell extends StatelessWidget {
                 title!,
                 style: const TextStyle(
                   color: Colors.white,
-                  fontFamily: 'KumarOne',
+                  fontFamily: 'InstrumentSans',
                 ),
               )
             : null,

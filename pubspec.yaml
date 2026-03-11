@@ -48,10 +48,6 @@ flutter:
     - assets/dental_items.yaml
 
   fonts:
-    - family: KumarOne
-      fonts:
-        - asset: fonts/KumarOne-Regular.ttf
-          weight: 400
     - family: InstrumentSans
       fonts:
         - asset: fonts/InstrumentSans-Bold.ttf
