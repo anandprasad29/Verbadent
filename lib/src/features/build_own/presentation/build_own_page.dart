@@ -512,7 +512,7 @@ class _BuildOwnPageState extends ConsumerState<BuildOwnPage> {
           filter: ImageFilter.blur(sigmaX: 12, sigmaY: 12),
           child: Material(
             color: (canCreate ? context.appPrimary : context.appNeutral)
-                .withValues(alpha: 0.7),
+                .withValues(alpha: 0.5),
             child: InkWell(
               onTap: canCreate ? _createTemplate : null,
               borderRadius: BorderRadius.circular(28),
