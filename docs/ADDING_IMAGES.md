@@ -1,10 +1,10 @@
-# Adding Images to Verbadent
+# Adding Images to Verbident
 
-This guide explains how to add new images to the Verbadent app using our automated workflow.
+This guide explains how to add new images to the Verbident app using our automated workflow.
 
 ## Overview
 
-Images in Verbadent are managed through a metadata-driven system:
+Images in Verbident are managed through a metadata-driven system:
 - **Source of truth**: `assets/dental_items.yaml` (metadata file)
 - **Generated code**: `lib/src/common/data/dental_items.dart` (auto-generated)
 - **Image files**: `assets/images/library/` (WebP format)
@@ -94,7 +94,7 @@ That's it! Your new image is now available in the app.
 ## File Structure
 
 ```
-Verbadent/
+Verbident/
 ├── assets/
 │   ├── dental_items.yaml          # ← Edit this to add images
 │   └── images/
@@ -250,7 +250,7 @@ This runs:
 **Solution**: Make sure you're running the script from the project root directory.
 
 ```bash
-cd /path/to/Verbadent
+cd /path/to/Verbident
 ./scripts/generate_dental_items.sh
 ```
 

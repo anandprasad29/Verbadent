@@ -1,7 +1,7 @@
-# Verbadent - Claude Code Project Guide
+# Verbident - Claude Code Project Guide
 
 ## Project Overview
-Verbadent is a Flutter dental education app for kids. It teaches children about dental visits through illustrated stories, a library of dental items with text-to-speech captions, and a "Build Your Own" story creator. Targets iOS and Android (phones and tablets) with responsive layouts.
+Verbident is a Flutter dental education app for kids. It teaches children about dental visits through illustrated stories, a library of dental items with text-to-speech captions, and a "Build Your Own" story creator. Targets iOS and Android (phones and tablets) with responsive layouts.
 
 **Current version:** See `pubspec.yaml` (`version:` field)
 **Bundle ID:** `com.verbident`
