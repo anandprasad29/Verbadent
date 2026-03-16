@@ -249,4 +249,13 @@ class AppLocalizationsEs extends AppLocalizations {
 
   @override
   String get dashboardCreateNew => 'Crear nueva';
+
+  @override
+  String get ok => 'Aceptar';
+
+  @override
+  String get templateNotFound => 'Plantilla no encontrada';
+
+  @override
+  String get allImagesAdded => 'Todas las imágenes han sido agregadas';
 }

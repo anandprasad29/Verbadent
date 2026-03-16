@@ -6,6 +6,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'src/features/library/services/tts_service.dart';
 import 'src/localization/app_localizations.dart';
 import 'src/routing/app_router.dart';
+import 'src/localization/content_language_provider.dart';
 import 'src/theme/app_theme.dart';
 import 'src/theme/theme_provider.dart';
 
@@ -53,9 +54,11 @@ class _VerbidentAppState extends ConsumerState<VerbidentApp> {
   Widget build(BuildContext context) {
     final goRouter = ref.watch(goRouterProvider);
     final themeMode = ref.watch(themeModeNotifierProvider);
+    final contentLanguage = ref.watch(contentLanguageNotifierProvider);
 
     return MaterialApp.router(
       routerConfig: goRouter,
+      locale: Locale(contentLanguage.code),
       onGenerateTitle: (context) => 'Verbident',
       theme: AppTheme.staticLightTheme,
       darkTheme: AppTheme.staticDarkTheme,

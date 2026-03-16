@@ -547,6 +547,24 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Create New'**
   String get dashboardCreateNew;
+
+  /// OK button text
+  ///
+  /// In en, this message translates to:
+  /// **'OK'**
+  String get ok;
+
+  /// Message when a template cannot be found
+  ///
+  /// In en, this message translates to:
+  /// **'Template not found'**
+  String get templateNotFound;
+
+  /// Message when all available images are already in the template
+  ///
+  /// In en, this message translates to:
+  /// **'All images have been added'**
+  String get allImagesAdded;
 }
 
 class _AppLocalizationsDelegate

@@ -142,7 +142,7 @@ class _BuildOwnPageState extends ConsumerState<BuildOwnPage> {
         actions: [
           TextButton(
             onPressed: () => Navigator.of(context).pop(),
-            child: Text('OK', style: TextStyle(color: context.appPrimary)),
+            child: Text(l10n?.ok ?? 'OK', style: TextStyle(color: context.appPrimary)),
           ),
         ],
       ),

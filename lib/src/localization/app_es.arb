@@ -74,6 +74,9 @@
   "dashboardLibrary": "Biblioteca",
   "dashboardBuildOwn": "Crea el tuyo",
   "dashboardMyTemplates": "Mis plantillas",
-  "dashboardCreateNew": "Crear nueva"
+  "dashboardCreateNew": "Crear nueva",
+  "ok": "Aceptar",
+  "templateNotFound": "Plantilla no encontrada",
+  "allImagesAdded": "Todas las imágenes han sido agregadas"
 }
 

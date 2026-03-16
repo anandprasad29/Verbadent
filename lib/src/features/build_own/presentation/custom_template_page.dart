@@ -296,7 +296,7 @@ class _CustomTemplatePageState extends ConsumerState<CustomTemplatePage> {
         showHomeButton: true,
         child: Center(
           child: Text(
-            'Template not found',
+            l10n?.templateNotFound ?? 'Template not found',
             style: TextStyle(
               fontFamily: 'InstrumentSans',
               color: context.appTextSecondary,
@@ -671,7 +671,7 @@ class _CustomTemplatePageState extends ConsumerState<CustomTemplatePage> {
                     child: Text(
                       searchInput.isNotEmpty
                           ? (l10n?.searchNoResults ?? 'No results found')
-                          : 'All images have been added',
+                          : (l10n?.allImagesAdded ?? 'All images have been added'),
                       style: TextStyle(
                         fontFamily: 'InstrumentSans',
                         color: context.appNeutral,

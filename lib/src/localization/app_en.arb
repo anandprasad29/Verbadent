@@ -317,5 +317,17 @@
   "dashboardCreateNew": "Create New",
   "@dashboardCreateNew": {
     "description": "Dashboard tile label for creating a new template"
+  },
+  "ok": "OK",
+  "@ok": {
+    "description": "OK button text"
+  },
+  "templateNotFound": "Template not found",
+  "@templateNotFound": {
+    "description": "Message when a template cannot be found"
+  },
+  "allImagesAdded": "All images have been added",
+  "@allImagesAdded": {
+    "description": "Message when all available images are already in the template"
   }
 }
