@@ -397,6 +397,340 @@ void main() {
     });
   });
 
+  group('Screen Size Coverage', () {
+    testWidgets('renders without overflow on very narrow screen (320x568)',
+        (tester) async {
+      tester.view.physicalSize = const Size(320, 568);
+      tester.view.devicePixelRatio = 1.0;
+
+      await tester.pumpWidget(
+        ProviderScope(
+          child: MaterialApp.router(routerConfig: createTestRouter()),
+        ),
+      );
+
+      expect(find.text('VERBIDENT'), findsOneWidget);
+      expect(find.byKey(const Key('tile_before_visit')), findsOneWidget);
+      expect(tester.takeException(), isNull);
+
+      tester.view.resetPhysicalSize();
+      tester.view.resetDevicePixelRatio();
+    });
+
+    testWidgets('renders without overflow on standard mobile (375x812)',
+        (tester) async {
+      tester.view.physicalSize = const Size(375, 812);
+      tester.view.devicePixelRatio = 1.0;
+
+      await tester.pumpWidget(
+        ProviderScope(
+          child: MaterialApp.router(routerConfig: createTestRouter()),
+        ),
+      );
+
+      expect(find.text('VERBIDENT'), findsOneWidget);
+      expect(find.byKey(const Key('tile_before_visit')), findsOneWidget);
+      expect(tester.takeException(), isNull);
+
+      tester.view.resetPhysicalSize();
+      tester.view.resetDevicePixelRatio();
+    });
+
+    testWidgets('renders on phone landscape (800x375)', (tester) async {
+      tester.view.physicalSize = const Size(800, 375);
+      tester.view.devicePixelRatio = 1.0;
+
+      await tester.pumpWidget(
+        ProviderScope(
+          child: MaterialApp.router(routerConfig: createTestRouter()),
+        ),
+      );
+
+      expect(find.text('VERBIDENT'), findsOneWidget);
+      expect(tester.takeException(), isNull);
+
+      tester.view.resetPhysicalSize();
+      tester.view.resetDevicePixelRatio();
+    });
+
+    testWidgets('renders on tablet portrait (768x1024)', (tester) async {
+      tester.view.physicalSize = const Size(768, 1024);
+      tester.view.devicePixelRatio = 1.0;
+
+      await tester.pumpWidget(
+        ProviderScope(
+          child: MaterialApp.router(routerConfig: createTestRouter()),
+        ),
+      );
+
+      expect(find.text('VERBIDENT'), findsOneWidget);
+      expect(tester.takeException(), isNull);
+
+      tester.view.resetPhysicalSize();
+      tester.view.resetDevicePixelRatio();
+    });
+
+    testWidgets('renders on tablet landscape (1024x768)', (tester) async {
+      tester.view.physicalSize = const Size(1024, 768);
+      tester.view.devicePixelRatio = 1.0;
+
+      await tester.pumpWidget(
+        ProviderScope(
+          child: MaterialApp.router(routerConfig: createTestRouter()),
+        ),
+      );
+
+      expect(find.text('VERBIDENT'), findsOneWidget);
+      expect(tester.takeException(), isNull);
+
+      tester.view.resetPhysicalSize();
+      tester.view.resetDevicePixelRatio();
+    });
+
+    testWidgets('renders on large tablet (1200x1920)', (tester) async {
+      tester.view.physicalSize = const Size(1200, 1920);
+      tester.view.devicePixelRatio = 1.0;
+
+      await tester.pumpWidget(
+        ProviderScope(
+          child: MaterialApp.router(routerConfig: createTestRouter()),
+        ),
+      );
+
+      expect(find.text('VERBIDENT'), findsOneWidget);
+      expect(tester.takeException(), isNull);
+
+      tester.view.resetPhysicalSize();
+      tester.view.resetDevicePixelRatio();
+    });
+
+    testWidgets('renders on wide desktop (1600x900)', (tester) async {
+      tester.view.physicalSize = const Size(1600, 900);
+      tester.view.devicePixelRatio = 1.0;
+
+      await tester.pumpWidget(
+        ProviderScope(
+          child: MaterialApp.router(routerConfig: createTestRouter()),
+        ),
+      );
+
+      expect(find.text('VERBIDENT'), findsOneWidget);
+      expect(tester.takeException(), isNull);
+
+      tester.view.resetPhysicalSize();
+      tester.view.resetDevicePixelRatio();
+    });
+  });
+
+  group('Breakpoint Boundary Tests', () {
+    testWidgets('uses 2 columns at 599px (just below mobile breakpoint)',
+        (tester) async {
+      tester.view.physicalSize = const Size(599, 800);
+      tester.view.devicePixelRatio = 1.0;
+
+      await tester.pumpWidget(
+        ProviderScope(
+          child: MaterialApp.router(routerConfig: createTestRouter()),
+        ),
+      );
+
+      final gridView = tester.widget<GridView>(find.byType(GridView).first);
+      final delegate =
+          gridView.gridDelegate as SliverGridDelegateWithFixedCrossAxisCount;
+      expect(delegate.crossAxisCount, equals(2));
+
+      tester.view.resetPhysicalSize();
+      tester.view.resetDevicePixelRatio();
+    });
+
+    testWidgets('uses 3 columns at exactly 600px (mobile breakpoint)',
+        (tester) async {
+      tester.view.physicalSize = const Size(600, 800);
+      tester.view.devicePixelRatio = 1.0;
+
+      await tester.pumpWidget(
+        ProviderScope(
+          child: MaterialApp.router(routerConfig: createTestRouter()),
+        ),
+      );
+
+      final gridView = tester.widget<GridView>(find.byType(GridView).first);
+      final delegate =
+          gridView.gridDelegate as SliverGridDelegateWithFixedCrossAxisCount;
+      expect(delegate.crossAxisCount, equals(3));
+
+      tester.view.resetPhysicalSize();
+      tester.view.resetDevicePixelRatio();
+    });
+
+    testWidgets('uses 3 columns at 899px (just below tablet breakpoint)',
+        (tester) async {
+      tester.view.physicalSize = const Size(899, 800);
+      tester.view.devicePixelRatio = 1.0;
+
+      await tester.pumpWidget(
+        ProviderScope(
+          child: MaterialApp.router(routerConfig: createTestRouter()),
+        ),
+      );
+
+      final gridView = tester.widget<GridView>(find.byType(GridView).first);
+      final delegate =
+          gridView.gridDelegate as SliverGridDelegateWithFixedCrossAxisCount;
+      expect(delegate.crossAxisCount, equals(3));
+
+      tester.view.resetPhysicalSize();
+      tester.view.resetDevicePixelRatio();
+    });
+
+    testWidgets('uses 4 columns at exactly 900px (tablet breakpoint)',
+        (tester) async {
+      tester.view.physicalSize = const Size(900, 800);
+      tester.view.devicePixelRatio = 1.0;
+
+      await tester.pumpWidget(
+        ProviderScope(
+          child: MaterialApp.router(routerConfig: createTestRouter()),
+        ),
+      );
+
+      final gridView = tester.widget<GridView>(find.byType(GridView).first);
+      final delegate =
+          gridView.gridDelegate as SliverGridDelegateWithFixedCrossAxisCount;
+      expect(delegate.crossAxisCount, equals(4));
+
+      tester.view.resetPhysicalSize();
+      tester.view.resetDevicePixelRatio();
+    });
+  });
+
+  group('Text Overflow Prevention', () {
+    testWidgets('title uses FittedBox with scaleDown fit', (tester) async {
+      tester.view.physicalSize = const Size(400, 800);
+      tester.view.devicePixelRatio = 1.0;
+
+      await tester.pumpWidget(
+        ProviderScope(
+          child: MaterialApp.router(routerConfig: createTestRouter()),
+        ),
+      );
+
+      final fittedBox = tester.widget<FittedBox>(find.byType(FittedBox));
+      expect(fittedBox.fit, equals(BoxFit.scaleDown));
+
+      tester.view.resetPhysicalSize();
+      tester.view.resetDevicePixelRatio();
+    });
+
+    testWidgets('title has horizontal padding for safety', (tester) async {
+      tester.view.physicalSize = const Size(320, 568);
+      tester.view.devicePixelRatio = 1.0;
+
+      await tester.pumpWidget(
+        ProviderScope(
+          child: MaterialApp.router(routerConfig: createTestRouter()),
+        ),
+      );
+
+      final paddingFinder = find.ancestor(
+        of: find.byType(FittedBox),
+        matching: find.byType(Padding),
+      );
+      expect(paddingFinder, findsWidgets);
+
+      tester.view.resetPhysicalSize();
+      tester.view.resetDevicePixelRatio();
+    });
+
+    testWidgets('no overflow on very narrow landscape (568x320)',
+        (tester) async {
+      tester.view.physicalSize = const Size(568, 320);
+      tester.view.devicePixelRatio = 1.0;
+
+      await tester.pumpWidget(
+        ProviderScope(
+          child: MaterialApp.router(routerConfig: createTestRouter()),
+        ),
+      );
+
+      expect(find.text('VERBIDENT'), findsOneWidget);
+      expect(tester.takeException(), isNull);
+
+      tester.view.resetPhysicalSize();
+      tester.view.resetDevicePixelRatio();
+    });
+
+    testWidgets('font size scales with screen width', (tester) async {
+      // Collect font size on narrow screen
+      tester.view.physicalSize = const Size(320, 568);
+      tester.view.devicePixelRatio = 1.0;
+
+      await tester.pumpWidget(
+        ProviderScope(
+          child: MaterialApp.router(routerConfig: createTestRouter()),
+        ),
+      );
+
+      final narrowText = tester.widget<Text>(find.text('VERBIDENT'));
+      final narrowFontSize = narrowText.style!.fontSize!;
+
+      tester.view.resetPhysicalSize();
+      tester.view.resetDevicePixelRatio();
+
+      // Collect font size on wide screen
+      tester.view.physicalSize = const Size(1200, 900);
+      tester.view.devicePixelRatio = 1.0;
+
+      await tester.pumpWidget(
+        ProviderScope(
+          child: MaterialApp.router(routerConfig: createTestRouter()),
+        ),
+      );
+
+      final wideText = tester.widget<Text>(find.text('VERBIDENT'));
+      final wideFontSize = wideText.style!.fontSize!;
+
+      expect(wideFontSize, greaterThan(narrowFontSize));
+
+      tester.view.resetPhysicalSize();
+      tester.view.resetDevicePixelRatio();
+    });
+
+    testWidgets('title uses InstrumentSans font', (tester) async {
+      tester.view.physicalSize = const Size(400, 800);
+      tester.view.devicePixelRatio = 1.0;
+
+      await tester.pumpWidget(
+        ProviderScope(
+          child: MaterialApp.router(routerConfig: createTestRouter()),
+        ),
+      );
+
+      final text = tester.widget<Text>(find.text('VERBIDENT'));
+      expect(text.style?.fontFamily, equals('InstrumentSans'));
+
+      tester.view.resetPhysicalSize();
+      tester.view.resetDevicePixelRatio();
+    });
+
+    testWidgets('title has proper contrast color', (tester) async {
+      tester.view.physicalSize = const Size(400, 800);
+      tester.view.devicePixelRatio = 1.0;
+
+      await tester.pumpWidget(
+        ProviderScope(
+          child: MaterialApp.router(routerConfig: createTestRouter()),
+        ),
+      );
+
+      final text = tester.widget<Text>(find.text('VERBIDENT'));
+      expect(text.style?.color, equals(AppColors.textTitle));
+
+      tester.view.resetPhysicalSize();
+      tester.view.resetDevicePixelRatio();
+    });
+  });
+
   group('DashboardPage Golden Tests', () {
     testGoldens('desktop layout', (tester) async {
       final builder = DeviceBuilder()

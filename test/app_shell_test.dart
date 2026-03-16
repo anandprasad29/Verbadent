@@ -6,6 +6,7 @@ import 'package:golden_toolkit/golden_toolkit.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:verbident/src/theme/app_colors.dart';
 import 'package:verbident/src/widgets/app_shell.dart';
+import 'package:verbident/src/widgets/language_selector.dart';
 
 void main() {
   setUpAll(() async {
@@ -218,6 +219,235 @@ void main() {
 
       tester.view.resetPhysicalSize();
       tester.view.resetDevicePixelRatio();
+    });
+  });
+
+  group('Screen Size Coverage', () {
+    testWidgets('AppBar renders on very narrow screen (320x568 - iPhone SE)',
+        (tester) async {
+      tester.view.physicalSize = const Size(320, 568);
+      tester.view.devicePixelRatio = 1.0;
+
+      await tester.pumpWidget(
+        ProviderScope(
+          child: MaterialApp.router(routerConfig: createTestRouter()),
+        ),
+      );
+
+      expect(find.byType(AppBar), findsOneWidget);
+      expect(find.text('Home Content'), findsOneWidget);
+      expect(find.byIcon(Icons.settings), findsOneWidget);
+      expect(tester.takeException(), isNull);
+
+      tester.view.resetPhysicalSize();
+      tester.view.resetDevicePixelRatio();
+    });
+
+    testWidgets('AppBar renders on standard mobile (375x812 - iPhone X)',
+        (tester) async {
+      tester.view.physicalSize = const Size(375, 812);
+      tester.view.devicePixelRatio = 1.0;
+
+      await tester.pumpWidget(
+        ProviderScope(
+          child: MaterialApp.router(routerConfig: createTestRouter()),
+        ),
+      );
+
+      expect(find.byType(AppBar), findsOneWidget);
+      expect(find.byIcon(Icons.settings), findsOneWidget);
+      expect(tester.takeException(), isNull);
+
+      tester.view.resetPhysicalSize();
+      tester.view.resetDevicePixelRatio();
+    });
+
+    testWidgets('AppBar renders on tablet portrait (768x1024 - iPad)',
+        (tester) async {
+      tester.view.physicalSize = const Size(768, 1024);
+      tester.view.devicePixelRatio = 1.0;
+
+      await tester.pumpWidget(
+        ProviderScope(
+          child: MaterialApp.router(routerConfig: createTestRouter()),
+        ),
+      );
+
+      expect(find.byType(AppBar), findsOneWidget);
+      expect(find.byIcon(Icons.settings), findsOneWidget);
+      expect(tester.takeException(), isNull);
+
+      tester.view.resetPhysicalSize();
+      tester.view.resetDevicePixelRatio();
+    });
+
+    testWidgets('AppBar renders on tablet landscape (1024x768 - iPad)',
+        (tester) async {
+      tester.view.physicalSize = const Size(1024, 768);
+      tester.view.devicePixelRatio = 1.0;
+
+      await tester.pumpWidget(
+        ProviderScope(
+          child: MaterialApp.router(routerConfig: createTestRouter()),
+        ),
+      );
+
+      expect(find.byType(AppBar), findsOneWidget);
+      expect(find.byIcon(Icons.settings), findsOneWidget);
+      expect(tester.takeException(), isNull);
+
+      tester.view.resetPhysicalSize();
+      tester.view.resetDevicePixelRatio();
+    });
+
+    testWidgets('AppBar renders on large tablet (1200x1920)',
+        (tester) async {
+      tester.view.physicalSize = const Size(1200, 1920);
+      tester.view.devicePixelRatio = 1.0;
+
+      await tester.pumpWidget(
+        ProviderScope(
+          child: MaterialApp.router(routerConfig: createTestRouter()),
+        ),
+      );
+
+      expect(find.byType(AppBar), findsOneWidget);
+      expect(find.byIcon(Icons.settings), findsOneWidget);
+      expect(tester.takeException(), isNull);
+
+      tester.view.resetPhysicalSize();
+      tester.view.resetDevicePixelRatio();
+    });
+
+    testWidgets('AppBar renders on wide desktop (1600x900)',
+        (tester) async {
+      tester.view.physicalSize = const Size(1600, 900);
+      tester.view.devicePixelRatio = 1.0;
+
+      await tester.pumpWidget(
+        ProviderScope(
+          child: MaterialApp.router(routerConfig: createTestRouter()),
+        ),
+      );
+
+      expect(find.byType(AppBar), findsOneWidget);
+      expect(find.byIcon(Icons.settings), findsOneWidget);
+      expect(tester.takeException(), isNull);
+
+      tester.view.resetPhysicalSize();
+      tester.view.resetDevicePixelRatio();
+    });
+
+    testWidgets('AppBar renders on phone landscape (800x375)',
+        (tester) async {
+      tester.view.physicalSize = const Size(800, 375);
+      tester.view.devicePixelRatio = 1.0;
+
+      await tester.pumpWidget(
+        ProviderScope(
+          child: MaterialApp.router(routerConfig: createTestRouter()),
+        ),
+      );
+
+      expect(find.byType(AppBar), findsOneWidget);
+      expect(find.byIcon(Icons.settings), findsOneWidget);
+      expect(tester.takeException(), isNull);
+
+      tester.view.resetPhysicalSize();
+      tester.view.resetDevicePixelRatio();
+    });
+
+    testWidgets('home icon visible on feature page across screen sizes',
+        (tester) async {
+      // Test on mobile
+      tester.view.physicalSize = const Size(375, 812);
+      tester.view.devicePixelRatio = 1.0;
+
+      await tester.pumpWidget(
+        ProviderScope(
+          child: MaterialApp.router(
+            routerConfig: createTestRouter(initialLocation: '/library'),
+          ),
+        ),
+      );
+
+      expect(find.byIcon(Icons.home), findsOneWidget);
+
+      tester.view.resetPhysicalSize();
+      tester.view.resetDevicePixelRatio();
+
+      // Test on desktop
+      tester.view.physicalSize = const Size(1200, 900);
+      tester.view.devicePixelRatio = 1.0;
+
+      await tester.pumpWidget(
+        ProviderScope(
+          child: MaterialApp.router(
+            routerConfig: createTestRouter(initialLocation: '/library'),
+          ),
+        ),
+      );
+
+      expect(find.byIcon(Icons.home), findsOneWidget);
+
+      tester.view.resetPhysicalSize();
+      tester.view.resetDevicePixelRatio();
+    });
+
+    testWidgets('no drawer or sidebar at any screen size', (tester) async {
+      for (final size in [
+        const Size(320, 568),
+        const Size(400, 800),
+        const Size(768, 1024),
+        const Size(1024, 768),
+        const Size(1200, 900),
+        const Size(1600, 900),
+      ]) {
+        tester.view.physicalSize = size;
+        tester.view.devicePixelRatio = 1.0;
+
+        await tester.pumpWidget(
+          ProviderScope(
+            child: MaterialApp.router(routerConfig: createTestRouter()),
+          ),
+        );
+
+        expect(find.byType(Drawer), findsNothing,
+            reason: 'Drawer should not exist at ${size.width}x${size.height}');
+        expect(find.byIcon(Icons.menu), findsNothing,
+            reason:
+                'Hamburger menu should not exist at ${size.width}x${size.height}');
+
+        tester.view.resetPhysicalSize();
+        tester.view.resetDevicePixelRatio();
+      }
+    });
+
+    testWidgets('language selector visible across screen sizes',
+        (tester) async {
+      for (final size in [
+        const Size(320, 568),
+        const Size(400, 800),
+        const Size(768, 1024),
+        const Size(1024, 768),
+        const Size(1600, 900),
+      ]) {
+        tester.view.physicalSize = size;
+        tester.view.devicePixelRatio = 1.0;
+
+        await tester.pumpWidget(
+          ProviderScope(
+            child: MaterialApp.router(routerConfig: createTestRouter()),
+          ),
+        );
+
+        expect(find.byType(LanguageSelector), findsOneWidget,
+            reason:
+                'Language selector should be visible at ${size.width}x${size.height}');
+
+        tester.view.resetPhysicalSize();
+        tester.view.resetDevicePixelRatio();
+      }
     });
   });
 
